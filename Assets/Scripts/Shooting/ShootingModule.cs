@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BreakInfinity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class ShootingModule : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Image crosshair;
+    [SerializeField] private CurrencyManager currencyManager;
     private PlayerControls controls;
 
     [Header("Config")]
@@ -43,7 +45,7 @@ public class ShootingModule : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
+        // Cursor.visible = false;
         CurrAmmo = MaxAmmo;
         crosshair.color = activeCrosshairColor;
     }
@@ -87,10 +89,13 @@ public class ShootingModule : MonoBehaviour
             bool isBullseye = distToBullseye < bullseyeDistanceThreshold ? true : false;
 
             // If bullseye give plus 50 money
-            // if(isBullseye)
-            // {
-                
-            // }
+            if (isBullseye)
+            {
+                currencyManager.Add("cash", 2);
+            } else
+            {
+                currencyManager.Add("cash", 1);
+            }
             
             Destroy(hit.collider.gameObject);
         }

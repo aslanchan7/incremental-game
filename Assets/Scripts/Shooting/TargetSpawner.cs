@@ -9,7 +9,7 @@ public class TargetSpawner : MonoBehaviour
     [SerializeField] private int targetCount; // number of targets we WANT to spawn in total
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
     [SerializeField] private float spawnPadding;
-    [SerializeField] private float timeBetweenSpawns; // after initial spawning, targets will spawn with this amount of time delay
+    public float TimeBetweenSpawns; // after initial spawning, targets will spawn with this amount of time delay
 
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
@@ -94,7 +94,7 @@ public class TargetSpawner : MonoBehaviour
     {
         while (totalTargetsSpawned < targetCount)
         {
-            yield return new WaitForSeconds(timeBetweenSpawns);   
+            yield return new WaitForSeconds(TimeBetweenSpawns);   
             int segmentIdx = Random.Range(0, screenSegments);
             Vector2 worldPos = GetRandomSpawnWorldPos(segmentIdx);
             
