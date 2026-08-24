@@ -10,22 +10,19 @@ public class SkillTreeManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(this);
+            return;
         } else
         {
             Instance = this;
         }
-
-        skillTree = new(treeHead);
     }
 
     [Header("References")]
     [SerializeField] private CurrencyManager currencyManager;
-    [SerializeField] private ShootingModule shootingModule;
-    [SerializeField] private TargetSpawner targetSpawner;
 
     [Header("Skill Tree")]
-    [SerializeField] private SkillTreeNode treeHead;
-    private SkillTree skillTree;
+    public SkillTreeNode TreeHead;
+    [SerializeField] private Transform nodesParent;
     private SkillEffectContext context;
 
     [Header("Actions")]
@@ -33,19 +30,50 @@ public class SkillTreeManager : MonoBehaviour
 
     void Start()
     {
-        context = new(shootingModule, targetSpawner);
+        context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData);
+
+        InitializeNodesData();
+    }
+
+    void InitializeNodesData()
+    {
+        for (int i = 0; i < nodesParent.childCount; i++)
+        {
+            SkillTreeNode node = nodesParent.GetChild(i).GetComponent<SkillTreeNode>();
+            bool purchased = GameManager.Instance.SkillTree.PurchasedNodeIds.Contains(node.Data.id);
+            if (purchased)
+            {
+                node.IsPurchased = true;
+            }
+        }
     }
 
     public void TryPurchase(SkillTreeNode node)
     {
-        if (!node.IsUnlocked) return; // can't purchased locked node
+        if (!node.IsUnlocked) // can't purchased locked node 
+        {
+            Debug.Log($"{node.Data.displayName} has not been unlocked yet");
+            return;
+        }
 
-        if (node.IsPurchased) return; // if node is already purchased then do nothing
+        if (node.IsPurchased) // if node is already purchased then do nothing
+        {
+            Debug.Log($"{node.Data.displayName} has already been purchased");
+            return;
+        }
 
         if (currencyManager.GetCurrency("cash").amount >= node.Data.cost)
         {
+            bool moneySpent = currencyManager.GetCurrency("cash").TrySpend(node.Data.cost);
+            if (!moneySpent) // if failed to spend money then don't apply upgrades. moneySpent should always be True but this is just a failsafe
+            {
+                Debug.LogWarning("Failed to spend money");
+                return;
+            }
+            
             node.ApplyEffects(context);
             node.IsPurchased = true;
+            GameManager.Instance.SkillTree.PurchasedNodeIds.Add(node.Data.id);
             OnNodePurchased?.Invoke(node);
             Debug.Log($"Purchased {node.Data.displayName}");
         } else

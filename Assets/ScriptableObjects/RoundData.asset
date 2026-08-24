@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c853eccc2f298a47a9a4d7b9647aa8e, type: 3}
-  m_Name: RicochetShotChance
-  m_EditorClassIdentifier: Assembly-CSharp::RicochetShotChanceEffect
-  chance: 0.05
+  m_Script: {fileID: 11500000, guid: 704e984a61a1d5a4694df80b4a275c45, type: 3}
+  m_Name: RoundData
+  m_EditorClassIdentifier: Assembly-CSharp::RoundData
+  TargetCount: 10
+  TimeBetweenSpawns: 1
+  BaseTargetValue: 1
+  BullseyeMultiplier: 2

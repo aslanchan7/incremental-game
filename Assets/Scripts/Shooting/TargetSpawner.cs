@@ -1,63 +1,65 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using BreakInfinity;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class TargetSpawner : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private int targetCount; // number of targets we WANT to spawn in total
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
     [SerializeField] private float spawnPadding;
-    public float TimeBetweenSpawns; // after initial spawning, targets will spawn with this amount of time delay
 
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
     [SerializeField] private ShootingModule shootingModule;
+    private RoundRuntimeData roundRuntimeData;
 
-    private PlayerControls controls;
+    [Header("Actions")]
+    public Action OnTargetsCleared;
     
     private List<GameObject> spawnedTargets = new();
-    private int totalTargetsSpawned;
+    private int remainingTargets;
 
     private int screenSegments;
     private float minX, maxX;
     private float minY, maxY;
     private float segmentWidth;
 
-    void Awake()
-    {
-        controls = new PlayerControls();
-    }
-
+    [Header("Stats for Summary UI")]
+    [HideInInspector] public int TotalTargetsSpawned;
+    [HideInInspector] public int TotalTargetsHit;
+    [HideInInspector] public int TotalBullseyesHit;
+    [HideInInspector] public int TotalShotsFired;
+    [HideInInspector] public float RoundStartTime;
+    [HideInInspector] public BigDouble TotalMoneyEarned;
+    
     void Start()
     {
+        roundRuntimeData = GameManager.Instance.RoundRuntimeData;
         SpawnInitialTargets();
+        RoundStartTime = Time.time;
     }
 
     void OnEnable()
     {
-        controls.Player.Enable();
-        controls.Player.Refresh.performed += Refresh;
-
-        shootingModule.ShotFired += TryRemoveNullTargets;
+        // TODO: MAYBE REFACTOR? IDK IF TARGET SPAWNER NEEDS TO HAVE A REFERENCE TO SHOOTING MODULE
+        shootingModule.ShotFired += HandleShotFired;
     }
 
     void OnDisable()
     {
-        controls.Player.Disable();
-        controls.Player.Refresh.performed -= Refresh;
-
-        shootingModule.ShotFired += TryRemoveNullTargets;
+        shootingModule.ShotFired -= HandleShotFired;
     }
 
     // THIS IS JUST A HELPER FUNCTION, I NEED TO REMOVE THIS
-    void Refresh(InputAction.CallbackContext context)
-    {
-        DestroyTargets();
-        SpawnInitialTargets();
-        shootingModule.CurrAmmo = shootingModule.MaxAmmo;
-    }
+    // void Refresh(InputAction.CallbackContext context)
+    // {
+    //     DestroyTargets();
+    //     SpawnInitialTargets();
+    //     shootingModule.CurrAmmo = shootingModule.MaxAmmo;
+    // }
 
     /// <summary>
     /// Spawns initial targets based on the num of screenSegments. This will spawn 1 target per segement.
@@ -65,7 +67,7 @@ public class TargetSpawner : MonoBehaviour
     /// </summary>
     void SpawnInitialTargets()
     {
-        screenSegments = Mathf.Min(targetCount, maxScreenSegments);
+        screenSegments = Mathf.Min(roundRuntimeData.TargetCount, maxScreenSegments);
 
         if (screenSegments <= 0)
         {
@@ -84,7 +86,8 @@ public class TargetSpawner : MonoBehaviour
 
             GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
             spawnedTargets.Add(instantiated);
-            totalTargetsSpawned++;
+            TotalTargetsSpawned++;
+            remainingTargets++;
         }
 
         StartCoroutine(SpawnTargetsOverTime());
@@ -92,15 +95,17 @@ public class TargetSpawner : MonoBehaviour
 
     IEnumerator SpawnTargetsOverTime()
     {
-        while (totalTargetsSpawned < targetCount)
+        // TODO: MAKE SURE TARGETS DON'T SPAWN TOO CLOSE TO OTHER ONES
+        while (TotalTargetsSpawned < roundRuntimeData.TargetCount)
         {
-            yield return new WaitForSeconds(TimeBetweenSpawns);   
+            yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);   
             int segmentIdx = Random.Range(0, screenSegments);
             Vector2 worldPos = GetRandomSpawnWorldPos(segmentIdx);
             
             GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
             spawnedTargets.Add(instantiated);
-            totalTargetsSpawned++;
+            TotalTargetsSpawned++;
+            remainingTargets++;
         }
     }
 
@@ -111,7 +116,8 @@ public class TargetSpawner : MonoBehaviour
         {
             Destroy(target);
         }
-        totalTargetsSpawned = 0;
+        TotalTargetsSpawned = 0;
+        remainingTargets = 0;
     }
 
     Vector2 GetRandomSpawnWorldPos(int segmentIndex)
@@ -137,8 +143,27 @@ public class TargetSpawner : MonoBehaviour
         return worldPos;
     }
 
-    void TryRemoveNullTargets()
+    void HandleShotFired(GameObject target, bool isBullseye)
     {
-        spawnedTargets.RemoveAll(t => t == null);
+        TotalShotsFired++;
+
+        if (target != null)
+        {
+            spawnedTargets.Remove(target);
+            remainingTargets--;
+            TotalTargetsHit++;
+            
+            BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
+            TotalMoneyEarned += moneyEarned;
+            TotalBullseyesHit += isBullseye ? 1 : 0;
+
+            CurrencyManager.Instance.Add("cash", moneyEarned);
+        }
+        
+        if (remainingTargets == 0)
+        {
+            OnTargetsCleared?.Invoke();
+            spawnedTargets.Clear();
+        }
     }
 }

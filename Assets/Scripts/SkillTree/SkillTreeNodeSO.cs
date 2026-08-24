@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Skill Tree/Skill Tree Node")]
 public class SkillTreeNodeSO : ScriptableObject
 {

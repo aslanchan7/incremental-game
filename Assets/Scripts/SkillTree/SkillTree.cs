@@ -1,9 +1,8 @@
+using System.Collections.Generic;
+
 public class SkillTree
 {
-    public SkillTreeNode treeHead;
+    public List<string> PurchasedNodeIds = new();
 
-    public SkillTree(SkillTreeNode headNode)
-    {
-        treeHead = headNode;
-    }
+    public SkillTree() { }
 }

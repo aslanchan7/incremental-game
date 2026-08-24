@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using BreakInfinity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -8,15 +7,16 @@ using UnityEngine.UI;
 public class ShootingModule : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Image crosshair;
     [SerializeField] private CurrencyManager currencyManager;
+    [SerializeField] private TargetSpawner targetSpawner;
+    [SerializeField] private Image crosshair;
     private PlayerControls controls;
+    private PlayerRuntimeStats playerRuntimeStats;
 
     [Header("Config")]
     [SerializeField] private float bullseyeDistanceThreshold;
 
     [Space(20)]
-    public int MaxAmmo;
     private int currAmmo;
     [HideInInspector] public int CurrAmmo
     {
@@ -28,14 +28,12 @@ public class ShootingModule : MonoBehaviour
             OnAmmoValueChanged.Invoke(currAmmo);
         }
     }
-    [SerializeField] private float reloadTime;
     private bool isReloading;
+
     [Space(20)]
-    [SerializeField] private Color activeCrosshairColor;
-    [SerializeField] private Color inactiveCrosshairColor;
 
     [Header("Actions")]
-    public Action ShotFired;
+    public Action<GameObject, bool> ShotFired;
     public Action<int> OnAmmoValueChanged;
 
     void Awake()
@@ -45,26 +43,43 @@ public class ShootingModule : MonoBehaviour
 
     void Start()
     {
-        // Cursor.visible = false;
-        CurrAmmo = MaxAmmo;
-        crosshair.color = activeCrosshairColor;
+        playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
+        ShowCrosshair();
+        CurrAmmo = playerRuntimeStats.MaxAmmo;
+        crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
     }
 
     void OnEnable()
     {
         controls.Player.Enable();
         controls.Player.Shoot.performed += TryShoot;
+
+        targetSpawner.OnTargetsCleared += HideCrosshair;
     }
 
     void OnDisable()
     {   
         controls.Player.Disable();
         controls.Player.Shoot.performed -= TryShoot;
+    
+        targetSpawner.OnTargetsCleared -= HideCrosshair;
     }
 
     void Update()
     {
         UpdateCrosshair();
+    }
+
+    void ShowCrosshair()
+    {
+        crosshair.gameObject.SetActive(true);
+        Cursor.visible = false;
+    }
+
+    void HideCrosshair()
+    {
+        crosshair.gameObject.SetActive(false);
+        Cursor.visible = true;        
     }
 
     void TryShoot(InputAction.CallbackContext context)
@@ -82,26 +97,21 @@ public class ShootingModule : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         var hit = Physics2D.GetRayIntersection(ray);
 
+        GameObject target = null;
+        bool isBullseye = false;
+        
         if (hit.collider != null)
         {
             // Calculate the distance to the bullseye
             float distToBullseye = Vector2.Distance(worldPos, hit.collider.transform.position);
-            bool isBullseye = distToBullseye < bullseyeDistanceThreshold ? true : false;
-
-            // If bullseye give plus 50 money
-            if (isBullseye)
-            {
-                currencyManager.Add("cash", 2);
-            } else
-            {
-                currencyManager.Add("cash", 1);
-            }
+            isBullseye = distToBullseye < bullseyeDistanceThreshold;
+            target = hit.collider.gameObject;
             
             Destroy(hit.collider.gameObject);
         }
   
         CurrAmmo--;
-        ShotFired.Invoke();
+        ShotFired?.Invoke(target, isBullseye);
 
         if (CurrAmmo == 0)
         {
@@ -116,7 +126,7 @@ public class ShootingModule : MonoBehaviour
             () =>
             {
                 isReloading = true;
-                crosshair.color = inactiveCrosshairColor;
+                crosshair.color = playerRuntimeStats.InactiveCrosshairColor;
             },
             (t) =>
             {
@@ -125,11 +135,11 @@ public class ShootingModule : MonoBehaviour
             () =>
             {
                 crosshair.fillAmount = 1f;
-                CurrAmmo = MaxAmmo;
+                CurrAmmo = playerRuntimeStats.MaxAmmo;
                 isReloading = false;
-                crosshair.color = activeCrosshairColor;
+                crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
             },
-            reloadTime
+            playerRuntimeStats.ReloadTime
         );
     }
 

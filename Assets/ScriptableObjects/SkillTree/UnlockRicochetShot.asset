@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
   m_Name: UnlockRicochetShot
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: unlock-ricochet-shot
   sprite: {fileID: 0}
   displayName: Unlock Ricochet Shot
-  description: Ricochet Shot gives 5% chance for any bullet to ricochet, hitting
-    another target
+  description: Bullets have 5% chance to ricochet off, hitting a nearby target
   cost: 20
   effects:
   - {fileID: 11400000, guid: e362cae6d5c126649b7954877e6c54fa, type: 2}

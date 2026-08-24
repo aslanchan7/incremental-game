@@ -7,6 +7,7 @@ public class AmmoUI : MonoBehaviour
     [Header("References")]
     [SerializeField] private ShootingModule shootingModule;
     [SerializeField] private GameObject ammoPrefab;
+    private PlayerRuntimeStats playerRuntimeStats;
 
     [Header("Settings")]
     [SerializeField] private Color activeAmmoColor;
@@ -14,9 +15,14 @@ public class AmmoUI : MonoBehaviour
 
     private List<Image> ammoImages = new();
 
+    void Awake()
+    {
+        playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
+    }
+
     void Start()
     {
-        for (int i = 0; i < shootingModule.MaxAmmo; i++)
+        for (int i = 0; i < playerRuntimeStats.MaxAmmo; i++)
         {
             GameObject instantiated = Instantiate(ammoPrefab, transform);
             Image imageComponent = instantiated.GetComponent<Image>();

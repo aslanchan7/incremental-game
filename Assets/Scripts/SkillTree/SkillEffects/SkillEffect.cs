@@ -6,12 +6,12 @@ public abstract class SkillEffect : ScriptableObject
 }
 
 public class SkillEffectContext {
-    public ShootingModule ShootingModule;
-    public TargetSpawner TargetSpawner;
+    public PlayerRuntimeStats PlayerRuntimeStats;
+    public RoundRuntimeData RoundRuntimeData;
 
-    public SkillEffectContext(ShootingModule shootingModule, TargetSpawner targetSpawner)
+    public SkillEffectContext(PlayerRuntimeStats playerRuntimeStats, RoundRuntimeData roundRuntimeData)
     {
-        ShootingModule = shootingModule;
-        TargetSpawner = targetSpawner;
+        PlayerRuntimeStats = playerRuntimeStats;
+        RoundRuntimeData = roundRuntimeData;
     }
 }

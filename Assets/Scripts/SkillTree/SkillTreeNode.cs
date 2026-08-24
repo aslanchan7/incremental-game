@@ -7,10 +7,14 @@ using UnityEngine.UI;
 public class SkillTreeNode : MonoBehaviour
 {
     public SkillTreeNodeSO Data;
-    public bool IsPurchased = false;
-    public bool IsUnlocked => PrevNodes.All(n => n.IsPurchased) || PrevNodes.Count == 0;
+    [Space(10)]
     public List<SkillTreeNode> PrevNodes = new();
     public List<SkillTreeNode> NextNodes = new();
+    [Space(10)]
+    public bool IsPurchased = false;
+    public bool IsUnlocked => PrevNodes.All(n => n.IsPurchased) || PrevNodes.Count == 0;
+    [Space(10)]
+    public Vector2Int GridPos;
     private Button button;
 
     void Start()
