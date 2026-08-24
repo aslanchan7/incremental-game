@@ -683,6 +683,14 @@ PrefabInstance:
       propertyPath: m_points.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: transforms.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: 'transforms.Array.data[0]'
+      value: 
+      objectReference: {fileID: 870146703}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1313,6 +1321,18 @@ PrefabInstance:
       propertyPath: m_points.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: transforms.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: 'transforms.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1806706804}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: 'transforms.Array.data[1]'
+      value: 
+      objectReference: {fileID: 870146703}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1442,6 +1462,18 @@ PrefabInstance:
       propertyPath: m_points.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: transforms.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: 'transforms.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1602567041}
+    - target: {fileID: 8643808769758806421, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: 'transforms.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1806706804}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
