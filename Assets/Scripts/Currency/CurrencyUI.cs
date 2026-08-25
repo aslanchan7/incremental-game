@@ -5,12 +5,7 @@ public class CurrencyUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TextMeshProUGUI cashText;
-    private CurrencyManager currencyManager;
-
-    void Awake()
-    {
-        currencyManager = GetComponent<CurrencyManager>();
-    }
+    [SerializeField] private CurrencyManager currencyManager;
 
     void Start()
     {
@@ -20,15 +15,18 @@ public class CurrencyUI : MonoBehaviour
     void OnEnable()
     {
         currencyManager.OnCurrencyChanged += UpdateUI;
+        Debug.Log("Enable");
     }
 
     void OnDisable()
     {
         currencyManager.OnCurrencyChanged -= UpdateUI;
+        Debug.Log("Disable");
     }
 
     void UpdateUI(string currencyId)
     {
-        cashText.text = $"${currencyManager.GetCurrency(currencyId).amount}";
+        Debug.Log("Update Cash UI");
+        cashText.text = $"${currencyManager.GetCurrency(currencyId).amount:F0}";
     }
 }

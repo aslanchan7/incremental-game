@@ -10,6 +10,7 @@ public class TargetSpawner : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
     [SerializeField] private float spawnPadding;
+    [SerializeField] private float minDistBetweenTargets = 1f;
 
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
@@ -82,7 +83,20 @@ public class TargetSpawner : MonoBehaviour
 
         for (int i = 0; i < screenSegments; i++)
         {
-            Vector2 worldPos = GetRandomSpawnWorldPos(i);
+            Vector2 worldPos;
+            int attempts = 0;
+            const int maxAttempts = 30;
+            do
+            {
+                worldPos = GetRandomSpawnWorldPos(i);
+                attempts++;             
+            } while (!IsPositionClear(worldPos) && attempts < maxAttempts);
+
+            if(attempts >= maxAttempts)
+            {
+                Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
+                continue;
+            }
 
             GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
             spawnedTargets.Add(instantiated);
@@ -100,13 +114,35 @@ public class TargetSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);   
             int segmentIdx = Random.Range(0, screenSegments);
-            Vector2 worldPos = GetRandomSpawnWorldPos(segmentIdx);
+            Vector2 worldPos;
+            int attempts = 0;
+            const int maxAttempts = 30;
+            do
+            {
+                worldPos = GetRandomSpawnWorldPos(segmentIdx);
+                attempts++;             
+            } while (!IsPositionClear(worldPos) && attempts < maxAttempts);
+
+            if(attempts >= maxAttempts)
+            {
+                Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
+                yield return null;
+            }
             
             GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
             spawnedTargets.Add(instantiated);
             TotalTargetsSpawned++;
             remainingTargets++;
         }
+    }
+
+    private bool IsPositionClear(Vector2 worldPos) {
+        foreach (var target in spawnedTargets) {
+            if (Vector2.Distance(target.transform.position, worldPos) < minDistBetweenTargets) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void DestroyTargets()

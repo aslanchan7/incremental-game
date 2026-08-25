@@ -276,7 +276,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &6375837181117054977
 MonoBehaviour:
@@ -344,5 +344,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667970afddc904d449a33fde7dd4ed6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyUI
-  currencyManager: {fileID: 4641039664655220024}
   cashText: {fileID: 5086845568947536761}
+  currencyManager: {fileID: 4641039664655220024}

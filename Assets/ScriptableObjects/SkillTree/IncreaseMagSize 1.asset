@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
-  m_Name: ReduceTimeBetweenSpawns
+  m_Name: IncreaseMagSize 1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
-  id: reduce-time-between-spawns
+  id: increase-mag-size-1
   sprite: {fileID: 0}
-  displayName: Reduce Time Between Spawns
-  description: -0.25s for targets to spawn
+  displayName: Increase Mag Size
+  description: +1 to the gun's magazine size
   cost: 10
   effects:
-  - {fileID: 11400000, guid: c6a752853dddba7438e9f519fa225d43, type: 2}
+  - {fileID: 11400000, guid: 7c1fd0cb188e5f440bb46570252ca82b, type: 2}

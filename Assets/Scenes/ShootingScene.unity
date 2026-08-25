@@ -220,7 +220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e5a15234ad17b4391d308fb4b566dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShootingModule
-  currencyManager: {fileID: 2130028917}
   targetSpawner: {fileID: 167575245}
   crosshair: {fileID: 802233575}
   bullseyeDistanceThreshold: 0.1
@@ -2459,17 +2458,6 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &2130028917 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4641039664655220024, guid: 165ac419b391f40458ecdf5adde4db54, type: 3}
-  m_PrefabInstance: {fileID: 7953481541696033815}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18d5edd668631714e98eb4c4182c8d1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CurrencyManager
 --- !u!1001 &7953481541696033815
 PrefabInstance:
   m_ObjectHideFlags: 0

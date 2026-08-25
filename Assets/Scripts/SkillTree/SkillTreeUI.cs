@@ -30,21 +30,24 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         skillTreeManager = GetComponent<SkillTreeManager>();
 
         // HideSkillTree();
-        SkillTreeNode[] nodes = GetComponentsInChildren<SkillTreeNode>();
-        InitializeLineRenderers(nodes);
-        InitializeVisibleNodes(nodes);
+        // SkillTreeNode[] nodes = GetComponentsInChildren<SkillTreeNode>();
+        // InitializeLineRenderers(nodes);
+        // InitializeVisibleNodes(nodes);
+        // HandleNodeDataInitialized();
     }
 
     void OnEnable()
     {
         // targetSpawner.OnTargetsCleared += ShowSkillTree;
         skillTreeManager.OnNodePurchased += HandleNodePurchased;
+        skillTreeManager.OnNodeDataInitialized += HandleNodeDataInitialized;
     }
 
     void OnDisable()
     {
         // targetSpawner.OnTargetsCleared -= ShowSkillTree;
         skillTreeManager.OnNodePurchased -= HandleNodePurchased;
+        skillTreeManager.OnNodeDataInitialized -= HandleNodeDataInitialized;
     }
 
     // void ShowSkillTree()
@@ -58,6 +61,13 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
     //     canvasGroup.alpha = 0f;
     //     canvasGroup.interactable = false;
     // }
+
+    void HandleNodeDataInitialized()
+    {
+        SkillTreeNode[] nodes = GetComponentsInChildren<SkillTreeNode>();
+        InitializeLineRenderers(nodes);
+        InitializeVisibleNodes(nodes);
+    }    
 
     public void InitializeLineRenderers(SkillTreeNode[] nodes)
     {

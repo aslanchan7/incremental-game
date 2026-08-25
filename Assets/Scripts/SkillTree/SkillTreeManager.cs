@@ -19,7 +19,6 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     [Header("References")]
-    [SerializeField] private CurrencyManager currencyManager;
 
     [Header("Skill Tree")]
     public SkillTreeNode TreeHead;
@@ -28,6 +27,7 @@ public class SkillTreeManager : MonoBehaviour
 
     [Header("Actions")]
     public Action<SkillTreeNode> OnNodePurchased;
+    public Action OnNodeDataInitialized;
 
     void Start()
     {
@@ -44,12 +44,10 @@ public class SkillTreeManager : MonoBehaviour
         for (int i = 0; i < nodesParent.childCount; i++)
         {
             SkillTreeNode node = nodesParent.GetChild(i).GetComponent<SkillTreeNode>();
-            bool purchased = GameManager.Instance.SkillTree.PurchasedNodeIds.Contains(node.Data.id);
-            if (purchased)
-            {
-                node.IsPurchased = true;
-            }
+            bool isPurchased = GameManager.Instance.SkillTree.PurchasedNodeIds.Contains(node.Data.id);
+            node.IsPurchased = isPurchased;
         }
+        OnNodeDataInitialized?.Invoke();
     }
 
     public void TryPurchase(SkillTreeNode node)
@@ -66,9 +64,9 @@ public class SkillTreeManager : MonoBehaviour
             return;
         }
 
-        if (currencyManager.GetCurrency("cash").amount >= node.Data.cost)
+        if (CurrencyManager.Instance.GetCurrency("cash").amount >= node.Data.cost)
         {
-            bool moneySpent = currencyManager.TrySpend("cash", node.Data.cost);
+            bool moneySpent = CurrencyManager.Instance.TrySpend("cash", node.Data.cost);
             if (!moneySpent) // if failed to spend money then don't apply upgrades. moneySpent should always be True but this is just a failsafe
             {
                 Debug.LogWarning("Failed to spend money");

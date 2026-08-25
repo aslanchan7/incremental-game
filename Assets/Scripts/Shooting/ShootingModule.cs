@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class ShootingModule : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private CurrencyManager currencyManager;
     [SerializeField] private TargetSpawner targetSpawner;
     [SerializeField] private Image crosshair;
     private PlayerControls controls;

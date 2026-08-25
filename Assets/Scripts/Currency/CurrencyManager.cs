@@ -18,7 +18,7 @@ public class CurrencyManager : MonoBehaviour {
         } else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
 
         currencyDict = allCurrencies.ToDictionary(c => c.id, c => c);
@@ -41,7 +41,7 @@ public class CurrencyManager : MonoBehaviour {
         if (currencyDict.TryGetValue(currencyId, out CurrencySO currency))
         {
             bool success = currency.TrySpend(amount);
-            if (success) OnCurrencyChanged?.Invoke(currencyId);
+            OnCurrencyChanged?.Invoke(currencyId);
             return success;
         } else
         {
