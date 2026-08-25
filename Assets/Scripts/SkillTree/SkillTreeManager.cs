@@ -4,14 +4,15 @@ using UnityEngine;
 public class SkillTreeManager : MonoBehaviour
 {
     public static SkillTreeManager Instance;
-    
+
     void Awake()
     {
         if (Instance != null && Instance != this)
         {
             Destroy(this);
             return;
-        } else
+        }
+        else
         {
             Instance = this;
         }
@@ -33,6 +34,9 @@ public class SkillTreeManager : MonoBehaviour
         context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData);
 
         InitializeNodesData();
+
+        // TODO: REMOVE THIS
+        // CurrencyManager.Instance.Add("cash", 1000);
     }
 
     void InitializeNodesData()
@@ -64,19 +68,20 @@ public class SkillTreeManager : MonoBehaviour
 
         if (currencyManager.GetCurrency("cash").amount >= node.Data.cost)
         {
-            bool moneySpent = currencyManager.GetCurrency("cash").TrySpend(node.Data.cost);
+            bool moneySpent = currencyManager.TrySpend("cash", node.Data.cost);
             if (!moneySpent) // if failed to spend money then don't apply upgrades. moneySpent should always be True but this is just a failsafe
             {
                 Debug.LogWarning("Failed to spend money");
                 return;
             }
-            
+
             node.ApplyEffects(context);
             node.IsPurchased = true;
             GameManager.Instance.SkillTree.PurchasedNodeIds.Add(node.Data.id);
             OnNodePurchased?.Invoke(node);
             Debug.Log($"Purchased {node.Data.displayName}");
-        } else
+        }
+        else
         {
             Debug.Log("Not Enough Money");
         }

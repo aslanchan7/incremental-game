@@ -13,6 +13,7 @@ public class SkillTreeNode : MonoBehaviour
     [Space(10)]
     public bool IsPurchased = false;
     public bool IsUnlocked => PrevNodes.All(n => n.IsPurchased) || PrevNodes.Count == 0;
+    public bool IsVisible => PrevNodes.Any(n => n.IsPurchased) || PrevNodes.Count == 0;
     [Space(10)]
     public Vector2Int GridPos;
     private Button button;
