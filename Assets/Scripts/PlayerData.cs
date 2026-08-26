@@ -8,4 +8,5 @@ public class PlayerData : ScriptableObject
     public float ReloadTime;
     public Color ActiveCrosshairColor;
     public Color InactiveCrosshairColor;
+    [Range(0, 1)] public float RicochetShotChance;
 }

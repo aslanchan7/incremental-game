@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class SkillTreeNode : MonoBehaviour
+public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public SkillTreeNodeSO Data;
     [Space(10)]
@@ -17,11 +19,13 @@ public class SkillTreeNode : MonoBehaviour
     [Space(10)]
     public Vector2Int GridPos;
     private Button button;
+    private Vector3 origScale;
 
     void Start()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnButtonClicked);
+        origScale = GetComponent<RectTransform>().localScale;
     }
 
     public void ApplyEffects(SkillEffectContext context)
@@ -37,5 +41,15 @@ public class SkillTreeNode : MonoBehaviour
         SkillTreeManager.Instance.TryPurchase(this);
     }
 
-    // TODO: ON HOVER TOOLTIP
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SkillTreeTooltip.Instance.RequestShow(this);
+        GetComponent<RectTransform>().localScale *= 1.1f;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SkillTreeTooltip.Instance.RequestHide();
+        GetComponent<RectTransform>().localScale = origScale;
+    }
 }

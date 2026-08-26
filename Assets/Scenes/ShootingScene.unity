@@ -165,6 +165,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
   maxScreenSegments: 7
   spawnPadding: 100
+  minDistBetweenTargets: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
   targetPrefab: {fileID: 8515914544824480102, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}
   shootingModule: {fileID: 319716620}
   TotalTargetsSpawned: 0
@@ -223,6 +227,7 @@ MonoBehaviour:
   targetSpawner: {fileID: 167575245}
   crosshair: {fileID: 802233575}
   bullseyeDistanceThreshold: 0.1
+  ricochetDistance: 2.5
 --- !u!1 &372500804
 GameObject:
   m_ObjectHideFlags: 0

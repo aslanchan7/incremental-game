@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class ShootingModule : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ShootingModule : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private float bullseyeDistanceThreshold;
+    [SerializeField] private float ricochetDistance;
 
     [Space(20)]
     private int currAmmo;
@@ -43,7 +45,7 @@ public class ShootingModule : MonoBehaviour
     void Start()
     {
         playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
-        ShowCrosshair();
+        EnableShooting();
         CurrAmmo = playerRuntimeStats.MaxAmmo;
         crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
     }
@@ -53,7 +55,7 @@ public class ShootingModule : MonoBehaviour
         controls.Player.Enable();
         controls.Player.Shoot.performed += TryShoot;
 
-        targetSpawner.OnTargetsCleared += HideCrosshair;
+        targetSpawner.OnTargetsCleared += DisableShooting;
     }
 
     void OnDisable()
@@ -61,7 +63,7 @@ public class ShootingModule : MonoBehaviour
         controls.Player.Disable();
         controls.Player.Shoot.performed -= TryShoot;
     
-        targetSpawner.OnTargetsCleared -= HideCrosshair;
+        targetSpawner.OnTargetsCleared -= DisableShooting;
     }
 
     void Update()
@@ -69,16 +71,18 @@ public class ShootingModule : MonoBehaviour
         UpdateCrosshair();
     }
 
-    void ShowCrosshair()
+    void EnableShooting()
     {
         crosshair.gameObject.SetActive(true);
         Cursor.visible = false;
+        controls.Player.Shoot.performed += TryShoot;
     }
 
-    void HideCrosshair()
+    void DisableShooting()
     {
         crosshair.gameObject.SetActive(false);
-        Cursor.visible = true;        
+        Cursor.visible = true;
+        controls.Player.Shoot.performed -= TryShoot;
     }
 
     void TryShoot(InputAction.CallbackContext context)
@@ -88,7 +92,7 @@ public class ShootingModule : MonoBehaviour
         if (CurrAmmo == 0)
         {
             StartCoroutine(TryReload());
-            return;   
+            return;
         }
 
         Vector2 screenPos = Mouse.current.position.ReadValue();
@@ -106,7 +110,9 @@ public class ShootingModule : MonoBehaviour
             isBullseye = distToBullseye < bullseyeDistanceThreshold;
             target = hit.collider.gameObject;
             
-            Destroy(hit.collider.gameObject);
+            HandleRicochetShot(target);
+
+            Destroy(target);
         }
   
         CurrAmmo--;
@@ -116,6 +122,27 @@ public class ShootingModule : MonoBehaviour
         {
             StartCoroutine(TryReload());
             return;   
+        }
+    }
+
+    void HandleRicochetShot(GameObject target)
+    {
+        float ricochetChance = playerRuntimeStats.RicochetShotChance;
+        if (ricochetChance == 0f) return;
+
+        float rand = Random.Range(0f, 1f);
+        if (rand <= ricochetChance)
+        {
+            targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] hits);
+            foreach (var hit in hits)
+            {
+                if (hit.gameObject == target) continue;
+                Debug.Log("Ricochet Activated");
+                GameObject ricochetTarget = hit.gameObject;
+                Destroy(ricochetTarget);
+                ShotFired?.Invoke(ricochetTarget, false);
+                return;
+            }
         }
     }
 

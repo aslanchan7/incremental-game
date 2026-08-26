@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c853eccc2f298a47a9a4d7b9647aa8e, type: 3}
   m_Name: RicochetShotChance
   m_EditorClassIdentifier: Assembly-CSharp::RicochetShotChanceEffect
-  chance: 0.05
+  chance: 0.2

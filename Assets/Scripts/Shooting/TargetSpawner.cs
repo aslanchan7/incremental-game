@@ -11,6 +11,7 @@ public class TargetSpawner : MonoBehaviour
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
     [SerializeField] private float spawnPadding;
     [SerializeField] private float minDistBetweenTargets = 1f;
+    [SerializeField] private LayerMask targetLayer;
 
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
@@ -90,7 +91,7 @@ public class TargetSpawner : MonoBehaviour
             {
                 worldPos = GetRandomSpawnWorldPos(i);
                 attempts++;             
-            } while (!IsPositionClear(worldPos) && attempts < maxAttempts);
+            } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
 
             if(attempts >= maxAttempts)
             {
@@ -121,7 +122,7 @@ public class TargetSpawner : MonoBehaviour
             {
                 worldPos = GetRandomSpawnWorldPos(segmentIdx);
                 attempts++;             
-            } while (!IsPositionClear(worldPos) && attempts < maxAttempts);
+            } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
 
             if(attempts >= maxAttempts)
             {
@@ -136,13 +137,9 @@ public class TargetSpawner : MonoBehaviour
         }
     }
 
-    private bool IsPositionClear(Vector2 worldPos) {
-        foreach (var target in spawnedTargets) {
-            if (Vector2.Distance(target.transform.position, worldPos) < minDistBetweenTargets) {
-                return false;
-            }
-        }
-        return true;
+    public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits) {
+        hits = Physics2D.OverlapCircleAll(worldPos, radius, targetLayer);
+        return hits.Length == 0;
     }
 
     void DestroyTargets()

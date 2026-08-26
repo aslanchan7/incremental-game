@@ -6,6 +6,7 @@ public class PlayerRuntimeStats
     public float ReloadTime;
     public Color ActiveCrosshairColor;
     public Color InactiveCrosshairColor;
+    public float RicochetShotChance;
 
     public PlayerRuntimeStats(PlayerData playerData)
     {
@@ -13,5 +14,6 @@ public class PlayerRuntimeStats
         ReloadTime = playerData.ReloadTime;
         ActiveCrosshairColor = playerData.ActiveCrosshairColor;
         InactiveCrosshairColor = playerData.InactiveCrosshairColor;
+        RicochetShotChance = playerData.RicochetShotChance;
     }
 }

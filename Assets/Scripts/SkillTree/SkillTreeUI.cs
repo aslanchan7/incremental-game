@@ -26,41 +26,20 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
 
     void Awake()
     {
-        // canvasGroup = GetComponent<CanvasGroup>();
         skillTreeManager = GetComponent<SkillTreeManager>();
-
-        // HideSkillTree();
-        // SkillTreeNode[] nodes = GetComponentsInChildren<SkillTreeNode>();
-        // InitializeLineRenderers(nodes);
-        // InitializeVisibleNodes(nodes);
-        // HandleNodeDataInitialized();
     }
 
     void OnEnable()
     {
-        // targetSpawner.OnTargetsCleared += ShowSkillTree;
         skillTreeManager.OnNodePurchased += HandleNodePurchased;
         skillTreeManager.OnNodeDataInitialized += HandleNodeDataInitialized;
     }
 
     void OnDisable()
     {
-        // targetSpawner.OnTargetsCleared -= ShowSkillTree;
         skillTreeManager.OnNodePurchased -= HandleNodePurchased;
         skillTreeManager.OnNodeDataInitialized -= HandleNodeDataInitialized;
     }
-
-    // void ShowSkillTree()
-    // {
-    //     canvasGroup.alpha = 1f;
-    //     canvasGroup.interactable = true;
-    // }
-
-    // void HideSkillTree()
-    // {
-    //     canvasGroup.alpha = 0f;
-    //     canvasGroup.interactable = false;
-    // }
 
     void HandleNodeDataInitialized()
     {
@@ -122,11 +101,6 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
                 connector.gameObject.SetActive(true);
             }
         }
-        // UILineConnector[] connectors = node.GetComponentsInChildren<UILineConnector>();
-        // foreach (var connector in connectors)
-        // {
-        //     connector.gameObject.SetActive(true);
-        // }
     }
 
     public void HandleContinueButton()
