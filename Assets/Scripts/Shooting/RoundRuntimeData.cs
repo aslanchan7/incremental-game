@@ -2,16 +2,22 @@ using UnityEngine;
 
 public class RoundRuntimeData
 {
-    public int TargetCount;
+    public int InitialTargetCount;
+    public int TotalTargetCount;
     public float TimeBetweenSpawns;
+    public float TargetRespawnChance;
     public float BaseTargetValue;
     public float BullseyeMultiplier; 
     public float SpeedBonusCash;
 
     public RoundRuntimeData(RoundData roundData)
     {
-        TargetCount = roundData.TargetCount;
+        if (TotalTargetCount < InitialTargetCount) Debug.LogWarning($"TotalTargetCount ({TotalTargetCount}) is less than InitialTargetCount ({InitialTargetCount}).");
+
+        InitialTargetCount = roundData.InitialTargetCount;
+        TotalTargetCount = roundData.TotalTargetCount;
         TimeBetweenSpawns = roundData.TimeBetweenSpawns;
+        TargetRespawnChance = roundData.TargetRespawnChance;
         BaseTargetValue = roundData.BaseTargetValue;
         BullseyeMultiplier = roundData.BullseyeMultiplier;
         SpeedBonusCash = roundData.SpeedBonusCash;

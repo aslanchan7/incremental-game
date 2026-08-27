@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
-  m_Name: IncreaseMagSize
+  m_Name: QuickReload
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
-  id: increase-mag-size
+  id: quick-reload
   sprite: {fileID: 0}
-  displayName: Increase Mag Size
-  description: +1 to the gun's magazine size
-  cost: 10
+  displayName: Quick Reload
+  description: 'Increase reload speeds. Reload time: -0.5s.'
+  cost: 1
   effects:
-  - {fileID: 11400000, guid: 7c1fd0cb188e5f440bb46570252ca82b, type: 2}
+  - {fileID: 11400000, guid: 7b2eb5f9b5e911d4c9100b516591223c, type: 2}

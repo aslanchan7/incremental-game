@@ -347,6 +347,8 @@ MonoBehaviour:
     m_Bits: 8
   targetPrefab: {fileID: 8515914544824480102, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}
   shootingModule: {fileID: 319716620}
+  SpawnedTargets: []
+  targetRespawnChanceBag: {fileID: 11400000, guid: e088dae2799a5c942ac0eb95fc216733, type: 2}
   TotalTargetsSpawned: 0
   TotalTargetsHit: 0
   TotalBullseyesHit: 0
@@ -543,11 +545,16 @@ MonoBehaviour:
   crosshair: {fileID: 802233575}
   reloadImage: {fileID: 1127642315}
   bulletTrailPrefab: {fileID: 3702308357922012407, guid: 435b02af18d1bad4db2109a7fb7a68e7, type: 3}
+  aerialStrikeTrailPrefab: {fileID: 3702308357922012407, guid: 50e20d6e171fa2842b1d011527236548, type: 3}
   muzzlePoint: {fileID: 91188134}
-  trailSpeed: 150
+  bulletTrailSpeed: 150
+  aerialStrikeTrailSpeed: 300
   bullseyeDistanceThreshold: 0.1
   ricochetDistance: 3.5
+  aerialStrikeOriginOffset: {x: -2, y: 20, z: 0}
   ricochetChanceBag: {fileID: 11400000, guid: 7e22f35f1038df145b915564e02002d7, type: 2}
+  ricochetBullseyeChanceBag: {fileID: 11400000, guid: 972c0ae9f149dd445aeb3ce9b64606fc, type: 2}
+  aerialStrikeChanceBag: {fileID: 11400000, guid: 99f2458ecedac5a4abbc1e72a4a353d3, type: 2}
 --- !u!1 &372500804
 GameObject:
   m_ObjectHideFlags: 0

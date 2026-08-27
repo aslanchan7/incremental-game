@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.GraphToolkit.Editor;
-using Unity.VisualScripting;
-using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -21,13 +17,16 @@ public class ShootingModule : MonoBehaviour
 
     [Header("Bullet Trail")]
     [SerializeField] private TrailRenderer bulletTrailPrefab;
+    [SerializeField] private TrailRenderer aerialStrikeTrailPrefab;
     [SerializeField] private Transform muzzlePoint;
-    [SerializeField] private float trailSpeed;
+    [SerializeField] private float bulletTrailSpeed;
+    [SerializeField] private float aerialStrikeTrailSpeed = 50f;
 
 
     [Header("Config")]
     [SerializeField] private float bullseyeDistanceThreshold;
     [SerializeField] private float ricochetDistance;
+    [SerializeField] private Vector3 aerialStrikeOriginOffset = new(-2f, 20f, 0f);
 
     [Space(20)]
     private int currAmmo;
@@ -45,6 +44,8 @@ public class ShootingModule : MonoBehaviour
 
     [Header("Chance Bags")]
     [SerializeField] private ChanceBag ricochetChanceBag;
+    [SerializeField] private ChanceBag ricochetBullseyeChanceBag;
+    [SerializeField] private ChanceBag aerialStrikeChanceBag;
 
     [Space(20)]
 
@@ -103,52 +104,6 @@ public class ShootingModule : MonoBehaviour
         controls.Player.Shoot.performed -= TryShoot;
     }
 
-    // void TryShoot(InputAction.CallbackContext context)
-    // {
-    //     if (isReloading) return; // Can't shoot while reloading
-
-    //     if (CurrAmmo == 0)
-    //     {
-    //         StartCoroutine(TryReload());
-    //         return;
-    //     }
-
-    //     Vector2 screenPos = Mouse.current.position.ReadValue();
-    //     Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-    //     Ray ray = Camera.main.ScreenPointToRay(screenPos);
-    //     var hit = Physics2D.GetRayIntersection(ray);
-
-    //     GameObject target = null;
-    //     bool isBullseye = false;
-        
-    //     if (hit.collider != null)
-    //     {
-    //         // Calculate the distance to the bullseye
-    //         float distToBullseye = Vector2.Distance(worldPos, hit.collider.transform.position);
-    //         isBullseye = distToBullseye < bullseyeDistanceThreshold;
-    //         target = hit.collider.gameObject;
-
-
-    //         StartCoroutine(HandleRicochetShot(target, worldPos));
-
-    //         // Destroy(target);
-    //     }
-  
-    //     // StartCoroutine(SpawnTracer(Camera.main.ScreenToWorldPoint(muzzlePoint.position), worldPos));
-    //     // StartCoroutine(RequestDestroyTarget(target, isBullseye));
-    //     StartCoroutine(DestroyTargetAfterTracer(Camera.main.ScreenToWorldPoint(muzzlePoint.position), worldPos, false, target, isBullseye));
-
-    //     CurrAmmo--;
-    //     // ShotFired?.Invoke(target, isBullseye);
-        
-
-    //     if (CurrAmmo == 0)
-    //     {
-    //         StartCoroutine(TryReload());
-    //         return;   
-    //     }
-    // }
-
     void TryShoot(InputAction.CallbackContext context)
     {
         if (isReloading) return; // Can't shoot while reloading
@@ -186,17 +141,9 @@ public class ShootingModule : MonoBehaviour
             hits.Add(null);
             isBullseyes.Add(false);
         }
-
-        // hits.Prepend(target);
-        // isBullseyes.Prepend(isBullseye);
-
-        // Debug.Log(hits.Count);
-        // Debug.Log(isBullseyes.Count);
-
-        // Debug.Log(hits.ToSeparatedString(", "));
-        // Debug.Log(isBullseyes.ToSeparatedString(", "));
   
         StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
+        StartCoroutine(HandleAerialStrike(hits));
 
         CurrAmmo--;
         if (CurrAmmo == 0)
@@ -231,49 +178,6 @@ public class ShootingModule : MonoBehaviour
         yield return null;
     }
 
-    // private IEnumerator HandleRicochetShot(GameObject target, Vector2 shotPos)
-    // {
-    //     if (playerRuntimeStats.RicochetShotChance == 0f)
-    //     {
-    //         ricochetChanceBag.Clear();
-    //         // return;
-    //         yield return null;
-    //     }
-
-    //     targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] hits);
-        
-    //     GameObject firstHit = null;
-    //     if (hits.Length >= 2)
-    //     {
-    //         foreach (var hit in hits)
-    //         {
-    //             if (hit.gameObject == target) continue;
-    //             firstHit = hit.gameObject;
-    //             break;
-    //         }
-    //     }
-
-    //     if (firstHit != null)
-    //     {
-    //         if (ricochetChanceBag.IsEmpty)
-    //             ricochetChanceBag.NewBag(playerRuntimeStats.RicochetShotChance);
-
-    //         bool ricochet = ricochetChanceBag.Pull();
-    //         if (ricochet)
-    //         {
-    //             // yield return SpawnTracer(shotPos, firstHit.transform.position, true);
-    //             // Destroy(firstHit);
-    //             // ShotFired?.Invoke(firstHit, false);
-
-    //             StartCoroutine(DestroyTargetAfterTracer(shotPos, firstHit.transform.position, true, firstHit, false));
-
-    //             // StartCoroutine(RequestDestroyTarget(firstHit, false));
-    //             // return;
-    //             yield return null;
-    //         }
-    //     }
-    // }
-
     private void HandleRicochetShot(GameObject target, ref List<GameObject> hits, ref List<bool> isBullseyes)
     {
         if (playerRuntimeStats.RicochetShotChance == 0f)
@@ -289,7 +193,6 @@ public class ShootingModule : MonoBehaviour
         {
             foreach (var collider in colliders)
             {
-                // if (collider.gameObject == target) continue;
                 if (hits.Contains(collider.gameObject)) continue;
                 firstHit = collider.gameObject;
                 break;
@@ -305,9 +208,48 @@ public class ShootingModule : MonoBehaviour
             if (ricochet)
             {
                 hits.Add(firstHit);
-                isBullseyes.Add(false); // TODO: CHANGE WHEN I WANT RICOCHETS TO HIT BULLSEYES TOO
+                bool isBullseye = false; 
+                if (playerRuntimeStats.RicochetBullseyeChance != 0f)
+                {
+                    if (ricochetBullseyeChanceBag.IsEmpty)
+                        ricochetBullseyeChanceBag.NewBag(playerRuntimeStats.RicochetBullseyeChance);
+                    
+                    isBullseye = ricochetBullseyeChanceBag.Pull();
+                }
+                isBullseyes.Add(isBullseye); 
 
-                HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
+                // hits.Count-1 gives you the curr number of ricochet bounces. only if this is less than RicochetMaxBounce then handle another ricochet shot
+                if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce) 
+                    HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
+            }
+        }
+    }
+
+    private IEnumerator HandleAerialStrike(List<GameObject> shotTargets)
+    {
+        if (playerRuntimeStats.AerialStrikeChance == 0f)
+        {
+            aerialStrikeChanceBag.Clear();
+            yield return null;
+        }
+
+        if (aerialStrikeChanceBag.IsEmpty)
+            aerialStrikeChanceBag.NewBag(playerRuntimeStats.AerialStrikeChance);
+        
+        bool aerialStrike = aerialStrikeChanceBag.Pull();
+        if (aerialStrike)
+        {
+            List<GameObject> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
+            foreach (var target in currTargetsOnScreen)
+            {
+                if (target == null) continue;
+                if (shotTargets.Contains(target)) continue;
+                Vector3 targetPos = target.transform.position;
+                targetPos.z = 0; // make sure targetPos.z is 0
+                Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
+                yield return SpawnTracer(tracerStartPos, targetPos, true);
+                Destroy(target);
+                ShotFired?.Invoke(target, false);
             }
         }
     }
@@ -344,30 +286,15 @@ public class ShootingModule : MonoBehaviour
         crosshair.rectTransform.position = screenPos;
     }
 
-    // private IEnumerator DestroyTargetAfterTracer(Vector2 startPos, Vector2 targetPos, bool isRicochet, GameObject hit, bool isBullseye)
-    // {
-    //     yield return SpawnTracer(startPos, targetPos, isRicochet);
-    //     // StartCoroutine(RequestDestroyTarget(hit, isBullseye));
-    //     if (hit != null)
-    //         Destroy(hit);
-    //     ShotFired?.Invoke(hit, isBullseye);
-
-    // }
-
-    private IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition)
+    private IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition, bool isAerialStrike = false)
     {
-        // if (isRicochet)
-        // {
-        //     yield return new WaitForSeconds(bulletTrailPrefab.time);
-        // }
-
-        // Instantiate the tracer at the muzzle position
-        // Vector2 spawnPosition = startPos;
-        TrailRenderer tracer = Instantiate(bulletTrailPrefab, startPos, Quaternion.identity);
+        TrailRenderer prefab = isAerialStrike ? aerialStrikeTrailPrefab : bulletTrailPrefab;
+        TrailRenderer tracer = Instantiate(prefab, startPos, Quaternion.identity);
         
         Vector3 startPosition = tracer.transform.position;
         float distance = Vector3.Distance(startPosition, targetPosition);
         float remainingDistance = distance;
+        float speed = isAerialStrike ? aerialStrikeTrailSpeed : bulletTrailSpeed;
 
         // Move the tracer towards the destination smoothly based on distance/speed
         while (remainingDistance > 0)
@@ -375,7 +302,7 @@ public class ShootingModule : MonoBehaviour
             tracer.transform.position = Vector3.MoveTowards(
                 tracer.transform.position, 
                 targetPosition, 
-                trailSpeed * Time.deltaTime
+                speed * Time.deltaTime
             );
 
             remainingDistance = Vector3.Distance(tracer.transform.position, targetPosition);
@@ -384,12 +311,4 @@ public class ShootingModule : MonoBehaviour
 
         tracer.transform.position = targetPosition;
     }
-
-    // private IEnumerator RequestDestroyTarget(GameObject hit, bool isBullseye)
-    // {
-    //     // yield return new WaitForSeconds(bulletTrailPrefab.time);
-    //     if (hit != null)
-    //         Destroy(hit);
-    //     ShotFired?.Invoke(hit, isBullseye);
-    // }
 }

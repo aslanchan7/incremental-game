@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
-  m_Name: IncreaseMagSize 1
+  m_Name: AccurateRicochets1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
-  id: increase-mag-size-1
+  id: accurate-ricochets-1
   sprite: {fileID: 0}
-  displayName: Increase Mag Size
-  description: +1 to the gun's magazine size
-  cost: 10
+  displayName: Accurate Ricochets
+  description: 'Ricocheted bullets have a chance to hit the bullseye. Ricocheted
+    bullseye chance: 25%.'
+  cost: 1
   effects:
-  - {fileID: 11400000, guid: 7c1fd0cb188e5f440bb46570252ca82b, type: 2}
+  - {fileID: 11400000, guid: 293719c89828ecf4f9a7dde9eea43213, type: 2}

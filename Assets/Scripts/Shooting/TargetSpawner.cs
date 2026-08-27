@@ -23,19 +23,23 @@ public class TargetSpawner : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
     [SerializeField] private ShootingModule shootingModule;
+    [HideInInspector] public List<GameObject> SpawnedTargets = new();
     private RoundRuntimeData roundRuntimeData;
 
     [Header("Actions")]
     public Action OnTargetsCleared;
     public Action OnRoundStart;
+
+    [Header("Chance Bags")]
+    [SerializeField] private ChanceBag targetRespawnChanceBag;
     
-    private List<GameObject> spawnedTargets = new();
     private int remainingTargets;
 
     private int screenSegments;
     private float minX, maxX;
     private float minY, maxY;
     private float segmentWidth;
+    private bool isSpawningTargetsOverTime;
 
     [Header("Stats for Summary UI")]
     [HideInInspector] public int TotalTargetsSpawned;
@@ -84,13 +88,9 @@ public class TargetSpawner : MonoBehaviour
         // shootingModule.CurrAmmo = shootingModule.MaxAmmo;
     }
 
-    /// <summary>
-    /// Spawns initial targets based on the num of screenSegments. This will spawn 1 target per segement.
-    /// It then calls SpawnTargetsOverTime to gradually spawn the rest of the targets.
-    /// </summary>
     void SpawnInitialTargets()
     {
-        screenSegments = Mathf.Min(roundRuntimeData.TargetCount, maxScreenSegments);
+        screenSegments = Mathf.Min(roundRuntimeData.InitialTargetCount, maxScreenSegments);
 
         if (screenSegments <= 0)
         {
@@ -103,27 +103,9 @@ public class TargetSpawner : MonoBehaviour
         maxY = Screen.height - spawnPaddingTop;
         segmentWidth = Screen.width / screenSegments;
 
-        for (int i = 0; i < screenSegments; i++)
+        for (int i = 0; i < roundRuntimeData.InitialTargetCount; i++)
         {
-            Vector2 worldPos;
-            int attempts = 0;
-            const int maxAttempts = 30;
-            do
-            {
-                worldPos = GetRandomSpawnWorldPos(i);
-                attempts++;             
-            } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
-
-            if(attempts >= maxAttempts)
-            {
-                Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
-                continue;
-            }
-
-            GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
-            spawnedTargets.Add(instantiated);
-            TotalTargetsSpawned++;
-            remainingTargets++;
+            SpawnTarget(i % screenSegments);
         }
 
         StartCoroutine(SpawnTargetsOverTime());
@@ -131,30 +113,14 @@ public class TargetSpawner : MonoBehaviour
 
     IEnumerator SpawnTargetsOverTime()
     {
-        while (TotalTargetsSpawned < roundRuntimeData.TargetCount)
+        isSpawningTargetsOverTime = true;
+        while (TotalTargetsSpawned < roundRuntimeData.TotalTargetCount)
         {
             yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);   
             int segmentIdx = Random.Range(0, screenSegments);
-            Vector2 worldPos;
-            int attempts = 0;
-            const int maxAttempts = 30;
-            do
-            {
-                worldPos = GetRandomSpawnWorldPos(segmentIdx);
-                attempts++;             
-            } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
-
-            if(attempts >= maxAttempts)
-            {
-                Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
-                yield return null;
-            }
-            
-            GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
-            spawnedTargets.Add(instantiated);
-            TotalTargetsSpawned++;
-            remainingTargets++;
+            SpawnTarget(segmentIdx);
         }
+        isSpawningTargetsOverTime = false;
     }
 
     public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits) {
@@ -165,12 +131,35 @@ public class TargetSpawner : MonoBehaviour
     void DestroyTargets()
     {
         StopCoroutine(SpawnTargetsOverTime());
-        foreach (var target in spawnedTargets)
+        foreach (var target in SpawnedTargets)
         {
             Destroy(target);
         }
         TotalTargetsSpawned = 0;
         remainingTargets = 0;
+    }
+
+    private void SpawnTarget(int segmentIdx)
+    {
+        Vector2 worldPos;
+        int attempts = 0;
+        const int maxAttempts = 30;
+        do
+        {
+            worldPos = GetRandomSpawnWorldPos(segmentIdx);
+            attempts++;             
+        } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
+
+        if(attempts >= maxAttempts)
+        {
+            Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
+            return;
+        }
+        
+        GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
+        SpawnedTargets.Add(instantiated);
+        TotalTargetsSpawned++;
+        remainingTargets++;
     }
 
     Vector2 GetRandomSpawnWorldPos(int segmentIndex)
@@ -202,7 +191,7 @@ public class TargetSpawner : MonoBehaviour
 
         if (target != null)
         {
-            spawnedTargets.Remove(target);
+            SpawnedTargets.Remove(target);
             remainingTargets--;
             TotalTargetsHit++;
             
@@ -211,9 +200,24 @@ public class TargetSpawner : MonoBehaviour
             TotalBullseyesHit += isBullseye ? 1 : 0;
 
             CurrencyManager.Instance.Add("cash", moneyEarned);
+
+            // Potentially respawn target here based on TargetRespawnChance
+            if (roundRuntimeData.TargetRespawnChance != 0f)
+            {
+                if (targetRespawnChanceBag.IsEmpty)
+                    targetRespawnChanceBag.NewBag(roundRuntimeData.TargetRespawnChance);
+
+                bool respawnTarget = targetRespawnChanceBag.Pull();
+                if (respawnTarget)
+                {
+                    int segmentIdx = Random.Range(0, screenSegments);
+                    SpawnTarget(segmentIdx);
+                }                
+            }
+
         }
         
-        if (remainingTargets == 0)
+        if (remainingTargets == 0 && !isSpawningTargetsOverTime)
         {
             // Apply Speed Bonus
             float extraTime = (TotalTargetsHit * timePerTarget) - (Time.time - RoundStartTime);
@@ -224,7 +228,7 @@ public class TargetSpawner : MonoBehaviour
             }
             
             OnTargetsCleared?.Invoke();
-            spawnedTargets.Clear();
+            SpawnedTargets.Clear();
         }
     }
 }

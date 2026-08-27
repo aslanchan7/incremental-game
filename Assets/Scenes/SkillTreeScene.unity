@@ -275,6 +275,10 @@ PrefabInstance:
       value: AccurateRicochet1
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 37039583b3556544a9df99d32e4bea59, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -1
       objectReference: {fileID: 0}
@@ -782,6 +786,10 @@ PrefabInstance:
       value: QuickerReload
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: e45b1bd9b08d4b04b94ca13da15e4e17, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 3
       objectReference: {fileID: 0}
@@ -1153,6 +1161,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AerialStrike
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 8943b8f4996698f4b86755acb1669b12, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 2
@@ -2016,6 +2028,10 @@ PrefabInstance:
       value: LongerRicochet1
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: d4e38b1d4c38845469207ca8d3b337c8, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -2
       objectReference: {fileID: 0}
@@ -2152,6 +2168,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MoreTargets2
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: cee38ee51d564f64da54ff32b9e43d04, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -2
@@ -2393,6 +2413,10 @@ PrefabInstance:
       value: RicochetShot
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 91c357b84f6545b47b5e391f79859f6b, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -1
       objectReference: {fileID: 0}
@@ -2533,6 +2557,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaxAmmo2
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 6d170e33d4d94b24ea16339b446e5b9d, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 1
@@ -3002,6 +3030,10 @@ PrefabInstance:
       value: NeedForSpeed
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a05ed5c723de85438053854287aaf07, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 2
       objectReference: {fileID: 0}
@@ -3130,6 +3162,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BullseyeMultiplierIncrease
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: a947eee751061674caf148c2830a0d1c, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 1
@@ -3551,6 +3587,10 @@ PrefabInstance:
       value: AccurateRicochet2
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: cac0dba2344970941a2fc8142ed6b97e, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -2
       objectReference: {fileID: 0}
@@ -3683,6 +3723,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaxAmmo1
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: f2e06739c71492f41a3fda4a63ca6438, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 1
@@ -3824,6 +3868,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuickReload
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: e0333d77a4033b942a6267da9c4424dd, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 2
@@ -4215,6 +4263,10 @@ PrefabInstance:
       value: LongerRicochet2
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 8a0d4b5035ffe1d4db2356695f1c12cd, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -3
       objectReference: {fileID: 0}
@@ -4347,6 +4399,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TargetValue1
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 9cb4cf34ea7bcd94f8f47dc2a8094168, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: NextNodes.Array.size
       value: 4
@@ -4856,6 +4912,10 @@ PrefabInstance:
       value: TargetValue2
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 89a66cf56e7ab9c429110fe27af8e817, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: 1
       objectReference: {fileID: 0}
@@ -5343,6 +5403,10 @@ PrefabInstance:
       value: TargetSpawnTime2
       objectReference: {fileID: 0}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 0ac0efeb8dd7bdd4c8a6e483012c6166, type: 2}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -3
       objectReference: {fileID: 0}
@@ -5483,6 +5547,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MoreTargets1
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 1736d8e431130514a8496960c77ab441, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -1
@@ -5725,6 +5793,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TargetSpawnTime1
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e33050dc95602149b4fbcb1f03a1d06, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -2
@@ -6115,6 +6187,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TargetRespawnChance1
       objectReference: {fileID: 0}
+    - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 11400000, guid: f0a6eef6b13be324aa45c18bd57dcdd4, type: 2}
     - target: {fileID: 3824388224596944898, guid: 7f4480c754280a64c9a013e76b52d4d2, type: 3}
       propertyPath: GridPos.x
       value: -1
