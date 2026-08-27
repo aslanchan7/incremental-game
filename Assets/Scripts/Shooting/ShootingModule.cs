@@ -12,6 +12,7 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private TargetSpawner targetSpawner;
     [SerializeField] private Image crosshair;
     [SerializeField] private Image reloadImage;
+    [SerializeField] private Transform gunVisualsTransform;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
@@ -27,6 +28,8 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private float bullseyeDistanceThreshold;
     [SerializeField] private float ricochetDistance;
     [SerializeField] private Vector3 aerialStrikeOriginOffset = new(-2f, 20f, 0f);
+    [SerializeField] private bool enableAerialStrikeShake = true;
+    [SerializeField] private bool enableBulletShake = true;
 
     [Space(20)]
     private int currAmmo;
@@ -155,13 +158,16 @@ public class ShootingModule : MonoBehaviour
 
     private IEnumerator HandleShotFired(Vector2 shotPos, List<GameObject> hits, List<bool> isBullseyes)
     {
-        Vector3 muzzlePointInWorldSpace = Camera.main.ScreenToWorldPoint(muzzlePoint.position);
+        // Vector3 muzzlePointInWorldSpace = Camera.main.ScreenToWorldPoint(muzzlePoint.position);
+        Vector3 muzzlePointInWorldSpace = muzzlePoint.position;
         Vector3 startPos = new(muzzlePointInWorldSpace.x, muzzlePointInWorldSpace.y, 0);
         Vector3 shotPosVec3 = new(shotPos.x, shotPos.y, 0);
         yield return SpawnTracer(startPos, shotPosVec3);
         if (hits[0] != null)
             Destroy(hits[0]);
         ShotFired?.Invoke(hits[0], isBullseyes[0]);
+        if (enableBulletShake)
+            Camera.main.GetComponent<CameraShake>().Recoil(new(0, -1f), 0.15f, gunVisualsTransform);
 
         for (int i = 1; i < hits.Count; i++)
         {
@@ -250,6 +256,8 @@ public class ShootingModule : MonoBehaviour
                 yield return SpawnTracer(tracerStartPos, targetPos, true);
                 Destroy(target);
                 ShotFired?.Invoke(target, false);
+                if (enableAerialStrikeShake)
+                    Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);
             }
         }
     }

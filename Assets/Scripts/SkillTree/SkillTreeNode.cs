@@ -18,14 +18,21 @@ public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public bool IsVisible => PrevNodes.Any(n => n.IsPurchased) || PrevNodes.Count == 0;
     [Space(10)]
     public Vector2Int GridPos;
+    public Image SpriteImage;
     private Button button;
     private Vector3 origScale;
 
-    void Start()
+    void Awake()
     {
         button = GetComponent<Button>();
+        SpriteImage = transform.GetChild(0).GetComponent<Image>();
         button.onClick.AddListener(OnButtonClicked);
-        origScale = GetComponent<RectTransform>().localScale;
+        origScale = GetComponent<RectTransform>().localScale;        
+    }
+
+    void Start()
+    {
+        
     }
 
     public void ApplyEffects(SkillEffectContext context)

@@ -15,7 +15,12 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
 
     [Header("Settings")]
     public float GridSpacing;
+    [SerializeField] private Color purchasedNodeColor;
     [SerializeField] private Color unpurchasedNodeColor;
+    [SerializeField] private Color lockedNodeColor;
+    [SerializeField] private Color purchasedBorderColor;
+    [SerializeField] private Color unpurchasedBorderColor;
+    [SerializeField] private Color lockedBorderColor;
 
     [Header("Pan Config")]
     [SerializeField] private float panSpeed = 1f;
@@ -30,7 +35,7 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
     {
         skillTreeManager = GetComponent<SkillTreeManager>();
     }
-
+    
     void OnEnable()
     {
         skillTreeManager.OnNodePurchased += HandleNodePurchased;
@@ -73,6 +78,16 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
                 lineConnector.transforms[1] = connectedNode.GetComponent<RectTransform>();
             }
         }
+
+        // UILineConnector[] connectors = lineRendererParent.GetComponentsInChildren<UILineConnector>();
+        connectors = lineRendererParent.GetComponentsInChildren<UILineConnector>();
+        foreach (var connector in connectors)
+        {
+            SkillTreeNode node = connector.transforms[1].GetComponent<SkillTreeNode>();
+            connector.gameObject.SetActive(node.IsVisible);
+            Color lineColor = node.IsPurchased ? purchasedBorderColor : node.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
+            connector.GetComponent<UILineRenderer>().color = lineColor;
+        }
     }
 
     void InitializeVisibleNodes(SkillTreeNode[] nodes)
@@ -80,38 +95,48 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         foreach (var node in nodes)
         {
             node.gameObject.SetActive(node.IsVisible);
-            node.GetComponent<Image>().color = node.IsPurchased ? Color.white : unpurchasedNodeColor;
-            UILineConnector[] connectors = lineRendererParent.GetComponentsInChildren<UILineConnector>();
-            foreach (var connector in connectors)
-            {
-                connector.gameObject.SetActive(connector.transforms[1].GetComponent<SkillTreeNode>().IsVisible);
-            }
+            node.SpriteImage.sprite = node.Data.sprite;
+            node.GetComponent<Image>().color = node.IsPurchased ? purchasedBorderColor : node.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
+            node.SpriteImage.color = node.IsPurchased ? purchasedNodeColor : node.IsUnlocked ? unpurchasedNodeColor : lockedNodeColor;            
         }
     }
 
     void HandleNodePurchased(SkillTreeNode node)
     {
-        node.GetComponent<Image>().color = Color.white;
+        node.GetComponent<Image>().color = purchasedBorderColor;
+        node.SpriteImage.color = purchasedNodeColor;
 
-        // TODO: Update visuals when new skill is purchased/unlocked
         foreach (var connectedNode in node.NextNodes)
         {
             connectedNode.gameObject.SetActive(true);
+            connectedNode.GetComponent<Image>().color = connectedNode.IsPurchased 
+                ? purchasedBorderColor 
+                : connectedNode.IsUnlocked 
+                    ? unpurchasedBorderColor 
+                    : lockedBorderColor;
+            connectedNode.SpriteImage.color = connectedNode.IsPurchased 
+                ? purchasedNodeColor 
+                : connectedNode.IsUnlocked 
+                    ? unpurchasedNodeColor 
+                    : lockedNodeColor;
         }
+
 
         for (int i = 0; i < lineRendererParent.childCount; i++)
         {
             lineRendererParent.GetChild(i).TryGetComponent<UILineConnector>(out var connector);
-            if (connector != null && connector.transforms[0] == node.GetComponent<RectTransform>())
-            {
-                connector.gameObject.SetActive(true);
-            }
+            if(connector == null) continue;
+
+            SkillTreeNode connectedNode = connector.transforms[1].GetComponent<SkillTreeNode>();
+            connector.gameObject.SetActive(connectedNode.IsVisible);
+            Color lineColor = connectedNode.IsPurchased ? purchasedBorderColor : connectedNode.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
+            connector.GetComponent<UILineRenderer>().color = lineColor;
         }
     }
 
     public void HandleContinueButton()
     {
-        SceneManager.LoadScene(0);
+        TransitionManager.Instance.StartFadeOutIn(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void OnDrag(PointerEventData eventData)

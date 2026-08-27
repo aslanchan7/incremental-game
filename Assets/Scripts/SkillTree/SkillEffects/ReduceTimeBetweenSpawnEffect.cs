@@ -7,6 +7,5 @@ public class ReduceTimeBetweenSpawnEffect : SkillEffect {
 
     public override void Apply(SkillEffectContext context) {
         context.RoundRuntimeData.TimeBetweenSpawns -= amount;
-        Debug.Log($"Reduced Time Between Spawns: {context.RoundRuntimeData.TimeBetweenSpawns}");
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TargetSpawnTime1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: target-spawn-time-1
-  sprite: {fileID: 0}
+  sprite: {fileID: -1745153820, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Target Spawn Time
   description: -0.25s between target spawns.
   cost: 1

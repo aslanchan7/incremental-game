@@ -50,14 +50,15 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public BigDouble TotalMoneyEarned;
     [HideInInspector] public double SpeedBonusCashEarned;
 
-    public bool refresh;
+    [Header("Debug")]
+    [SerializeField] private bool refresh;
 
     void Start()
     {
         roundRuntimeData = GameManager.Instance.RoundRuntimeData;
         SpawnInitialTargets();
-        RoundStartTime = Time.time;
         OnRoundStart?.Invoke();
+        RoundStartTime = Time.time; // This is here in case TransitionManager does not trigger OnFadeIn. If OnFadeIn is triggered then this value will be overwritten.
     }
 
     void Update()
@@ -73,11 +74,18 @@ public class TargetSpawner : MonoBehaviour
     {
         // TODO: MAYBE REFACTOR? IDK IF TARGET SPAWNER NEEDS TO HAVE A REFERENCE TO SHOOTING MODULE
         shootingModule.ShotFired += HandleShotFired;
+        TransitionManager.Instance.OnFadeIn += HandleFadeIn;
     }
 
     void OnDisable()
     {
         shootingModule.ShotFired -= HandleShotFired;
+        TransitionManager.Instance.OnFadeIn -= HandleFadeIn;
+    }
+
+    void HandleFadeIn()
+    {
+        RoundStartTime = Time.time;
     }
 
     // THIS IS JUST A HELPER FUNCTION, I NEED TO REMOVE THIS

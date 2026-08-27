@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseMaxAmmo1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: increase-max-ammo-1
-  sprite: {fileID: 0}
+  sprite: {fileID: -16654454480229629, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Max Ammo
   description: +1 max ammo per magazine.
   cost: 10

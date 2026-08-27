@@ -7,6 +7,5 @@ public class IncrementMaxAmmoEffect : SkillEffect {
 
     public override void Apply(SkillEffectContext context) {
         context.PlayerRuntimeStats.MaxAmmo += amount;
-        Debug.Log($"Upgraded Max Ammo: {context.PlayerRuntimeStats.MaxAmmo}");
     }
 }

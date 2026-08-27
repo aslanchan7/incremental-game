@@ -25,7 +25,7 @@ public static class BasicAnimations
     }
 
     // https://easings.net/
-    public static float Smooth(float t) // Quadratic
+    public static float Quadratic(float t)
     {
         t = t < 0.5f ? 2f * t * t : 1 - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
         return t;
