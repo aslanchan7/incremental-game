@@ -59,15 +59,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 0.47058824}
+  m_Color: {r: 0.29654682, g: 0.5283019, b: 0.31179386, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 9114c23f59cf8964e92c3568f6266bd8, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -143,8 +143,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: $100
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3a18afa2307ee8941aedc0d8ec4301a7, type: 2}
+  m_sharedMaterial: {fileID: 7524866100110353314, guid: 3a18afa2307ee8941aedc0d8ec4301a7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -168,13 +168,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -225,7 +225,6 @@ GameObject:
   - component: {fileID: 998889979834602794}
   - component: {fileID: 6375837181117054977}
   - component: {fileID: 6713677399741340876}
-  - component: {fileID: 4641039664655220024}
   - component: {fileID: 6583519111214361755}
   m_Layer: 5
   m_Name: CurrencyUI
@@ -276,7 +275,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &6375837181117054977
 MonoBehaviour:
@@ -318,20 +317,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4641039664655220024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7100730828270503161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18d5edd668631714e98eb4c4182c8d1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CurrencyManager
-  allCurrencies:
-  - {fileID: 11400000, guid: e896466114c66d347822c25857453190, type: 2}
 --- !u!114 &6583519111214361755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,5 +329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667970afddc904d449a33fde7dd4ed6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CurrencyUI
+  cashContainer: {fileID: 7866638286677264733}
   cashText: {fileID: 5086845568947536761}
-  currencyManager: {fileID: 4641039664655220024}
+  targetSpawner: {fileID: 0}

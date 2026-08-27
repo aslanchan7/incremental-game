@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7edf6e8edd14c354d97c12f2f60929d5, type: 3}
-  m_Name: ReduceTimeBetweenSpawns
-  m_EditorClassIdentifier: Assembly-CSharp::ReduceTimeBetweenSpawnEffect
-  amount: 0.25
+  m_Script: {fileID: 11500000, guid: 1901009734adaf84ea6e97cc942ed237, type: 3}
+  m_Name: RicochetChanceBag
+  m_EditorClassIdentifier: Assembly-CSharp::ChanceBag

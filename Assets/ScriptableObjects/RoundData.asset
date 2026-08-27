@@ -16,3 +16,4 @@ MonoBehaviour:
   TimeBetweenSpawns: 1
   BaseTargetValue: 1
   BullseyeMultiplier: 2
+  SpeedBonusCash: 5

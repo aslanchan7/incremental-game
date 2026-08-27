@@ -1,8 +1,8 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI.Extensions;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SkillTreeManager))]
 public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
@@ -10,10 +10,12 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
     [Header("References")]
     [SerializeField] private RectTransform content; // the panel containing all nodes
     [SerializeField] private GameObject lineRendererPrefab;
+    public Transform lineRendererParent;
     private SkillTreeManager skillTreeManager;
 
     [Header("Settings")]
     public float GridSpacing;
+    [SerializeField] private Color unpurchasedNodeColor;
 
     [Header("Pan Config")]
     [SerializeField] private float panSpeed = 1f;
@@ -50,20 +52,21 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
 
     public void InitializeLineRenderers(SkillTreeNode[] nodes)
     {
+        // Destroy existing line connectors
+        UILineConnector[] connectors = lineRendererParent.GetComponentsInChildren<UILineConnector>();
+        foreach (UILineConnector connector in connectors)
+        {
+            DestroyImmediate(connector.gameObject);
+        }
+        
         foreach (var node in nodes)
         {
-            // Destroy existing line connectors
-            UILineConnector[] connectors = node.GetComponentsInChildren<UILineConnector>();
-            foreach (UILineConnector connector in connectors)
-            {
-                DestroyImmediate(connector.gameObject);
-            }
-
             // Instantiate new line connectors
             for (int i = 0; i < node.NextNodes.Count; i++)
             {
                 SkillTreeNode connectedNode = node.NextNodes[i];
-                GameObject instantiated = Instantiate(lineRendererPrefab, node.transform);
+                // GameObject instantiated = Instantiate(lineRendererPrefab, node.transform);
+                GameObject instantiated = Instantiate(lineRendererPrefab, lineRendererParent);
                 UILineConnector lineConnector = instantiated.GetComponent<UILineConnector>();
                 lineConnector.transforms = new RectTransform[2];
                 lineConnector.transforms[0] = node.GetComponent<RectTransform>();
@@ -77,7 +80,8 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         foreach (var node in nodes)
         {
             node.gameObject.SetActive(node.IsVisible);
-            UILineConnector[] connectors = node.GetComponentsInChildren<UILineConnector>();
+            node.GetComponent<Image>().color = node.IsPurchased ? Color.white : unpurchasedNodeColor;
+            UILineConnector[] connectors = lineRendererParent.GetComponentsInChildren<UILineConnector>();
             foreach (var connector in connectors)
             {
                 connector.gameObject.SetActive(connector.transforms[1].GetComponent<SkillTreeNode>().IsVisible);
@@ -87,16 +91,18 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
 
     void HandleNodePurchased(SkillTreeNode node)
     {
+        node.GetComponent<Image>().color = Color.white;
+
         // TODO: Update visuals when new skill is purchased/unlocked
         foreach (var connectedNode in node.NextNodes)
         {
             connectedNode.gameObject.SetActive(true);
         }
 
-        for (int i = 0; i < node.transform.childCount; i++)
+        for (int i = 0; i < lineRendererParent.childCount; i++)
         {
-            node.transform.GetChild(i).TryGetComponent<UILineConnector>(out var connector);
-            if (connector != null)
+            lineRendererParent.GetChild(i).TryGetComponent<UILineConnector>(out var connector);
+            if (connector != null && connector.transforms[0] == node.GetComponent<RectTransform>())
             {
                 connector.gameObject.SetActive(true);
             }

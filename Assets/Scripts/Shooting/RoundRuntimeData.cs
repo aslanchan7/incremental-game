@@ -6,6 +6,7 @@ public class RoundRuntimeData
     public float TimeBetweenSpawns;
     public float BaseTargetValue;
     public float BullseyeMultiplier; 
+    public float SpeedBonusCash;
 
     public RoundRuntimeData(RoundData roundData)
     {
@@ -13,5 +14,6 @@ public class RoundRuntimeData
         TimeBetweenSpawns = roundData.TimeBetweenSpawns;
         BaseTargetValue = roundData.BaseTargetValue;
         BullseyeMultiplier = roundData.BullseyeMultiplier;
+        SpeedBonusCash = roundData.SpeedBonusCash;
     }
 }

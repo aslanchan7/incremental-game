@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   MaxAmmo: 4
   ReloadTime: 2
-  ActiveCrosshairColor: {r: 1, g: 0, b: 0.77521884, a: 1}
-  InactiveCrosshairColor: {r: 0.7735849, g: 0, b: 0.60066587, a: 1}
+  ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 1}
+  InactiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0.50980395}
   RicochetShotChance: 0

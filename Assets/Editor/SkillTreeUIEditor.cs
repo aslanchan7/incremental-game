@@ -42,12 +42,17 @@ public class SkillTreeUIEditor : Editor
 
         skillTreeUI.InitializeLineRenderers(nodes);
 
-        foreach (var node in nodes)
+        // foreach (var node in nodes)
+        // {
+        //     for (int i = 0; i < node.transform.childCount; i++)
+        //     {
+        //         EditorUtility.SetDirty(node.transform.GetChild(i).GetComponent<UILineConnector>());
+        //     }
+        // }
+
+        for (int i = 0; i < skillTreeUI.lineRendererParent.childCount; i++)
         {
-            for (int i = 0; i < node.transform.childCount; i++)
-            {
-                EditorUtility.SetDirty(node.transform.GetChild(i).GetComponent<UILineConnector>());
-            }
+            EditorUtility.SetDirty(skillTreeUI.lineRendererParent.GetChild(i).GetComponent<UILineConnector>());
         }
 
         EditorSceneManager.MarkSceneDirty(skillTreeUI.gameObject.scene);

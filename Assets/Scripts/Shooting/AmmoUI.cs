@@ -10,8 +10,10 @@ public class AmmoUI : MonoBehaviour
     private PlayerRuntimeStats playerRuntimeStats;
 
     [Header("Settings")]
-    [SerializeField] private Color activeAmmoColor;
-    [SerializeField] private Color unactiveAmmoColor;
+    // [SerializeField] private Color activeAmmoColor;
+    // [SerializeField] private Color unactiveAmmoColor;
+    [SerializeField] private Sprite activeAmmoImg;
+    [SerializeField] private Sprite inactiveAmmoImg;
 
     private List<Image> ammoImages = new();
 
@@ -26,7 +28,7 @@ public class AmmoUI : MonoBehaviour
         {
             GameObject instantiated = Instantiate(ammoPrefab, transform);
             Image imageComponent = instantiated.GetComponent<Image>();
-            imageComponent.color = activeAmmoColor;
+            imageComponent.sprite = activeAmmoImg;
             ammoImages.Add(imageComponent);
         }
     }
@@ -44,7 +46,7 @@ public class AmmoUI : MonoBehaviour
     void UpdateAmmoUI(int ammo)
     {        
         for (int i = 0; i < ammoImages.Count; i++) {
-            ammoImages[i].color = (i >= ammo) ? unactiveAmmoColor : activeAmmoColor;
+            ammoImages[i].sprite = (i >= ammo) ? inactiveAmmoImg : activeAmmoImg;
         }
     }
 }

@@ -86,7 +86,7 @@ public class SkillTreeTooltip : MonoBehaviour
 
         RectTransform tooltipRect = GetComponent<RectTransform>();
         LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
-
+        CalculatePosition();
     }
 
     void CalculatePosition()

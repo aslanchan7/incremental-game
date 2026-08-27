@@ -3,14 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using BreakInfinity;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class TargetSpawner : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
-    [SerializeField] private float spawnPadding;
+    [Space(10)]
+    [SerializeField] private float spawnPaddingTop;
+    [SerializeField] private float spawnPaddingBottom;
+    [SerializeField] private float spawnPaddingLeft;
+    [SerializeField] private float spawnPaddingRight;
+    [Space(10)]
     [SerializeField] private float minDistBetweenTargets = 1f;
+    [SerializeField] private float timePerTarget = 0.5f;
     [SerializeField] private LayerMask targetLayer;
 
     [Header("References")]
@@ -20,6 +27,7 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("Actions")]
     public Action OnTargetsCleared;
+    public Action OnRoundStart;
     
     private List<GameObject> spawnedTargets = new();
     private int remainingTargets;
@@ -36,12 +44,25 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public int TotalShotsFired;
     [HideInInspector] public float RoundStartTime;
     [HideInInspector] public BigDouble TotalMoneyEarned;
-    
+    [HideInInspector] public double SpeedBonusCashEarned;
+
+    public bool refresh;
+
     void Start()
     {
         roundRuntimeData = GameManager.Instance.RoundRuntimeData;
         SpawnInitialTargets();
         RoundStartTime = Time.time;
+        OnRoundStart?.Invoke();
+    }
+
+    void Update()
+    {
+        if (refresh)
+        {
+            refresh = false;
+            Refresh();
+        }
     }
 
     void OnEnable()
@@ -56,12 +77,12 @@ public class TargetSpawner : MonoBehaviour
     }
 
     // THIS IS JUST A HELPER FUNCTION, I NEED TO REMOVE THIS
-    // void Refresh(InputAction.CallbackContext context)
-    // {
-    //     DestroyTargets();
-    //     SpawnInitialTargets();
-    //     shootingModule.CurrAmmo = shootingModule.MaxAmmo;
-    // }
+    void Refresh()
+    {
+        DestroyTargets();
+        SpawnInitialTargets();
+        // shootingModule.CurrAmmo = shootingModule.MaxAmmo;
+    }
 
     /// <summary>
     /// Spawns initial targets based on the num of screenSegments. This will spawn 1 target per segement.
@@ -76,10 +97,10 @@ public class TargetSpawner : MonoBehaviour
             Debug.LogError("Screen Segments is less than or equal to 0");
         }
 
-        minX = spawnPadding;
-        maxX = Screen.width - spawnPadding;
-        minY = spawnPadding;
-        maxY = Screen.height - spawnPadding;
+        minX = spawnPaddingLeft;
+        maxX = Screen.width - spawnPaddingRight;
+        minY = spawnPaddingBottom;
+        maxY = Screen.height - spawnPaddingTop;
         segmentWidth = Screen.width / screenSegments;
 
         for (int i = 0; i < screenSegments; i++)
@@ -110,7 +131,6 @@ public class TargetSpawner : MonoBehaviour
 
     IEnumerator SpawnTargetsOverTime()
     {
-        // TODO: MAKE SURE TARGETS DON'T SPAWN TOO CLOSE TO OTHER ONES
         while (TotalTargetsSpawned < roundRuntimeData.TargetCount)
         {
             yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);   
@@ -195,6 +215,14 @@ public class TargetSpawner : MonoBehaviour
         
         if (remainingTargets == 0)
         {
+            // Apply Speed Bonus
+            float extraTime = (TotalTargetsHit * timePerTarget) - (Time.time - RoundStartTime);
+            if (extraTime > 0)
+            {
+                SpeedBonusCashEarned = (int)extraTime * roundRuntimeData.SpeedBonusCash;
+                CurrencyManager.Instance.Add("cash", SpeedBonusCashEarned);
+            }
+            
             OnTargetsCleared?.Invoke();
             spawnedTargets.Clear();
         }

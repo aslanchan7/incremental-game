@@ -2,7 +2,10 @@ using System.Collections.Generic;
 
 public class SkillTree
 {
-    public List<string> PurchasedNodeIds = new();
+    public List<string> PurchasedNodeIds;
 
-    public SkillTree() { }
+    public SkillTree()
+    {
+        PurchasedNodeIds = new();
+    }
 }

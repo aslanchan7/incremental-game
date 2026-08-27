@@ -8,4 +8,5 @@ public class RoundData : ScriptableObject
     public float TimeBetweenSpawns; // after initial spawning, targets will spawn with this amount of time delay
     public float BaseTargetValue;
     public float BullseyeMultiplier; 
+    public float SpeedBonusCash;
 }
