@@ -7,17 +7,19 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private RoundData roundData;
+    [SerializeField] private GunDataSO currGunData;
     public PlayerRuntimeStats PlayerRuntimeStats;
     public RoundRuntimeData RoundRuntimeData;
     public SkillTree SkillTree;
 
     void Awake()
     {
-        if(Instance != null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
             return;
-        } else
+        }
+        else
         {
             Instance = this;
             DontDestroyOnLoad(this);
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     void InitializePlayerRuntimeStats()
     {
-        PlayerRuntimeStats = new(playerData);
+        PlayerRuntimeStats = new(playerData, currGunData);
 
         // TODO: READ FROM SAVE FILE IF AVAILABLE
     }

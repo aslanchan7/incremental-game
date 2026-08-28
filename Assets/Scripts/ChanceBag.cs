@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -30,7 +31,8 @@ public class ChanceBag : ScriptableObject
             {
                 bag.Enqueue(true);
                 successes--;
-            } else
+            }
+            else
             {
                 bag.Enqueue(false);
                 failures--;
@@ -40,20 +42,24 @@ public class ChanceBag : ScriptableObject
 
     private int GCD(int a, int b)
     {
-        while (b != 0) {
+        while (b != 0)
+        {
             (a, b) = (b, a % b);
         }
-        return a;        
+        return a;
     }
 
-    public bool Pull()
+    public bool Pull(float chance)
     {
+        if (IsEmpty)
+            NewBag(chance);
+
         if (bag.TryDequeue(out bool returnVal))
         {
-            return returnVal;   
+            return returnVal;
         }
 
-        Debug.LogWarning("QUEUE WAS EMPTY, RETURNING FALSE...");
+        Debug.LogWarning("CHANCE BAG: SOMETHING WENT WRONG, RETURNING FALSE...");
         return false;
     }
 

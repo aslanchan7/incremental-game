@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerData: {fileID: 11400000, guid: 210187d3094c71b44b22d850dd7cb7ae, type: 2}
   roundData: {fileID: 11400000, guid: 53031483ec99f7b468e612903025286d, type: 2}
+  currGunData: {fileID: 11400000, guid: 3c3b4dac54944c241a712843ddbf41aa, type: 2}

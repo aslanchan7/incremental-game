@@ -33,7 +33,8 @@ public class ShootingModule : MonoBehaviour
 
     [Space(20)]
     private int currAmmo;
-    [HideInInspector] public int CurrAmmo
+    [HideInInspector]
+    public int CurrAmmo
     {
         get => currAmmo;
         set
@@ -49,12 +50,22 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private ChanceBag ricochetChanceBag;
     [SerializeField] private ChanceBag ricochetBullseyeChanceBag;
     [SerializeField] private ChanceBag aerialStrikeChanceBag;
+    [SerializeField] private ChanceBag bullseyeChanceBag;
 
     [Space(20)]
 
     [Header("Actions")]
     public Action<GameObject, bool> ShotFired;
     public Action<int> OnAmmoValueChanged;
+
+    [Header("Auto Fire Settings")]
+    [SerializeField] private Image autoFireCrosshairCountdown;
+    private Coroutine currFireRateCoroutine;
+    private Coroutine reloadCoroutine;
+
+    [Header("Debug Settings")]
+    [SerializeField] private bool autoFire;
+    [SerializeField] private bool randomBullseye;
 
     void Awake()
     {
@@ -75,16 +86,18 @@ public class ShootingModule : MonoBehaviour
     void OnEnable()
     {
         controls.Player.Enable();
-        controls.Player.Shoot.performed += TryShoot;
+        if (!autoFire)
+            controls.Player.Shoot.performed += ManualShoot;
 
         targetSpawner.OnTargetsCleared += DisableShooting;
     }
 
     void OnDisable()
-    {   
+    {
         controls.Player.Disable();
-        controls.Player.Shoot.performed -= TryShoot;
-    
+        if (!autoFire)
+            controls.Player.Shoot.performed -= ManualShoot;
+
         targetSpawner.OnTargetsCleared -= DisableShooting;
     }
 
@@ -97,23 +110,78 @@ public class ShootingModule : MonoBehaviour
     {
         crosshair.gameObject.SetActive(true);
         Cursor.visible = false;
-        controls.Player.Shoot.performed += TryShoot;
+        if (autoFire)
+        {
+            currFireRateCoroutine = StartCoroutine(HandleFireRate());
+        }
+        else
+        {
+            controls.Player.Shoot.performed += ManualShoot;
+        }
     }
+
 
     public void DisableShooting()
     {
         crosshair.gameObject.SetActive(false);
         Cursor.visible = true;
-        controls.Player.Shoot.performed -= TryShoot;
+        if (autoFire)
+        {
+            StopCoroutine(currFireRateCoroutine);
+        }
+        else
+        {
+            controls.Player.Shoot.performed -= ManualShoot;
+        }
     }
 
-    void TryShoot(InputAction.CallbackContext context)
+    private IEnumerator HandleFireRate()
+    {
+        // if reloading --> wait for reload to return before we try shoot again
+        if (reloadCoroutine != null)
+        {
+            yield return reloadCoroutine;
+        }
+        else
+        {
+            yield return BasicAnimations.Interpolate(
+                () =>
+                {
+                    autoFireCrosshairCountdown.fillAmount = 1;
+                },
+                (t) =>
+                {
+                    autoFireCrosshairCountdown.fillAmount = 1 - t;
+                },
+                () =>
+                {
+                    autoFireCrosshairCountdown.fillAmount = 0;
+                },
+                1f / playerRuntimeStats.AutoFireRate
+            );
+        }
+
+        TryShoot();
+        currFireRateCoroutine = StartCoroutine(HandleFireRate());
+    }
+
+    /// <summary>
+    /// This is a helper method to call TryShoot when autoFire is turned on. This is needed because subscribing to an input action
+    /// requires an InputAction.CallbackContext
+    /// </summary>
+    /// <param name="context"></param>
+    private void ManualShoot(InputAction.CallbackContext context)
+    {
+        TryShoot();
+    }
+
+    void TryShoot()
     {
         if (isReloading) return; // Can't shoot while reloading
 
         if (CurrAmmo == 0)
         {
-            StartCoroutine(TryReload());
+            reloadCoroutine = StartCoroutine(TryReload());
             return;
         }
 
@@ -127,32 +195,43 @@ public class ShootingModule : MonoBehaviour
 
         List<GameObject> hits = new();
         List<bool> isBullseyes = new();
-        
+
         if (hit.collider != null)
         {
-            // Calculate the distance to the bullseye
-            float distToBullseye = Vector2.Distance(worldPos, hit.collider.transform.position);
-            isBullseye = distToBullseye < bullseyeDistanceThreshold;
+            if (randomBullseye)
+            {
+                isBullseye = playerRuntimeStats.BullseyeChance == 0f
+                    ? false
+                    : bullseyeChanceBag.Pull(playerRuntimeStats.BullseyeChance);
+            }
+            else
+            {
+                // Calculate the distance to the bullseye
+                float distToBullseye = Vector2.Distance(worldPos, hit.collider.transform.position);
+                isBullseye = distToBullseye < bullseyeDistanceThreshold;
+            }
+
             target = hit.collider.gameObject;
 
             hits.Add(target);
             isBullseyes.Add(isBullseye);
 
             HandleRicochetShot(target, ref hits, ref isBullseyes);
-        } else
+        }
+        else
         {
             hits.Add(null);
             isBullseyes.Add(false);
         }
-  
+
         StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
         StartCoroutine(HandleAerialStrike(hits));
 
         CurrAmmo--;
         if (CurrAmmo == 0)
         {
-            StartCoroutine(TryReload());
-            return;   
+            reloadCoroutine = StartCoroutine(TryReload());
+            return;
         }
     }
 
@@ -171,8 +250,8 @@ public class ShootingModule : MonoBehaviour
 
         for (int i = 1; i < hits.Count; i++)
         {
-            if (hits[i-1] == null) continue;
-            Vector3 tracerStartPos = hits[i-1].transform.position;
+            if (hits[i - 1] == null) continue;
+            Vector3 tracerStartPos = hits[i - 1].transform.position;
             tracerStartPos.z = 0;
             if (i == 1) tracerStartPos = shotPosVec3;
             yield return SpawnTracer(tracerStartPos, hits[i].transform.position);
@@ -193,7 +272,7 @@ public class ShootingModule : MonoBehaviour
         }
 
         targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] colliders);
-        
+
         GameObject firstHit = null;
         if (colliders.Length >= 2)
         {
@@ -207,25 +286,19 @@ public class ShootingModule : MonoBehaviour
 
         if (firstHit != null)
         {
-            if (ricochetChanceBag.IsEmpty)
-                ricochetChanceBag.NewBag(playerRuntimeStats.RicochetShotChance);
-
-            bool ricochet = ricochetChanceBag.Pull();
+            bool ricochet = ricochetChanceBag.Pull(playerRuntimeStats.RicochetShotChance);
             if (ricochet)
             {
                 hits.Add(firstHit);
-                bool isBullseye = false; 
+                bool isBullseye = false;
                 if (playerRuntimeStats.RicochetBullseyeChance != 0f)
                 {
-                    if (ricochetBullseyeChanceBag.IsEmpty)
-                        ricochetBullseyeChanceBag.NewBag(playerRuntimeStats.RicochetBullseyeChance);
-                    
-                    isBullseye = ricochetBullseyeChanceBag.Pull();
+                    isBullseye = ricochetBullseyeChanceBag.Pull(playerRuntimeStats.RicochetBullseyeChance);
                 }
-                isBullseyes.Add(isBullseye); 
+                isBullseyes.Add(isBullseye);
 
                 // hits.Count-1 gives you the curr number of ricochet bounces. only if this is less than RicochetMaxBounce then handle another ricochet shot
-                if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce) 
+                if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce)
                     HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
             }
         }
@@ -239,10 +312,7 @@ public class ShootingModule : MonoBehaviour
             yield return null;
         }
 
-        if (aerialStrikeChanceBag.IsEmpty)
-            aerialStrikeChanceBag.NewBag(playerRuntimeStats.AerialStrikeChance);
-        
-        bool aerialStrike = aerialStrikeChanceBag.Pull();
+        bool aerialStrike = aerialStrikeChanceBag.Pull(playerRuntimeStats.AerialStrikeChance);
         if (aerialStrike)
         {
             List<GameObject> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
@@ -269,12 +339,14 @@ public class ShootingModule : MonoBehaviour
             {
                 isReloading = true;
                 crosshair.color = playerRuntimeStats.InactiveCrosshairColor;
-                
-                reloadImage.gameObject.SetActive(true);
+
+                // reloadImage.gameObject.SetActive(true);
+                autoFireCrosshairCountdown.fillAmount = 1f;
             },
             (t) =>
             {
-                reloadImage.fillAmount = t;
+                // reloadImage.fillAmount = t;
+                autoFireCrosshairCountdown.fillAmount = 1 - t;
             },
             () =>
             {
@@ -282,10 +354,12 @@ public class ShootingModule : MonoBehaviour
                 isReloading = false;
                 crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
 
-                reloadImage.gameObject.SetActive(false);
+                // reloadImage.gameObject.SetActive(false);
+                autoFireCrosshairCountdown.fillAmount = 0f;
             },
             playerRuntimeStats.ReloadTime
         );
+        reloadCoroutine = null;
     }
 
     void UpdateCrosshair()
@@ -298,7 +372,7 @@ public class ShootingModule : MonoBehaviour
     {
         TrailRenderer prefab = isAerialStrike ? aerialStrikeTrailPrefab : bulletTrailPrefab;
         TrailRenderer tracer = Instantiate(prefab, startPos, Quaternion.identity);
-        
+
         Vector3 startPosition = tracer.transform.position;
         float distance = Vector3.Distance(startPosition, targetPosition);
         float remainingDistance = distance;
@@ -308,13 +382,13 @@ public class ShootingModule : MonoBehaviour
         while (remainingDistance > 0)
         {
             tracer.transform.position = Vector3.MoveTowards(
-                tracer.transform.position, 
-                targetPosition, 
+                tracer.transform.position,
+                targetPosition,
                 speed * Time.deltaTime
             );
 
             remainingDistance = Vector3.Distance(tracer.transform.position, targetPosition);
-            yield return null; 
+            yield return null;
         }
 
         tracer.transform.position = targetPosition;

@@ -4,22 +4,27 @@ public class PlayerRuntimeStats
 {
     public int MaxAmmo;
     public float ReloadTime;
+    public float AutoFireRate;
     public Color ActiveCrosshairColor;
     public Color InactiveCrosshairColor;
+    public float BullseyeChance;
     public float RicochetShotChance;
     public int RicochetMaxBounce;
     public float RicochetBullseyeChance;
     public float AerialStrikeChance;
 
-    public PlayerRuntimeStats(PlayerData playerData)
+    public PlayerRuntimeStats(PlayerData playerData, GunDataSO gunData)
     {
-        MaxAmmo = playerData.MaxAmmo;
-        ReloadTime = playerData.ReloadTime;
         ActiveCrosshairColor = playerData.ActiveCrosshairColor;
         InactiveCrosshairColor = playerData.InactiveCrosshairColor;
-        RicochetShotChance = playerData.RicochetShotChance;
         RicochetMaxBounce = playerData.RicochetMaxBounce;
+        RicochetShotChance = playerData.RicochetShotChance;
         RicochetBullseyeChance = playerData.RicochetBullseyeChance;
         AerialStrikeChance = playerData.AerialStrikeChance;
+
+        MaxAmmo = gunData.MaxAmmo;
+        ReloadTime = gunData.ReloadTime;
+        AutoFireRate = gunData.AutoFireRate;
+        BullseyeChance = gunData.BullseyeChance;
     }
 }

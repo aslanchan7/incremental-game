@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e0b46a4c38cbc438f7f2a151eb5d69, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
-  MaxAmmo: 4
-  ReloadTime: 2
   ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 1}
   InactiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0.50980395}
   RicochetShotChance: 0

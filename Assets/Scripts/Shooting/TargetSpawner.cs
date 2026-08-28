@@ -32,7 +32,7 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("Chance Bags")]
     [SerializeField] private ChanceBag targetRespawnChanceBag;
-    
+
     private int remainingTargets;
 
     private int screenSegments;
@@ -124,14 +124,15 @@ public class TargetSpawner : MonoBehaviour
         isSpawningTargetsOverTime = true;
         while (TotalTargetsSpawned < roundRuntimeData.TotalTargetCount)
         {
-            yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);   
+            yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);
             int segmentIdx = Random.Range(0, screenSegments);
             SpawnTarget(segmentIdx);
         }
         isSpawningTargetsOverTime = false;
     }
 
-    public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits) {
+    public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits)
+    {
         hits = Physics2D.OverlapCircleAll(worldPos, radius, targetLayer);
         return hits.Length == 0;
     }
@@ -155,15 +156,15 @@ public class TargetSpawner : MonoBehaviour
         do
         {
             worldPos = GetRandomSpawnWorldPos(segmentIdx);
-            attempts++;             
+            attempts++;
         } while (!IsPositionClear(worldPos, minDistBetweenTargets, out _) && attempts < maxAttempts);
 
-        if(attempts >= maxAttempts)
+        if (attempts >= maxAttempts)
         {
             Debug.LogWarning($"Couldn't find a valid spawn position after {maxAttempts} attempts.");
             return;
         }
-        
+
         GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
         SpawnedTargets.Add(instantiated);
         TotalTargetsSpawned++;
@@ -174,18 +175,18 @@ public class TargetSpawner : MonoBehaviour
     {
         float randX = Random.Range(0f, 1f);
         float xPos = (segmentWidth * segmentIndex) + (segmentWidth * randX);
-        xPos = xPos < minX 
-            ? minX 
-            : xPos > maxX 
-                ? maxX 
+        xPos = xPos < minX
+            ? minX
+            : xPos > maxX
+                ? maxX
                 : xPos;
 
         float randY = Random.Range(0f, 1f);
         float yPos = randY * Screen.height;
-        yPos = yPos < minY 
-            ? minY 
-            : yPos > maxY 
-                ? maxY 
+        yPos = yPos < minY
+            ? minY
+            : yPos > maxY
+                ? maxY
                 : yPos;
 
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(new(xPos, yPos));
@@ -202,7 +203,7 @@ public class TargetSpawner : MonoBehaviour
             SpawnedTargets.Remove(target);
             remainingTargets--;
             TotalTargetsHit++;
-            
+
             BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
             TotalMoneyEarned += moneyEarned;
             TotalBullseyesHit += isBullseye ? 1 : 0;
@@ -212,19 +213,16 @@ public class TargetSpawner : MonoBehaviour
             // Potentially respawn target here based on TargetRespawnChance
             if (roundRuntimeData.TargetRespawnChance != 0f)
             {
-                if (targetRespawnChanceBag.IsEmpty)
-                    targetRespawnChanceBag.NewBag(roundRuntimeData.TargetRespawnChance);
-
-                bool respawnTarget = targetRespawnChanceBag.Pull();
+                bool respawnTarget = targetRespawnChanceBag.Pull(roundRuntimeData.TargetRespawnChance);
                 if (respawnTarget)
                 {
                     int segmentIdx = Random.Range(0, screenSegments);
                     SpawnTarget(segmentIdx);
-                }                
+                }
             }
 
         }
-        
+
         if (remainingTargets == 0 && !isSpawningTargetsOverTime)
         {
             // Apply Speed Bonus
@@ -234,7 +232,7 @@ public class TargetSpawner : MonoBehaviour
                 SpeedBonusCashEarned = (int)extraTime * roundRuntimeData.SpeedBonusCash;
                 CurrencyManager.Instance.Add("cash", SpeedBonusCashEarned);
             }
-            
+
             OnTargetsCleared?.Invoke();
             SpawnedTargets.Clear();
         }
