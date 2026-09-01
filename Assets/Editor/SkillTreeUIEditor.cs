@@ -35,6 +35,7 @@ public class SkillTreeUIEditor : Editor
 
         foreach (var node in nodes)
         {
+            node.InitializePrevNodes();
             Vector2 newPos = new(node.GridPos.x * skillTreeUI.GridSpacing, node.GridPos.y * skillTreeUI.GridSpacing);
             node.GetComponent<RectTransform>().localPosition = newPos;
             EditorUtility.SetDirty(node);
@@ -52,6 +53,7 @@ public class SkillTreeUIEditor : Editor
 
         for (int i = 0; i < skillTreeUI.lineRendererParent.childCount; i++)
         {
+            skillTreeUI.lineRendererParent.GetChild(i).gameObject.SetActive(true);
             EditorUtility.SetDirty(skillTreeUI.lineRendererParent.GetChild(i).GetComponent<UILineConnector>());
         }
 

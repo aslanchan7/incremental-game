@@ -27,12 +27,17 @@ public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         button = GetComponent<Button>();
         SpriteImage = transform.GetChild(0).GetComponent<Image>();
         button.onClick.AddListener(OnButtonClicked);
-        origScale = GetComponent<RectTransform>().localScale;        
+        origScale = GetComponent<RectTransform>().localScale;
+        InitializePrevNodes();
     }
 
-    void Start()
+    public void InitializePrevNodes()
     {
-        
+        foreach (var node in NextNodes)
+        {
+            if (node.PrevNodes.Contains(this)) continue;
+            node.PrevNodes.Add(this);
+        }
     }
 
     public void ApplyEffects(SkillEffectContext context)
