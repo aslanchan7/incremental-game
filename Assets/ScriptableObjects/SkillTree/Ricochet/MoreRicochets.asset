@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
-  m_Name: IncreaseBullseyeMultiplier
+  m_Name: MoreRicochets
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
-  id: increase-bullseye-multiplier
+  id: more-ricochets
   sprite: {fileID: 0}
-  displayName: Bullseye Multiplier Increase
-  description: 'Bullseye hits give even more money. Increase cash multiplier for
-    bullseye hits. Bullseye multiplier: x3.'
-  cost: 1
+  displayName: More Ricochets
+  description: +10% chance for bullets to ricochet.
+  cost: 1000
   effects:
-  - {fileID: 11400000, guid: 7d362520d9617d948a55acb8414edc97, type: 2}
+  - {fileID: 11400000, guid: 5623bb7e83faaee45819f741feae9f9d, type: 2}

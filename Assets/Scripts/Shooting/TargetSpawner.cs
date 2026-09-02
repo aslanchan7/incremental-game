@@ -116,20 +116,20 @@ public class TargetSpawner : MonoBehaviour
             SpawnTarget(i % screenSegments);
         }
 
-        StartCoroutine(SpawnTargetsOverTime());
+        // StartCoroutine(SpawnTargetsOverTime());
     }
 
-    IEnumerator SpawnTargetsOverTime()
-    {
-        isSpawningTargetsOverTime = true;
-        while (TotalTargetsSpawned < roundRuntimeData.TotalTargetCount)
-        {
-            yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);
-            int segmentIdx = Random.Range(0, screenSegments);
-            SpawnTarget(segmentIdx);
-        }
-        isSpawningTargetsOverTime = false;
-    }
+    // IEnumerator SpawnTargetsOverTime()
+    // {
+    //     isSpawningTargetsOverTime = true;
+    //     while (TotalTargetsSpawned < roundRuntimeData.TotalTargetCount)
+    //     {
+    //         yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);
+    //         int segmentIdx = Random.Range(0, screenSegments);
+    //         SpawnTarget(segmentIdx);
+    //     }
+    //     isSpawningTargetsOverTime = false;
+    // }
 
     public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits)
     {
@@ -139,7 +139,7 @@ public class TargetSpawner : MonoBehaviour
 
     void DestroyTargets()
     {
-        StopCoroutine(SpawnTargetsOverTime());
+        // StopCoroutine(SpawnTargetsOverTime());
         foreach (var target in SpawnedTargets)
         {
             Destroy(target);
@@ -229,7 +229,7 @@ public class TargetSpawner : MonoBehaviour
             float extraTime = (TotalTargetsHit * timePerTarget) - (Time.time - RoundStartTime);
             if (extraTime > 0)
             {
-                SpeedBonusCashEarned = (int)extraTime * roundRuntimeData.SpeedBonusCash;
+                SpeedBonusCashEarned = (int)(extraTime + 1) * roundRuntimeData.SpeedBonusCash;
                 CurrencyManager.Instance.Add("cash", SpeedBonusCashEarned);
             }
 

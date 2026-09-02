@@ -341,7 +341,7 @@ MonoBehaviour:
   spawnPaddingLeft: 100
   spawnPaddingRight: 100
   minDistBetweenTargets: 1
-  timePerTarget: 0.5
+  timePerTarget: 1
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -3941,7 +3941,7 @@ PrefabInstance:
     - target: {fileID: 8348122600084654178, guid: 22ccd1af00377de48b01682b7f1d90a8, type: 3}
       propertyPath: currGunData
       value: 
-      objectReference: {fileID: 11400000, guid: bbaf506eb7b6418419bbf539dbb27937, type: 2}
+      objectReference: {fileID: 11400000, guid: 3c3b4dac54944c241a712843ddbf41aa, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

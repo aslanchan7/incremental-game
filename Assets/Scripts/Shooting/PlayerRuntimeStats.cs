@@ -28,3 +28,10 @@ public class PlayerRuntimeStats
         BullseyeChance = gunData.BullseyeChance;
     }
 }
+
+public enum PlayerStatsCondition
+{
+    None = 0,
+    MaxAmmo = 1 << 0,
+    // TODO: ADD MORE CONDITION FLAGS AS NECESSARY
+}

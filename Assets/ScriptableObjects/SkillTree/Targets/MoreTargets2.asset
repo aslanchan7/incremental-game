@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: 0}
   displayName: More Targets
   description: +3 targets at the start of the run.
-  cost: 1
+  cost: 225
   effects:
   - {fileID: 11400000, guid: 2dad8b1ba8d97104c8b441203800210d, type: 2}

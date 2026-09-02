@@ -17,6 +17,6 @@ MonoBehaviour:
   displayName: Longer Ricochets
   description: 'Ricocheted bullets have a chance to bounce more than once. Max ricochet
     bounces: 2.'
-  cost: 1
+  cost: 750
   effects:
   - {fileID: 11400000, guid: 81dd882ded626f04bbb0a2ca239c588e, type: 2}

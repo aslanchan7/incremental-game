@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[System.Serializable]
+[Serializable]
 [CreateAssetMenu(fileName = "ChanceBag", menuName = "Chance Bag")]
 public class ChanceBag : ScriptableObject
 {
     private Queue<bool> bag = new();
     public bool IsEmpty => bag.Count == 0;
+    public float CurrChance;
 
     public void NewBag(float chance)
     {
-        int maxDecimalPlaces = 2;
+        int maxDecimalPlaces = 4;
         chance = (float)Math.Round(chance, maxDecimalPlaces);
+        CurrChance = chance;
 
         int denominator = (int)Math.Pow(10, maxDecimalPlaces);
         int numerator = Mathf.RoundToInt(chance * denominator);
@@ -51,7 +52,7 @@ public class ChanceBag : ScriptableObject
 
     public bool Pull(float chance)
     {
-        if (IsEmpty)
+        if (IsEmpty || chance != CurrChance)
             NewBag(chance);
 
         if (bag.TryDequeue(out bool returnVal))

@@ -8,5 +8,5 @@ public class GunDataSO : ScriptableObject
     public float ReloadTime;
     public float AutoFireRate; // measured in bullets per second
     [Range(0, 1)] public float BullseyeChance;
-    public float ChanceMult;
+    // public float ChanceMult;
 }

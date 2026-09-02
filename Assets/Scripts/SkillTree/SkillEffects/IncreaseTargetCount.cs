@@ -8,6 +8,6 @@ public class IncreaseTargetCount : SkillEffect
     public override void Apply(SkillEffectContext context)
     {
         context.RoundRuntimeData.InitialTargetCount += count;
-        context.RoundRuntimeData.TotalTargetCount += count; // If we increment initial, we should also increment total
+        // context.RoundRuntimeData.TotalTargetCount += count; // If we increment initial, we should also increment total
     }
 }

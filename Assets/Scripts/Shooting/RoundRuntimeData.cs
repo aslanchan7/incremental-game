@@ -3,7 +3,7 @@ using UnityEngine;
 public class RoundRuntimeData
 {
     public int InitialTargetCount;
-    public int TotalTargetCount;
+    // public int TotalTargetCount;
     public float TimeBetweenSpawns;
     public float TargetRespawnChance;
     public float BaseTargetValue;
@@ -12,10 +12,10 @@ public class RoundRuntimeData
 
     public RoundRuntimeData(RoundData roundData)
     {
-        if (TotalTargetCount < InitialTargetCount) Debug.LogWarning($"TotalTargetCount ({TotalTargetCount}) is less than InitialTargetCount ({InitialTargetCount}).");
+        // if (TotalTargetCount < InitialTargetCount) Debug.LogWarning($"TotalTargetCount ({TotalTargetCount}) is less than InitialTargetCount ({InitialTargetCount}).");
 
         InitialTargetCount = roundData.InitialTargetCount;
-        TotalTargetCount = roundData.TotalTargetCount;
+        // TotalTargetCount = roundData.TotalTargetCount;
         TimeBetweenSpawns = roundData.TimeBetweenSpawns;
         TargetRespawnChance = roundData.TargetRespawnChance;
         BaseTargetValue = roundData.BaseTargetValue;

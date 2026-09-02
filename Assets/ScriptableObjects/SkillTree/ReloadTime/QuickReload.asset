@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: 0}
   displayName: Quick Reload
   description: 'Increase reload speeds. Reload time: -0.5s.'
-  cost: 1
+  cost: 50
   effects:
   - {fileID: 11400000, guid: 7b2eb5f9b5e911d4c9100b516591223c, type: 2}

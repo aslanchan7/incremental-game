@@ -17,6 +17,6 @@ MonoBehaviour:
   displayName: Accurate Ricochets
   description: '+10% chance for ricocheted bullets to hit the bullseye. Ricocheted
     bullseye chance: 35%.'
-  cost: 1
+  cost: 1500
   effects:
   - {fileID: 11400000, guid: c6e36ff749a315741bbf368e09ecc0b8, type: 2}

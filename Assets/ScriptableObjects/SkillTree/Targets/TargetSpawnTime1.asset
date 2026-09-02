@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: -1745153820, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Target Spawn Time
   description: -0.25s between target spawns.
-  cost: 1
+  cost: 35
   effects:
   - {fileID: 11400000, guid: c6a752853dddba7438e9f519fa225d43, type: 2}

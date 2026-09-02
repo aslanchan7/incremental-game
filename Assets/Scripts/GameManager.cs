@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
         InitializePlayerRuntimeStats();
         InitializeRoundRuntimeData();
-        SkillTree = new();
+        SkillTree = new SkillTree();
     }
 
     void InitializePlayerRuntimeStats()

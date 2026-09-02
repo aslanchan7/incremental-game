@@ -17,6 +17,6 @@ MonoBehaviour:
   displayName: Need for Speed
   description: Bonus cash awarded for destroying all targets quickly. +$5 for every
     second quicker than the target time. Target time is 1s per target.
-  cost: 1
+  cost: 45
   effects:
   - {fileID: 11400000, guid: b39600eda36c51842adbaa348d5842f6, type: 2}

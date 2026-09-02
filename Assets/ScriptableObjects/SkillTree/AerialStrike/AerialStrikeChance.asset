@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
-  m_Name: TargetRespawnChance
+  m_Name: AerialStrikeChance
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
-  id: target-respawn-chance
+  id: aerial-strike-chance
   sprite: {fileID: 0}
-  displayName: Target Respawn Chance
-  description: +10% chance for a new target to spawn when one is hit.
-  cost: 1
+  displayName: Aerial Strike Chance
+  description: +0.25% Aerial Strike chance for every max ammo per magazine.
+  cost: 1000
   effects:
-  - {fileID: 11400000, guid: 472f82e7bd693b744a2608cc3bb95376, type: 2}
+  - {fileID: 11400000, guid: a69a78377e1a1ad468faced4097fd744, type: 2}

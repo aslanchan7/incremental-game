@@ -44,6 +44,16 @@ public class SkillTreeManager : MonoBehaviour
         for (int i = 0; i < nodesParent.childCount; i++)
         {
             SkillTreeNode node = nodesParent.GetChild(i).GetComponent<SkillTreeNode>();
+
+            if (node == null)
+            {
+                Debug.LogError($"Node at child: {i} is NULL");
+            }
+            if (node.Data == null)
+            {
+                Debug.LogError($"{node} has NULL data");
+            }
+
             bool isPurchased = GameManager.Instance.SkillTree.PurchasedNodeIds.Contains(node.Data.id);
             node.IsPurchased = isPurchased;
         }

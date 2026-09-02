@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704e984a61a1d5a4694df80b4a275c45, type: 3}
   m_Name: RoundData
   m_EditorClassIdentifier: Assembly-CSharp::RoundData
-  InitialTargetCount: 7
-  TotalTargetCount: 10
+  InitialTargetCount: 10
   TimeBetweenSpawns: 1
   TargetRespawnChance: 0
   BaseTargetValue: 1

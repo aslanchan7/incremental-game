@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: 0}
   displayName: Target Value
   description: Earn more money per target hit. +$1 base target value.
-  cost: 1
+  cost: 100
   effects:
   - {fileID: 11400000, guid: f5641148afd38c947bc24e903cee434b, type: 2}
