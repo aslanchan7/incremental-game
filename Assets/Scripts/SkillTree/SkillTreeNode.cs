@@ -14,6 +14,7 @@ public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public List<SkillTreeNode> NextNodes = new();
     [Space(10)]
     public bool IsPurchased = false;
+    public bool IsDemoLocked = false;
     public bool IsUnlocked => PrevNodes.All(n => n.IsPurchased) || PrevNodes.Count == 0;
     public bool IsVisible => PrevNodes.Any(n => n.IsPurchased) || PrevNodes.Count == 0;
     [Space(10)]
@@ -26,7 +27,10 @@ public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         button = GetComponent<Button>();
         SpriteImage = transform.GetChild(0).GetComponent<Image>();
-        button.onClick.AddListener(OnButtonClicked);
+
+        if (!IsDemoLocked)
+            button.onClick.AddListener(OnButtonClicked);
+        
         origScale = GetComponent<RectTransform>().localScale;
         InitializePrevNodes();
     }

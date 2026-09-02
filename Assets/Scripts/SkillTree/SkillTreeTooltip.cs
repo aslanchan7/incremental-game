@@ -80,9 +80,18 @@ public class SkillTreeTooltip : MonoBehaviour
 
     void InitializeTooltipData()
     {
-        title.text = currHoveredNode.Data.displayName;
-        description.text = currHoveredNode.Data.description;
-        cost.text = $"${currHoveredNode.Data.cost}";
+        if (currHoveredNode.IsDemoLocked)
+        {
+            title.text = "???";
+            description.text = "Available in the full game.";
+            cost.text = "Locked in demo.";
+        } else
+        {
+            title.text = currHoveredNode.Data.displayName;
+            description.text = currHoveredNode.Data.description;
+            cost.text = $"${currHoveredNode.Data.cost}";
+        }
+
 
         RectTransform tooltipRect = GetComponent<RectTransform>();
         LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);

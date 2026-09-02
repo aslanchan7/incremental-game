@@ -36,7 +36,7 @@ public class SkillTreeManager : MonoBehaviour
         InitializeNodesData();
 
         // TODO: REMOVE THIS
-        // CurrencyManager.Instance.Add("cash", 1000);
+        CurrencyManager.Instance.Add("cash", 10000);
     }
 
     void InitializeNodesData()
@@ -44,6 +44,12 @@ public class SkillTreeManager : MonoBehaviour
         for (int i = 0; i < nodesParent.childCount; i++)
         {
             SkillTreeNode node = nodesParent.GetChild(i).GetComponent<SkillTreeNode>();
+
+            if (node.IsDemoLocked)
+            {
+                node.IsPurchased = false;
+                continue;
+            }
 
             if (node == null)
             {

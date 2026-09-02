@@ -87,6 +87,12 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             SkillTreeNode toNode = connector.transforms[1].GetComponent<SkillTreeNode>();
             connector.gameObject.SetActive(fromNode.IsVisible && toNode.IsVisible);
             Color lineColor = toNode.IsPurchased ? purchasedBorderColor : toNode.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
+
+            if (toNode.IsDemoLocked)
+            {
+                lineColor = lockedBorderColor;    
+            }
+
             connector.GetComponent<UILineRenderer>().color = lineColor;
         }
     }
@@ -96,9 +102,17 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         foreach (var node in nodes)
         {
             node.gameObject.SetActive(node.IsVisible);
+
+            if (node.IsDemoLocked)
+            {
+                node.GetComponent<Image>().color = lockedBorderColor;            
+                node.SpriteImage.color = lockedNodeColor;
+                continue;
+            }
+            
             node.SpriteImage.sprite = node.Data.sprite;
             node.GetComponent<Image>().color = node.IsPurchased ? purchasedBorderColor : node.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
-            node.SpriteImage.color = node.IsPurchased ? purchasedNodeColor : node.IsUnlocked ? unpurchasedNodeColor : lockedNodeColor;            
+            node.SpriteImage.color = node.IsPurchased ? purchasedNodeColor : node.IsUnlocked ? unpurchasedNodeColor : lockedNodeColor;
         }
     }
 
@@ -119,7 +133,13 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
                 ? purchasedNodeColor 
                 : connectedNode.IsUnlocked 
                     ? unpurchasedNodeColor 
-                    : lockedNodeColor;            
+                    : lockedNodeColor;
+
+            if (connectedNode.IsDemoLocked)
+            {
+                connectedNode.GetComponent<Image>().color = lockedBorderColor;            
+                connectedNode.SpriteImage.color = lockedNodeColor;
+            }
         }
 
 
@@ -132,6 +152,12 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             SkillTreeNode toNode = connector.transforms[1].GetComponent<SkillTreeNode>();
             connector.gameObject.SetActive(fromNode.IsVisible && toNode.IsVisible);
             Color lineColor = toNode.IsPurchased ? purchasedBorderColor : toNode.IsUnlocked ? unpurchasedBorderColor : lockedBorderColor;
+            
+            if (toNode.IsDemoLocked)
+            {
+                lineColor = lockedBorderColor;    
+            }
+
             connector.GetComponent<UILineRenderer>().color = lineColor;
         }
     }
