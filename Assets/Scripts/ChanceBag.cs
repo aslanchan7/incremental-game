@@ -41,6 +41,24 @@ public class ChanceBag : ScriptableObject
         }
     }
 
+    private string DebugQueue()
+    {
+        string returnVal = "";
+        bool[] bagArr = bag.ToArray();
+        for (int i = 0; i < bagArr.Length; i++)
+        {
+            if (i == 0)
+            {
+                returnVal += bagArr[i];
+                continue; 
+            }
+
+            returnVal += $" | {bagArr[i]}";
+        }
+
+        return returnVal;
+    }
+
     private int GCD(int a, int b)
     {
         while (b != 0)
