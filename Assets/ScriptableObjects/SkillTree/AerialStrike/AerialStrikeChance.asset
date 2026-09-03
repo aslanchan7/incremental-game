@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: AerialStrikeChance
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: aerial-strike-chance
-  sprite: {fileID: 0}
+  sprite: {fileID: 1613400633, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Aerial Strike Chance
   description: +0.25% Aerial Strike chance for every max ammo per magazine.
-  cost: 1000
+  cost: 450
   effects:
   - {fileID: 11400000, guid: a69a78377e1a1ad468faced4097fd744, type: 2}

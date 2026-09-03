@@ -17,4 +17,4 @@ MonoBehaviour:
   RicochetShotChance: 0
   RicochetMaxBounce: 1
   RicochetBullseyeChance: 0
-  AerialStrikeChance: 0.3
+  AerialStrikeChance: 0

@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI.Extensions;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 
 [RequireComponent(typeof(SkillTreeManager))]
 public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
@@ -12,6 +14,9 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
     [SerializeField] private GameObject lineRendererPrefab;
     public Transform lineRendererParent;
     private SkillTreeManager skillTreeManager;
+    [SerializeField] Sprite lockedNodeSprite;
+    [SerializeField] RectTransform popupBox;
+    private Coroutine popupBoxCoroutine;
 
     [Header("Settings")]
     public float GridSpacing;
@@ -40,12 +45,20 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
     {
         skillTreeManager.OnNodePurchased += HandleNodePurchased;
         skillTreeManager.OnNodeDataInitialized += HandleNodeDataInitialized;
+
+        // TODO: REMOVE THIS AFTER DEMO
+        skillTreeManager.OnNodeLockedPurchaseAttempt += HandleNodeLocked;
+        skillTreeManager.OnNotEnoughMoneyPurchaseAttempt += HandleNotEnoughMoney;
     }
 
     void OnDisable()
     {
         skillTreeManager.OnNodePurchased -= HandleNodePurchased;
         skillTreeManager.OnNodeDataInitialized -= HandleNodeDataInitialized;
+
+        // TODO: REMOVE THIS AFTER DEMO
+        skillTreeManager.OnNodeLockedPurchaseAttempt -= HandleNodeLocked;
+        skillTreeManager.OnNotEnoughMoneyPurchaseAttempt -= HandleNotEnoughMoney;
     }
 
     void HandleNodeDataInitialized()
@@ -105,7 +118,8 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
 
             if (node.IsDemoLocked)
             {
-                node.GetComponent<Image>().color = lockedBorderColor;            
+                node.GetComponent<Image>().color = lockedBorderColor; 
+                node.SpriteImage.sprite = lockedNodeSprite;
                 node.SpriteImage.color = lockedNodeColor;
                 continue;
             }
@@ -182,5 +196,29 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         float zoomDelta = eventData.scrollDelta.y * zoomSpeed;
         float newScale = Mathf.Clamp(content.localScale.x + zoomDelta, minZoom, maxZoom);
         content.localScale = new Vector3(newScale, newScale, 1f);
+    }
+
+    private void HandleNodeLocked()
+    {
+        popupBox.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Node Is Not Unlocked";
+        if (popupBoxCoroutine != null)
+            StopCoroutine(popupBoxCoroutine);
+        popupBoxCoroutine = StartCoroutine(ShowPopupBox());
+    }
+
+    private void HandleNotEnoughMoney()
+    {
+        popupBox.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Not Enough Money";
+        if (popupBoxCoroutine != null)
+            StopCoroutine(popupBoxCoroutine);
+        popupBoxCoroutine = StartCoroutine(ShowPopupBox());
+    }
+
+    IEnumerator ShowPopupBox()
+    {
+        popupBox.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        popupBox.gameObject.SetActive(false);
+        popupBoxCoroutine = null;
     }
 }

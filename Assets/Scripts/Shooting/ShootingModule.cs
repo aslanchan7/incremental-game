@@ -256,7 +256,7 @@ public class ShootingModule : MonoBehaviour
         }
         ShotFired?.Invoke(hits[0], isBullseyes[0]);
         if (enableBulletShake)
-            Camera.main.GetComponent<CameraShake>().Recoil(new(0, -1f), 0.15f, gunVisualsTransform);
+            Camera.main.GetComponent<CameraShake>().Recoil(new(0f, -1f), 0.15f, gunVisualsTransform);
 
         for (int i = 1; i < hits.Count; i++)
         {

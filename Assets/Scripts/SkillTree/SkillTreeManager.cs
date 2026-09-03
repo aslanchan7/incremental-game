@@ -29,6 +29,10 @@ public class SkillTreeManager : MonoBehaviour
     public Action<SkillTreeNode> OnNodePurchased;
     public Action OnNodeDataInitialized;
 
+    // TODO: REMOVE THESE TEMPORARY ONES AFTER DEMO
+    public Action OnNodeLockedPurchaseAttempt;
+    public Action OnNotEnoughMoneyPurchaseAttempt;
+
     void Start()
     {
         context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData);
@@ -36,7 +40,7 @@ public class SkillTreeManager : MonoBehaviour
         InitializeNodesData();
 
         // TODO: REMOVE THIS
-        CurrencyManager.Instance.Add("cash", 10000);
+        // CurrencyManager.Instance.Add("cash", 10000);
     }
 
     void InitializeNodesData()
@@ -71,6 +75,7 @@ public class SkillTreeManager : MonoBehaviour
         if (!node.IsUnlocked) // can't purchased locked node 
         {
             Debug.Log($"{node.Data.displayName} has not been unlocked yet");
+            OnNodeLockedPurchaseAttempt?.Invoke();
             return;
         }
 
@@ -98,6 +103,7 @@ public class SkillTreeManager : MonoBehaviour
         }
         else
         {
+            OnNotEnoughMoneyPurchaseAttempt?.Invoke();
             Debug.Log("Not Enough Money");
         }
     }
