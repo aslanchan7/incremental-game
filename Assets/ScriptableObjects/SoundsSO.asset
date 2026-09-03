@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c6615cb7084be4c9be9057e99090c7, type: 3}
+  m_Name: SoundsSO
+  m_EditorClassIdentifier: Assembly-CSharp::SoundsSO
+  sounds:
+  - name: Gunshot
+    volume: 0.1
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 95df08aa3e42e7b4aba94fb730bc1533, type: 3}
+  - name: TargetHit
+    volume: 0.25
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 8219103b52fc4f047aee762f74710166, type: 3}
+  - name: ReloadGun
+    volume: 0.6
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 3893e8a3da77c7047995979c60dbe039, type: 3}
+  - name: AerialStrike
+    volume: 0.8
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: edffecb69e5a74042aaf4917825cc7a2, type: 3}
+  - name: UIClick
+    volume: 1
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: ad6ba5d27d1ae3043b9637e8e8a7f1fb, type: 3}
+  - name: UIHover
+    volume: 1
+    mixer: {fileID: 24300002, guid: 6ca6f53494e202c41b186427f2f48aeb, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: a86dcc220cf24af46b7f8a2850cf1958, type: 3}

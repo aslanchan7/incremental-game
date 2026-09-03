@@ -87,6 +87,7 @@ public class SkillTreeManager : MonoBehaviour
             node.IsPurchased = true;
             GameManager.Instance.SkillTree.PurchasedNodeIds.Add(node.Data.id);
             OnNodePurchased?.Invoke(node);
+            SFXManager.PlaySound(SoundType.UIClick);
             Debug.Log($"Purchased {node.Data.displayName}");
         }
         else

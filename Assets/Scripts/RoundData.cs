@@ -11,4 +11,6 @@ public class RoundData : ScriptableObject
     public float BaseTargetValue;
     public float BullseyeMultiplier; 
     public float SpeedBonusCash;
+    public float AccuracyBonusCashPercentage;
+    public bool IsComboBonusActive;
 }

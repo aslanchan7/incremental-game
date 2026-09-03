@@ -57,6 +57,7 @@ public class SkillTreeNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         SkillTreeTooltip.Instance.RequestShow(this);
         GetComponent<RectTransform>().localScale *= 1.1f;
+        SFXManager.PlaySound(SoundType.UIHover);
     }
 
     public void OnPointerExit(PointerEventData eventData)
