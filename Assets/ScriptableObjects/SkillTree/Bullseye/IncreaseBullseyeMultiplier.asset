@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseBullseyeMultiplier
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: increase-bullseye-multiplier
-  sprite: {fileID: 0}
+  sprite: {fileID: 433473358, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Bullseye Multiplier Increase
   description: 'Bullseye hits give even more money. Increase cash multiplier for
     bullseye hits. Bullseye multiplier: x3.'

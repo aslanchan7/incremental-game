@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: QuickReload
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: quick-reload
-  sprite: {fileID: 0}
+  sprite: {fileID: 458938037, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Quick Reload
   description: 'Increase reload speeds. Reload time: -0.5s.'
   cost: 50

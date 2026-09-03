@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TargetValue2
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: target-value-2
-  sprite: {fileID: 0}
+  sprite: {fileID: -1057645938, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Target Value
   description: Earn more money per target hit. +$1 base target value.
   cost: 100

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TargetRespawnChance1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: target-respawn-chance-1
-  sprite: {fileID: 0}
+  sprite: {fileID: -1346585213, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Target Respawn Chance
   description: +10% chance for a new target to spawn when one is hit.
   cost: 50

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MoreTargets1
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: more-targets-1
-  sprite: {fileID: 0}
+  sprite: {fileID: -1994979536, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: More Targets
   description: +2 targets at the start of the run.
   cost: 20

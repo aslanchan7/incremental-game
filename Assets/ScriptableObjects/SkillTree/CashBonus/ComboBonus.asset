@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ComboBonus
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: combo-bonus
-  sprite: {fileID: 0}
+  sprite: {fileID: -93276258, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Combo Bonus
   description: Targets hit in a row give more money based on the current streak.
   cost: 65

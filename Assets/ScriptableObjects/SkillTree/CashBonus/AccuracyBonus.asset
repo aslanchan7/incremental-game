@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AccuracyBonus
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: accuracy-bonus
-  sprite: {fileID: 0}
+  sprite: {fileID: -2115665248, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Accuracy Bonus
   description: If accuracy is 100%, then a 10% cash bonus is rewarded.
   cost: 55
