@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 280025843}
   - component: {fileID: 280025842}
   - component: {fileID: 280025841}
+  - component: {fileID: 280025844}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -252,6 +253,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280025839}
   m_CullTransparentMesh: 1
+--- !u!114 &280025844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280025839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388d096b8d9726e4bbd483986858b589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
 --- !u!1 &409662144
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,6 +340,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409662144}
   m_CullTransparentMesh: 1
+--- !u!1001 &856209977
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5004082791096767338, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_Name
+      value: SFXManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.09008
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2902
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a1080d62ea055484db76e09f759214d5, type: 3}
 --- !u!1 &905412492
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,7 +793,6 @@ MonoBehaviour:
   quitButton: {fileID: 280025840}
   fadeOutBg: {fileID: 2062140457}
   fadeInAnimTime: 1
-  fadeOutAnimTime: 0.5
   fadeIn: 0
   fadeOut: 0
 --- !u!1 &1486831847
@@ -738,6 +807,7 @@ GameObject:
   - component: {fileID: 1486831851}
   - component: {fileID: 1486831850}
   - component: {fileID: 1486831849}
+  - component: {fileID: 1486831852}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -859,6 +929,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486831847}
   m_CullTransparentMesh: 1
+--- !u!114 &1486831852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486831847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388d096b8d9726e4bbd483986858b589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
 --- !u!1 &1520082841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1444,3 +1526,4 @@ SceneRoots:
   - {fileID: 1337196138}
   - {fileID: 1833960699}
   - {fileID: 1902872565}
+  - {fileID: 856209977}

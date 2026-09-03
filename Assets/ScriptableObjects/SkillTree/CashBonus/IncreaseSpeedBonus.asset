@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseSpeedBonus
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: increase-speed-bonus
-  sprite: {fileID: 0}
+  sprite: {fileID: 1945045985, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Need for Speed
   description: Bonus cash awarded for destroying all targets quickly. +$5 for every
     second quicker than the target time. Target time is 1s per target.

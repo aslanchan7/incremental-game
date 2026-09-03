@@ -13,6 +13,7 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private Image crosshair;
     [SerializeField] private Image reloadImage;
     [SerializeField] private Transform gunVisualsTransform;
+    [SerializeField] private GameObject targetHitParticles;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
@@ -62,6 +63,10 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private Image autoFireCrosshairCountdown;
     private Coroutine currFireRateCoroutine;
     private Coroutine reloadCoroutine;
+
+    [Header("Aerial Strike Settings")]
+    [SerializeField] private int aerialStrikeTargetThreshold = 5;
+    private bool isAerialStrikeDue;
 
     [Header("Debug Settings")]
     [SerializeField] private bool autoFire;
@@ -241,9 +246,14 @@ public class ShootingModule : MonoBehaviour
         Vector3 muzzlePointInWorldSpace = muzzlePoint.position;
         Vector3 startPos = new(muzzlePointInWorldSpace.x, muzzlePointInWorldSpace.y, 0);
         Vector3 shotPosVec3 = new(shotPos.x, shotPos.y, 0);
+        SFXManager.PlaySound(SoundType.Gunshot);
         yield return SpawnTracer(startPos, shotPosVec3);
         if (hits[0] != null)
+        {
+            Instantiate(targetHitParticles, shotPosVec3, Quaternion.identity);
+            SFXManager.PlaySound(SoundType.TargetHit);
             Destroy(hits[0]);
+        }
         ShotFired?.Invoke(hits[0], isBullseyes[0]);
         if (enableBulletShake)
             Camera.main.GetComponent<CameraShake>().Recoil(new(0, -1f), 0.15f, gunVisualsTransform);
@@ -256,11 +266,13 @@ public class ShootingModule : MonoBehaviour
             if (i == 1) tracerStartPos = shotPosVec3;
             yield return SpawnTracer(tracerStartPos, hits[i].transform.position);
             if (hits[i] != null)
+            {
+                Instantiate(targetHitParticles, hits[i].transform.position, Quaternion.identity);
+                SFXManager.PlaySound(SoundType.TargetHit);
                 Destroy(hits[i]);
+            }
             ShotFired?.Invoke(hits[i], isBullseyes[i]);
         }
-
-        yield return null;
     }
 
     private void HandleRicochetShot(GameObject target, ref List<GameObject> hits, ref List<bool> isBullseyes)
@@ -309,13 +321,21 @@ public class ShootingModule : MonoBehaviour
         if (playerRuntimeStats.AerialStrikeChance == 0f)
         {
             aerialStrikeChanceBag.Clear();
-            yield return null;
+            yield break;
         }
 
-        bool aerialStrike = aerialStrikeChanceBag.Pull(playerRuntimeStats.AerialStrikeChance);
-        if (aerialStrike)
+        bool aerialStrike = false;
+        if (!isAerialStrikeDue) // only pull if we don't already have an aerial strike in queue 
+            aerialStrike = aerialStrikeChanceBag.Pull(playerRuntimeStats.AerialStrikeChance);
+        
+        if (aerialStrike || isAerialStrikeDue)
         {
             List<GameObject> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
+            isAerialStrikeDue = currTargetsOnScreen.Count <= aerialStrikeTargetThreshold;
+            if (isAerialStrikeDue) yield break; // If there are too few targets then don't perform aerial strike but queue it up
+
+            SFXManager.PlaySound(SoundType.AerialStrike);
+
             foreach (var target in currTargetsOnScreen)
             {
                 if (target == null) continue;
@@ -324,6 +344,7 @@ public class ShootingModule : MonoBehaviour
                 targetPos.z = 0; // make sure targetPos.z is 0
                 Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
                 yield return SpawnTracer(tracerStartPos, targetPos, true);
+                SFXManager.PlaySound(SoundType.TargetHit);
                 Destroy(target);
                 ShotFired?.Invoke(target, false);
                 if (enableAerialStrikeShake)
@@ -334,6 +355,7 @@ public class ShootingModule : MonoBehaviour
 
     IEnumerator TryReload()
     {
+        bool sfxPlayed = false;
         yield return BasicAnimations.Interpolate(
             () =>
             {
@@ -345,7 +367,13 @@ public class ShootingModule : MonoBehaviour
             },
             (t) =>
             {
-                // reloadImage.fillAmount = t;
+                // TODO: REPLACE THIS TEMPORARY SFX PLAY
+                if (t >= 0.2f && !sfxPlayed)
+                {
+                    sfxPlayed = true;
+                    SFXManager.PlaySound(SoundType.ReloadGun);
+                }
+
                 autoFireCrosshairCountdown.fillAmount = 1 - t;
             },
             () =>

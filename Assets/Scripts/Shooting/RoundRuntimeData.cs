@@ -9,6 +9,8 @@ public class RoundRuntimeData
     public float BaseTargetValue;
     public float BullseyeMultiplier; 
     public float SpeedBonusCash;
+    public float AccuracyBonusCashPercentage;
+    public bool IsComboBonusActive;
 
     public RoundRuntimeData(RoundData roundData)
     {
@@ -21,5 +23,7 @@ public class RoundRuntimeData
         BaseTargetValue = roundData.BaseTargetValue;
         BullseyeMultiplier = roundData.BullseyeMultiplier;
         SpeedBonusCash = roundData.SpeedBonusCash;
+        IsComboBonusActive = roundData.IsComboBonusActive;
+        AccuracyBonusCashPercentage = roundData.AccuracyBonusCashPercentage;
     }
 }

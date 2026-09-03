@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MoreBullseyes
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: more-bullseyes
-  sprite: {fileID: 0}
+  sprite: {fileID: 1190167170, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: More Bullseyes
   description: +15% bullseye chance.
   cost: 20

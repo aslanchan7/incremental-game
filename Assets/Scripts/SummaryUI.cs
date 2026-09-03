@@ -13,6 +13,7 @@ public class SummaryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeTaken;
     [SerializeField] TextMeshProUGUI moneyEarned;
     [SerializeField] TextMeshProUGUI speedMoneyEarned;
+    [SerializeField] TextMeshProUGUI accuracyMoneyEarned;
 
     void Awake()
     {
@@ -42,12 +43,13 @@ public class SummaryUI : MonoBehaviour
 
     void UpdateStats()
     {
-        accuracy.text = $"{(float)targetSpawner.TotalTargetsHit / targetSpawner.TotalShotsFired * 100:F0}%";
+        accuracy.text = $"{targetSpawner.Accuracy * 100:F0}%";
         targetsShot.text = $"{targetSpawner.TotalTargetsHit}";
         bullseye.text = $"{(float)targetSpawner.TotalBullseyesHit / targetSpawner.TotalTargetsHit * 100:F0}%";
         timeTaken.text = $"{Time.time - targetSpawner.RoundStartTime:F1}s";
-        moneyEarned.text = $"Money Earned: ${targetSpawner.TotalMoneyEarned + targetSpawner.SpeedBonusCashEarned:F0}";
+        moneyEarned.text = $"Money Earned: ${targetSpawner.TotalMoneyEarned.ToDouble():F0}";
         speedMoneyEarned.text = targetSpawner.SpeedBonusCashEarned > 0d ? $"(+${targetSpawner.SpeedBonusCashEarned:F0})" : ""; 
+        accuracyMoneyEarned.text = targetSpawner.AccuracyBonusCashEarned > 0d ? $"(+${targetSpawner.AccuracyBonusCashEarned:F0})" : "";
     }
 
     public void HandleUpgradesButton()

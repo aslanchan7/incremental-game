@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3108ff2d05897db41aa540091abaef3e, type: 3}
+  m_Name: AccuracyBonus
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
+  id: accuracy-bonus
+  sprite: {fileID: -2115665248, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
+  displayName: Accuracy Bonus
+  description: If accuracy is 100%, then a 10% cash bonus is rewarded.
+  cost: 55
+  effects:
+  - {fileID: 11400000, guid: 342f5e7a1d3b85e4b82faa8822e8ec04, type: 2}

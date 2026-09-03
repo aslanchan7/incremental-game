@@ -33,15 +33,14 @@ public class TargetSpawner : MonoBehaviour
     [Header("Chance Bags")]
     [SerializeField] private ChanceBag targetRespawnChanceBag;
 
-    private int remainingTargets;
-
+    [Header("Screen Variables")]
     private int screenSegments;
     private float minX, maxX;
     private float minY, maxY;
     private float segmentWidth;
-    private bool isSpawningTargetsOverTime;
 
     [Header("Stats for Summary UI")]
+    [HideInInspector] public float Accuracy;
     [HideInInspector] public int TotalTargetsSpawned;
     [HideInInspector] public int TotalTargetsHit;
     [HideInInspector] public int TotalBullseyesHit;
@@ -49,6 +48,15 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public float RoundStartTime;
     [HideInInspector] public BigDouble TotalMoneyEarned;
     [HideInInspector] public double SpeedBonusCashEarned;
+    [HideInInspector] public double AccuracyBonusCashEarned;
+    
+    [Header("Combo Settings")]
+    private float comboMultPerHit = 0.1f;
+    private int currCombo;
+
+    [Header("Target Variables")]
+    private int remainingTargets;
+    private bool isSpawningTargetsOverTime;
 
     [Header("Debug")]
     [SerializeField] private bool refresh;
@@ -198,6 +206,8 @@ public class TargetSpawner : MonoBehaviour
     {
         TotalShotsFired++;
 
+        currCombo = target != null ? currCombo + 1 : 0;
+
         if (target != null)
         {
             SpawnedTargets.Remove(target);
@@ -205,6 +215,9 @@ public class TargetSpawner : MonoBehaviour
             TotalTargetsHit++;
 
             BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
+            // Account for Combo Bonus
+            float comboBonusMult = 1 + (currCombo * comboMultPerHit);
+            moneyEarned = roundRuntimeData.IsComboBonusActive ? moneyEarned * comboBonusMult : moneyEarned;
             TotalMoneyEarned += moneyEarned;
             TotalBullseyesHit += isBullseye ? 1 : 0;
 
@@ -220,7 +233,6 @@ public class TargetSpawner : MonoBehaviour
                     SpawnTarget(segmentIdx);
                 }
             }
-
         }
 
         if (remainingTargets == 0 && !isSpawningTargetsOverTime)
@@ -232,6 +244,16 @@ public class TargetSpawner : MonoBehaviour
                 SpeedBonusCashEarned = (int)(extraTime + 1) * roundRuntimeData.SpeedBonusCash;
                 CurrencyManager.Instance.Add("cash", SpeedBonusCashEarned);
             }
+
+            // Apply Accuracy Bonus
+            Accuracy = (float)TotalTargetsHit / TotalShotsFired;
+            if (Accuracy >= 1.0f)
+            {
+                AccuracyBonusCashEarned = TotalMoneyEarned.ToDouble() * roundRuntimeData.AccuracyBonusCashPercentage;
+                CurrencyManager.Instance.Add("cash", AccuracyBonusCashEarned);
+            }
+
+            TotalMoneyEarned += SpeedBonusCashEarned + AccuracyBonusCashEarned;
 
             OnTargetsCleared?.Invoke();
             SpawnedTargets.Clear();
