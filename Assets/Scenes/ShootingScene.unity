@@ -3627,6 +3627,7 @@ MonoBehaviour:
   moneyEarned: {fileID: 1986571763}
   speedMoneyEarned: {fileID: 124042778}
   accuracyMoneyEarned: {fileID: 160209994}
+  animTime: 1
 --- !u!1 &2088379525
 GameObject:
   m_ObjectHideFlags: 0

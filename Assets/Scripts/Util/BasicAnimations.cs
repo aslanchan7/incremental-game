@@ -64,4 +64,9 @@ public static class BasicAnimations
 
         return (float)(1 + c3 * Math.Pow(t - 1, 3) + c1 * Math.Pow(t - 1, 2));
     }
+
+    public static float EaseOutExpo(float t)
+    {
+        return t == 1f ? 1f : 1f - Mathf.Pow(2f, -10f * t);
+    }
 }
