@@ -15,7 +15,7 @@ MonoBehaviour:
   id: unlock-ricochet-shot
   sprite: {fileID: -1745153820, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Unlock Ricochet Shot
-  description: Bullets have 5% chance to ricochet off, hitting a nearby target
+  description: Bullets ricochet off, hitting a nearby target.
   cost: 300
   effects:
   - {fileID: 11400000, guid: e362cae6d5c126649b7954877e6c54fa, type: 2}

@@ -247,7 +247,7 @@ public class TargetSpawner : MonoBehaviour
 
             // Apply Accuracy Bonus
             Accuracy = (float)TotalTargetsHit / TotalShotsFired;
-            if (Accuracy >= 1.0f)
+            if (Accuracy >= 0.9f)
             {
                 AccuracyBonusCashEarned = TotalMoneyEarned.ToDouble() * roundRuntimeData.AccuracyBonusCashPercentage;
                 CurrencyManager.Instance.Add("cash", AccuracyBonusCashEarned);

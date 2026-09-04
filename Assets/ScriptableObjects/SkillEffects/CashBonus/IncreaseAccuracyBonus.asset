@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42548944e53270c45b60f0bcbf3c4743, type: 3}
   m_Name: IncreaseAccuracyBonus
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseAccuracyBonus
-  accuracyBonusIncrease: 0.1
+  accuracyBonusIncrease: 0.25

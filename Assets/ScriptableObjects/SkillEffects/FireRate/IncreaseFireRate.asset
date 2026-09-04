@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc66ab2d62e35742a8348914cb8c65d, type: 3}
   m_Name: IncreaseFireRate
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseFireRate
-  increaseRate: 0.2
+  increaseRate: 0.35

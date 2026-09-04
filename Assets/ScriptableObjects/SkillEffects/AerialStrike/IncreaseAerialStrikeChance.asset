@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bad7937a00459a04e888bc51e7537cac, type: 3}
   m_Name: IncreaseAerialStrikeChance
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseAerialStrikeChance
+  aerialStrikeChance: 0.03
+  variable: 0

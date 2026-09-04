@@ -15,7 +15,7 @@ MonoBehaviour:
   id: even-more-bullseyes
   sprite: {fileID: 1190167170, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Even More Bullseyes
-  description: +10% bullseye chance.
+  description: +20% bullseye chance.
   cost: 60
   effects:
   - {fileID: 11400000, guid: 463ffc9ba0c9fc74c9505f9d289f1ac2, type: 2}

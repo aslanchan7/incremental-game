@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0393fa747fbcf5e4c84ea6137f314b90, type: 3}
-  m_Name: IncreaseBullseyeChance10
+  m_Name: IncreaseBullseyeChance20
   m_EditorClassIdentifier: Assembly-CSharp::IncreaseBullseyeChance
-  bullseyeChance: 0.1
+  bullseyeChance: 0.2

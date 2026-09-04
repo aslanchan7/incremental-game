@@ -15,7 +15,7 @@ MonoBehaviour:
   id: aerial-strike
   sprite: {fileID: 1613400633, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Aerial Strike
-  description: Unlock Aerial Strike. Each target hit has a 1% chance of triggering
+  description: Unlock Aerial Strike. Each target hit has a 3% chance of triggering
     an Aerial Strike that destroys ALL targets on screen.
   cost: 300
   effects:
