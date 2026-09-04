@@ -58,7 +58,7 @@ public class ShootingModule : MonoBehaviour
     [Space(20)]
 
     [Header("Actions")]
-    public Action<GameObject, bool> ShotFired;
+    public Action<GameObject, bool> ShotFired; // GameObject: target, 1st bool: isBullseye
     public Action<int> OnAmmoValueChanged;
 
     [Header("Auto Fire Settings")]
@@ -69,6 +69,7 @@ public class ShootingModule : MonoBehaviour
     [Header("Aerial Strike Settings")]
     [SerializeField] private int aerialStrikeTargetThreshold = 5;
     private bool isAerialStrikeDue;
+    private Coroutine aerialStrikeCoroutine;
 
     [Header("Debug Settings")]
     [SerializeField] private bool autoFire;
@@ -148,32 +149,40 @@ public class ShootingModule : MonoBehaviour
         if (reloadCoroutine != null)
         {
             yield return reloadCoroutine;
-        }
-        else
+        } else if (aerialStrikeCoroutine != null)
         {
-            yield return BasicAnimations.Interpolate(
-                () =>
-                {
-                    autoFireCrosshairCountdown.fillAmount = 1;
-                },
-                (t) =>
-                {
-                    autoFireCrosshairCountdown.fillAmount = 1 - t;
-                },
-                () =>
-                {
-                    autoFireCrosshairCountdown.fillAmount = 0;
-                },
-                1f / playerRuntimeStats.AutoFireRate
-            );
+            yield return aerialStrikeCoroutine;
+            yield return AutoFireCrosshairAnim();
+        } else
+        {
+            yield return AutoFireCrosshairAnim();
         }
 
         TryShoot();
         currFireRateCoroutine = StartCoroutine(HandleFireRate());
     }
 
+    private IEnumerator AutoFireCrosshairAnim()
+    {
+        yield return BasicAnimations.Interpolate(
+            () =>
+            {
+                autoFireCrosshairCountdown.fillAmount = 1;
+            },
+            (t) =>
+            {
+                autoFireCrosshairCountdown.fillAmount = 1 - t;
+            },
+            () =>
+            {
+                autoFireCrosshairCountdown.fillAmount = 0;
+            },
+            1f / playerRuntimeStats.AutoFireRate
+        );
+    }
+
     /// <summary>
-    /// This is a helper method to call TryShoot when autoFire is turned on. This is needed because subscribing to an input action
+    /// This is a helper method to call TryShoot when autoFire is turned off. This is needed because subscribing to an input action
     /// requires an InputAction.CallbackContext
     /// </summary>
     /// <param name="context"></param>
@@ -232,7 +241,7 @@ public class ShootingModule : MonoBehaviour
         }
 
         StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
-        StartCoroutine(HandleAerialStrike(hits));
+        aerialStrikeCoroutine = StartCoroutine(HandleAerialStrike(hits));
 
         CurrAmmo--;
         if (CurrAmmo == 0)
@@ -344,6 +353,7 @@ public class ShootingModule : MonoBehaviour
         if (playerRuntimeStats.AerialStrikeChance == 0f)
         {
             aerialStrikeChanceBag.Clear();
+            aerialStrikeCoroutine = null;
             yield break;
         }
 
@@ -355,8 +365,11 @@ public class ShootingModule : MonoBehaviour
         {
             List<GameObject> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
             isAerialStrikeDue = currTargetsOnScreen.Count <= aerialStrikeTargetThreshold;
-            if (isAerialStrikeDue) yield break; // If there are too few targets then don't perform aerial strike but queue it up
-
+            if (isAerialStrikeDue)  // If there are too few targets then don't perform aerial strike but queue it up 
+            {
+                aerialStrikeCoroutine = null;
+                yield break;
+            }
             SFXManager.PlaySound(SoundType.AerialStrike);
 
             foreach (var target in currTargetsOnScreen)
@@ -374,6 +387,8 @@ public class ShootingModule : MonoBehaviour
                     Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);
             }
         }
+
+        aerialStrikeCoroutine = null;
     }
 
     IEnumerator TryReload()
