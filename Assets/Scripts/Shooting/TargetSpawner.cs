@@ -30,6 +30,8 @@ public class TargetSpawner : MonoBehaviour
     [Header("Golden Target Settings")]
     [SerializeField] private float goldenTargetDestroyTime = 4f;
     [SerializeField] private float goldenTargetCashMult = 10f;
+    [SerializeField] private Color goldenFlytextColor;
+    [SerializeField] private Flytext flytextPrefab;
     private List<GameObject> goldenTargetList = new();
 
     [Header("Actions")]
@@ -243,6 +245,8 @@ public class TargetSpawner : MonoBehaviour
             if (goldenTargetList.Contains(target))
             {
                 moneyEarned *= goldenTargetCashMult;
+                Flytext flytext = Instantiate(flytextPrefab, target.transform.position, Quaternion.identity);
+                flytext.Show($"x{goldenTargetCashMult:F0}", 1f, Vector3.up, goldenFlytextColor);
             }
             // Account for Combo Bonus
             float comboBonusMult = 1 + (currCombo * comboMultPerHit);

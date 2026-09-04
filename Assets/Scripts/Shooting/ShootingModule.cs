@@ -14,6 +14,7 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private Image reloadImage;
     [SerializeField] private Transform gunVisualsTransform;
     [SerializeField] private GameObject targetHitParticles;
+    [SerializeField] private Flytext flytextPrefab;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
@@ -31,6 +32,7 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private Vector3 aerialStrikeOriginOffset = new(-2f, 20f, 0f);
     [SerializeField] private bool enableAerialStrikeShake = true;
     [SerializeField] private bool enableBulletShake = true;
+    [SerializeField] private Color bullseyeFlytextColor;
 
     [Space(20)]
     private int currAmmo;
@@ -247,16 +249,17 @@ public class ShootingModule : MonoBehaviour
         Vector3 startPos = new(muzzlePointInWorldSpace.x, muzzlePointInWorldSpace.y, 0);
         Vector3 shotPosVec3 = new(shotPos.x, shotPos.y, 0);
         SFXManager.PlaySound(SoundType.Gunshot);
-        yield return SpawnTracer(startPos, shotPosVec3);
-        if (hits[0] != null)
-        {
-            Instantiate(targetHitParticles, shotPosVec3, Quaternion.identity);
-            SFXManager.PlaySound(SoundType.TargetHit);
-            Destroy(hits[0]);
-        }
-        ShotFired?.Invoke(hits[0], isBullseyes[0]);
         if (enableBulletShake)
             Camera.main.GetComponent<CameraShake>().Recoil(new(0f, -1f), 0.15f, gunVisualsTransform);
+        // yield return SpawnTracer(startPos, shotPosVec3);
+        // if (hits[0] != null)
+        // {
+        //     Instantiate(targetHitParticles, shotPosVec3, Quaternion.identity);
+        //     SFXManager.PlaySound(SoundType.TargetHit);
+        //     Destroy(hits[0]);
+        // }
+        // ShotFired?.Invoke(hits[0], isBullseyes[0]);
+        yield return DestroyTarget(startPos, shotPosVec3, hits[0], isBullseyes[0]);
 
         for (int i = 1; i < hits.Count; i++)
         {
@@ -264,15 +267,35 @@ public class ShootingModule : MonoBehaviour
             Vector3 tracerStartPos = hits[i - 1].transform.position;
             tracerStartPos.z = 0;
             if (i == 1) tracerStartPos = shotPosVec3;
-            yield return SpawnTracer(tracerStartPos, hits[i].transform.position);
-            if (hits[i] != null)
-            {
-                Instantiate(targetHitParticles, hits[i].transform.position, Quaternion.identity);
-                SFXManager.PlaySound(SoundType.TargetHit);
-                Destroy(hits[i]);
-            }
-            ShotFired?.Invoke(hits[i], isBullseyes[i]);
+            yield return DestroyTarget(tracerStartPos, hits[i].transform.position, hits[i], isBullseyes[i]);
+            // yield return SpawnTracer(tracerStartPos, hits[i].transform.position);
+            // if (hits[i] != null)
+            // {
+            //     Instantiate(targetHitParticles, hits[i].transform.position, Quaternion.identity);
+            //     SFXManager.PlaySound(SoundType.TargetHit);
+
+            //     Destroy(hits[i]);
+            // }
+            // ShotFired?.Invoke(hits[i], isBullseyes[i]);
         }
+    }
+
+    private IEnumerator DestroyTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, GameObject hit, bool isBullseye)
+    {
+        yield return SpawnTracer(tracerStartPos, tracerEndPos);
+        if (hit != null)
+        {
+            Instantiate(targetHitParticles, tracerEndPos, Quaternion.identity);
+            SFXManager.PlaySound(SoundType.TargetHit);
+            Destroy(hit);
+
+            if (isBullseye)
+            {
+                Flytext flytext = Instantiate(flytextPrefab, hit.transform.position, Quaternion.identity);
+                flytext.Show("bullseye!", 1f, Vector2.up, bullseyeFlytextColor);
+            }
+        }
+        ShotFired?.Invoke(hit, isBullseye);
     }
 
     private void HandleRicochetShot(GameObject target, ref List<GameObject> hits, ref List<bool> isBullseyes)

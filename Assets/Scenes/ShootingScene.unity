@@ -488,6 +488,8 @@ MonoBehaviour:
   SpawnedTargets: []
   goldenTargetDestroyTime: 2
   goldenTargetCashMult: 10
+  goldenFlytextColor: {r: 1, g: 0.6745098, b: 0, a: 1}
+  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
   targetRespawnChanceBag: {fileID: 11400000, guid: e088dae2799a5c942ac0eb95fc216733, type: 2}
   goldenTargetChanceBag: {fileID: 11400000, guid: be34c3235e3c4f04a888086961048398, type: 2}
   Accuracy: 0
@@ -691,6 +693,7 @@ MonoBehaviour:
   reloadImage: {fileID: 1127642315}
   gunVisualsTransform: {fileID: 1710658262}
   targetHitParticles: {fileID: 6156794285846784741, guid: 71eff1e0c890fd14d8d71c1e3647e521, type: 3}
+  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
   bulletTrailPrefab: {fileID: 3702308357922012407, guid: 435b02af18d1bad4db2109a7fb7a68e7, type: 3}
   aerialStrikeTrailPrefab: {fileID: 3702308357922012407, guid: 50e20d6e171fa2842b1d011527236548, type: 3}
   muzzlePoint: {fileID: 460273536}
@@ -701,6 +704,7 @@ MonoBehaviour:
   aerialStrikeOriginOffset: {x: -2, y: 20, z: 0}
   enableAerialStrikeShake: 1
   enableBulletShake: 1
+  bullseyeFlytextColor: {r: 0.8980393, g: 0.23137257, b: 0.26666668, a: 1}
   ricochetChanceBag: {fileID: 11400000, guid: 7e22f35f1038df145b915564e02002d7, type: 2}
   ricochetBullseyeChanceBag: {fileID: 11400000, guid: 972c0ae9f149dd445aeb3ce9b64606fc, type: 2}
   aerialStrikeChanceBag: {fileID: 11400000, guid: 99f2458ecedac5a4abbc1e72a4a353d3, type: 2}

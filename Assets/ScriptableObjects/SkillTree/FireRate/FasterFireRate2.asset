@@ -15,7 +15,7 @@ MonoBehaviour:
   id: faster-fire-rate-2
   sprite: {fileID: -298859008, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Faster Fire Rate
-  description: +35% to gun's fire rate.
+  description: +30% to gun's fire rate.
   cost: 65
   effects:
   - {fileID: 11400000, guid: 8bd371a4db2760347ab7e612b046f3e1, type: 2}
