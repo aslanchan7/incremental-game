@@ -20,3 +20,4 @@ MonoBehaviour:
   SpeedBonusCash: 0
   AccuracyBonusCashPercentage: 0
   IsComboBonusActive: 0
+  GoldenTargetChance: 0

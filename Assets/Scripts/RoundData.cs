@@ -13,4 +13,5 @@ public class RoundData : ScriptableObject
     public float SpeedBonusCash;
     public float AccuracyBonusCashPercentage;
     public bool IsComboBonusActive;
+    [Range(0, 1)] public float GoldenTargetChance;
 }

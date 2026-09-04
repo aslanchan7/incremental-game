@@ -22,9 +22,15 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject targetPrefab;
+    [SerializeField] private GameObject goldenTargetPrefab;
     [SerializeField] private ShootingModule shootingModule;
     [HideInInspector] public List<GameObject> SpawnedTargets = new();
     private RoundRuntimeData roundRuntimeData;
+
+    [Header("Golden Target Settings")]
+    [SerializeField] private float goldenTargetDestroyTime = 4f;
+    [SerializeField] private float goldenTargetCashMult = 10f;
+    private List<GameObject> goldenTargetList = new();
 
     [Header("Actions")]
     public Action OnTargetsCleared;
@@ -32,6 +38,7 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("Chance Bags")]
     [SerializeField] private ChanceBag targetRespawnChanceBag;
+    [SerializeField] private ChanceBag goldenTargetChanceBag;
 
     [Header("Screen Variables")]
     private int screenSegments;
@@ -156,7 +163,7 @@ public class TargetSpawner : MonoBehaviour
         remainingTargets = 0;
     }
 
-    private void SpawnTarget(int segmentIdx)
+    private void SpawnTarget(int segmentIdx, bool isGolden = false)
     {
         Vector2 worldPos;
         int attempts = 0;
@@ -173,10 +180,29 @@ public class TargetSpawner : MonoBehaviour
             return;
         }
 
-        GameObject instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
+        GameObject prefabToInstantiate = isGolden ? goldenTargetPrefab : targetPrefab;
+        GameObject instantiated = Instantiate(prefabToInstantiate, worldPos, Quaternion.identity, transform);
+
+        if (isGolden)
+        {
+            StartCoroutine(GoldenTargetSelfDestroy(instantiated));
+            goldenTargetList.Add(instantiated);
+        }
+
         SpawnedTargets.Add(instantiated);
         TotalTargetsSpawned++;
         remainingTargets++;
+    }
+
+    IEnumerator GoldenTargetSelfDestroy(GameObject target)
+    {
+        yield return new WaitForSeconds(goldenTargetDestroyTime);
+        if (target != null)
+        {
+            Destroy(target);
+            remainingTargets--;
+            Debug.Log("Golden Target destroyed itself");
+        }
     }
 
     Vector2 GetRandomSpawnWorldPos(int segmentIndex)
@@ -205,7 +231,6 @@ public class TargetSpawner : MonoBehaviour
     void HandleShotFired(GameObject target, bool isBullseye)
     {
         TotalShotsFired++;
-
         currCombo = target != null ? currCombo + 1 : 0;
 
         if (target != null)
@@ -215,6 +240,10 @@ public class TargetSpawner : MonoBehaviour
             TotalTargetsHit++;
 
             BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
+            if (goldenTargetList.Contains(target))
+            {
+                moneyEarned *= goldenTargetCashMult;
+            }
             // Account for Combo Bonus
             float comboBonusMult = 1 + (currCombo * comboMultPerHit);
             moneyEarned = roundRuntimeData.IsComboBonusActive ? moneyEarned * comboBonusMult : moneyEarned;
@@ -229,12 +258,23 @@ public class TargetSpawner : MonoBehaviour
                 bool respawnTarget = targetRespawnChanceBag.Pull(roundRuntimeData.TargetRespawnChance);
                 if (respawnTarget)
                 {
+                    bool isGoldenTarget = false;
+                    if (roundRuntimeData.GoldenTargetChance != 0f)
+                    {
+                        isGoldenTarget = goldenTargetChanceBag.Pull(roundRuntimeData.GoldenTargetChance);
+                    }
+
                     int segmentIdx = Random.Range(0, screenSegments);
-                    SpawnTarget(segmentIdx);
+                    SpawnTarget(segmentIdx, isGoldenTarget);
                 }
             }
         }
 
+        CheckRoundEndCondition();
+    }
+
+    void CheckRoundEndCondition()
+    {
         if (remainingTargets == 0 && !isSpawningTargetsOverTime)
         {
             // Apply Speed Bonus

@@ -483,9 +483,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   targetPrefab: {fileID: 8515914544824480102, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}
+  goldenTargetPrefab: {fileID: 6394022492654286143, guid: 697f07e1eda875f4ab2871fc46425923, type: 3}
   shootingModule: {fileID: 319716620}
   SpawnedTargets: []
+  goldenTargetDestroyTime: 2
+  goldenTargetCashMult: 10
   targetRespawnChanceBag: {fileID: 11400000, guid: e088dae2799a5c942ac0eb95fc216733, type: 2}
+  goldenTargetChanceBag: {fileID: 11400000, guid: be34c3235e3c4f04a888086961048398, type: 2}
   Accuracy: 0
   TotalTargetsSpawned: 0
   TotalTargetsHit: 0

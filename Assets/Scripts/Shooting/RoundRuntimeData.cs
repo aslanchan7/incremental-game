@@ -11,6 +11,7 @@ public class RoundRuntimeData
     public float SpeedBonusCash;
     public float AccuracyBonusCashPercentage;
     public bool IsComboBonusActive;
+    public float GoldenTargetChance;
 
     public RoundRuntimeData(RoundData roundData)
     {
@@ -25,5 +26,6 @@ public class RoundRuntimeData
         SpeedBonusCash = roundData.SpeedBonusCash;
         IsComboBonusActive = roundData.IsComboBonusActive;
         AccuracyBonusCashPercentage = roundData.AccuracyBonusCashPercentage;
+        GoldenTargetChance = roundData.GoldenTargetChance;
     }
 }
