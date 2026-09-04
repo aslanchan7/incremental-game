@@ -42,7 +42,7 @@ public class CurrencyUI : MonoBehaviour
 
     void UpdateUI(string currencyId)
     {
-        cashText.text = $"${CurrencyManager.Instance.GetCurrency(currencyId).amount:F0}";
+        cashText.text = $"${Mathf.FloorToInt((float)CurrencyManager.Instance.GetCurrency(currencyId).amount.ToDouble()):F0}";
     }
 
     public void Show()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UnlockGoldenTargets
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeSO
   id: unlock-golden-targets
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 765206162227dfc4ba7a053b35ec8582, type: 3}
   displayName: Unlock Golden Targets
   description: Respawned targets have 50% chance to be Golden. A Golden Target has
     10x base target value.

@@ -109,7 +109,7 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             }
 
             Color lineColor = lockedBorderColor;
-            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount > toNode.Data.cost;
+            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount >= toNode.Data.cost;
             if (toNode.IsPurchased)
             {
                 lineColor = purchasedBorderColor;
@@ -227,7 +227,7 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
                 continue;
             }
 
-            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount > toNode.Data.cost;
+            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount >= toNode.Data.cost;
             Color lineColor = lockedBorderColor;
             if (toNode.IsPurchased)
             {
@@ -256,7 +256,7 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             
             node.SpriteImage.sprite = node.Data.sprite;
 
-            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount > node.Data.cost;
+            bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount >= node.Data.cost;
             Color nodeBorderColor = lockedBorderColor;
             Color spriteColor = lockedNodeColor;
             if (node.IsPurchased)
