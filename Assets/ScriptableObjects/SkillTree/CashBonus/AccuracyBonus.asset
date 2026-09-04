@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: -2115665248, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Accuracy Bonus
   description: If accuracy is higher than 90%, then a 25% cash bonus is rewarded.
-  cost: 55
+  cost: 40
   effects:
   - {fileID: 11400000, guid: 342f5e7a1d3b85e4b82faa8822e8ec04, type: 2}

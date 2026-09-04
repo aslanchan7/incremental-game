@@ -51,10 +51,10 @@ public class SkillTreeUIEditor : Editor
         //     }
         // }
 
-        for (int i = 0; i < skillTreeUI.lineRendererParent.childCount; i++)
+        for (int i = 0; i < skillTreeUI.LineRendererParent.childCount; i++)
         {
-            skillTreeUI.lineRendererParent.GetChild(i).gameObject.SetActive(true);
-            EditorUtility.SetDirty(skillTreeUI.lineRendererParent.GetChild(i).GetComponent<UILineConnector>());
+            skillTreeUI.LineRendererParent.GetChild(i).gameObject.SetActive(true);
+            EditorUtility.SetDirty(skillTreeUI.LineRendererParent.GetChild(i).GetComponent<UILineConnector>());
         }
 
         EditorSceneManager.MarkSceneDirty(skillTreeUI.gameObject.scene);

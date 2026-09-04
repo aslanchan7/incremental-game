@@ -40,7 +40,7 @@ public class SkillTreeManager : MonoBehaviour
         InitializeNodesData();
 
         // TODO: REMOVE THIS
-        CurrencyManager.Instance.Add("cash", 10000);
+        // CurrencyManager.Instance.Add("cash", 10000);
     }
 
     void InitializeNodesData()

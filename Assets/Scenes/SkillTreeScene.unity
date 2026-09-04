@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeUI
   content: {fileID: 404729477}
   lineRendererPrefab: {fileID: 2532021289084888585, guid: 994922998c2579a40a2d177b22a88afe, type: 3}
-  lineRendererParent: {fileID: 935796246}
+  LineRendererParent: {fileID: 935796246}
   lockedNodeSprite: {fileID: 1511998079, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   popupBox: {fileID: 1875177182}
   GridSpacing: 75

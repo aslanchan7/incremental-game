@@ -16,6 +16,6 @@ MonoBehaviour:
   sprite: {fileID: -16654454480229629, guid: 46e92bc24f2127b4a965eff3fbe741f5, type: 3}
   displayName: Max Ammo
   description: +1 max ammo per magazine.
-  cost: 50
+  cost: 40
   effects:
   - {fileID: 11400000, guid: 7c1fd0cb188e5f440bb46570252ca82b, type: 2}
