@@ -146,5 +146,9 @@ MonoBehaviour:
   targetHitParticles: {fileID: 6156794285846784741, guid: 71eff1e0c890fd14d8d71c1e3647e521, type: 3}
   BaseValue: 0
   MaxHealth: 2
+  currHealth: 0
   flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
   bullseyeFlytextColor: {r: 0.8980393, g: 0.23137257, b: 0.26666668, a: 1}
+  healthBarPrefab: {fileID: 7506085658792486897, guid: 94885bc627756424a80f55c3a6e1a91c, type: 3}
+  healthBarOffsetWorldSpace: {x: 0, y: 1.25, z: 0}
+  healthBarAnimTime: 0.1

@@ -348,6 +348,7 @@ public class ShootingModule : MonoBehaviour
                 Vector3 targetPos = target.transform.position;
                 targetPos.z = 0; // make sure targetPos.z is 0
                 Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
+                
                 yield return DestroyTarget(tracerStartPos, targetPos, true, target, false);
                 if (enableAerialStrikeShake)
                     Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);

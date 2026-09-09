@@ -1,3 +1,4 @@
+using System.Collections;
 using BreakInfinity;
 using UnityEngine;
 
@@ -16,8 +17,18 @@ public abstract class Target : MonoBehaviour
     [SerializeField] protected Flytext flytextPrefab;
     [SerializeField] protected Color bullseyeFlytextColor;
 
+    [Header("Health Bar Settings")]
+    [SerializeField] protected HealthBarUI healthBarPrefab;
+    protected HealthBarUI healthBar;
+    [SerializeField] protected Vector3 healthBarOffsetWorldSpace;
+    [SerializeField] protected float healthBarAnimTime = 0.1f;
+
     void Start()
     {
+        healthBar = Instantiate(healthBarPrefab, transform);
+        Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
+        healthBar.SetPositionWorldSpace(worldPos);
+
         currHealth = MaxHealth;
     }
 
@@ -30,15 +41,15 @@ public abstract class Target : MonoBehaviour
         HandleFlytext(isBullseye);
 
         currHealth -= damage;
-        // TODO: UPDATE HEALTH BAR
-        
+        StartCoroutine(healthBar.UpdateHealthBar(currHealth, MaxHealth, healthBarAnimTime));
+
         if (currHealth <= 0f)
         {
-            TargetDestroyed(isBullseye);
+            StartCoroutine(TargetDestroyed(isBullseye));
         }
     }
 
-    protected virtual void TargetDestroyed(bool isBullseye)
+    protected virtual IEnumerator TargetDestroyed(bool isBullseye)
     {
         TargetSpawner.SpawnedTargets.Remove(this);
         TargetSpawner.RemainingTargets--;
@@ -48,6 +59,10 @@ public abstract class Target : MonoBehaviour
         AddMoneyEarned(isBullseye);
         HandleRespawnTarget();
 
+        do
+        {
+            yield return null;
+        } while (healthBar.IsAnimating);
         Destroy(gameObject);
     }
 
