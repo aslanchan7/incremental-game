@@ -109,7 +109,7 @@ public class ShootingModule : MonoBehaviour
         targetSpawner.OnTargetsCleared -= DisableShooting;
     }
 
-    void Update()
+    void LateUpdate()
     {
         UpdateCrosshair();
     }
