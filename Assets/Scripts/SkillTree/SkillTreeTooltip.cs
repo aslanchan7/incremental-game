@@ -1,11 +1,12 @@
 using System.Collections;
 using TMPro;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkillTreeTooltip : MonoBehaviour
+public partial class SkillTreeTooltip : MonoBehaviour
 {
-    public static SkillTreeTooltip Instance;
+    [AutoStaticsCleanup] public static SkillTreeTooltip Instance = null;
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI title;

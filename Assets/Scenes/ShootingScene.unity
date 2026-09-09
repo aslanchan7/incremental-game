@@ -261,7 +261,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -398,7 +398,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -482,27 +482,33 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
-  targetPrefab: {fileID: 8515914544824480102, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}
-  goldenTargetPrefab: {fileID: 6394022492654286143, guid: 697f07e1eda875f4ab2871fc46425923, type: 3}
+  defaultTargetPrefab: {fileID: 436141970365316559, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}
+  goldenTargetPrefab: {fileID: -9001020489507900468, guid: 697f07e1eda875f4ab2871fc46425923, type: 3}
   shootingModule: {fileID: 319716620}
   SpawnedTargets: []
-  goldenTargetDestroyTime: 2
-  goldenTargetCashMult: 10
-  goldenFlytextColor: {r: 1, g: 0.6745098, b: 0, a: 1}
-  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
-  targetRespawnChanceBag: {fileID: 11400000, guid: e088dae2799a5c942ac0eb95fc216733, type: 2}
-  goldenTargetChanceBag: {fileID: 11400000, guid: be34c3235e3c4f04a888086961048398, type: 2}
+  TargetRespawnChanceBag: {fileID: 11400000, guid: e088dae2799a5c942ac0eb95fc216733, type: 2}
+  GoldenTargetChanceBag: {fileID: 11400000, guid: be34c3235e3c4f04a888086961048398, type: 2}
+  ScreenSegments: 0
+  MinX: 0
+  MaxX: 0
+  MinY: 0
+  MaxY: 0
+  SegmentWidth: 0
   Accuracy: 0
   TotalTargetsSpawned: 0
   TotalTargetsHit: 0
   TotalBullseyesHit: 0
   TotalShotsFired: 0
+  TotalShotsMissed: 0
   RoundStartTime: 0
   TotalMoneyEarned:
     mantissa: 0
     exponent: 0
   SpeedBonusCashEarned: 0
   AccuracyBonusCashEarned: 0
+  comboMultPerHit: 0.1
+  CurrCombo: 0
+  RemainingTargets: 0
   refresh: 0
 --- !u!1 &187667063
 GameObject:
@@ -611,7 +617,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -692,8 +698,6 @@ MonoBehaviour:
   crosshair: {fileID: 802233575}
   reloadImage: {fileID: 1127642315}
   gunVisualsTransform: {fileID: 1710658262}
-  targetHitParticles: {fileID: 6156794285846784741, guid: 71eff1e0c890fd14d8d71c1e3647e521, type: 3}
-  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
   bulletTrailPrefab: {fileID: 3702308357922012407, guid: 435b02af18d1bad4db2109a7fb7a68e7, type: 3}
   aerialStrikeTrailPrefab: {fileID: 3702308357922012407, guid: 50e20d6e171fa2842b1d011527236548, type: 3}
   muzzlePoint: {fileID: 460273536}
@@ -704,7 +708,6 @@ MonoBehaviour:
   aerialStrikeOriginOffset: {x: -2, y: 20, z: 0}
   enableAerialStrikeShake: 1
   enableBulletShake: 1
-  bullseyeFlytextColor: {r: 0.8980393, g: 0.23137257, b: 0.26666668, a: 1}
   ricochetChanceBag: {fileID: 11400000, guid: 7e22f35f1038df145b915564e02002d7, type: 2}
   ricochetBullseyeChanceBag: {fileID: 11400000, guid: 972c0ae9f149dd445aeb3ce9b64606fc, type: 2}
   aerialStrikeChanceBag: {fileID: 11400000, guid: 99f2458ecedac5a4abbc1e72a4a353d3, type: 2}
@@ -712,7 +715,7 @@ MonoBehaviour:
   autoFireCrosshairCountdown: {fileID: 1557237445}
   aerialStrikeTargetThreshold: 5
   autoFire: 1
-  randomBullseye: 1
+  randomBullseye: 0
 --- !u!114 &319716621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -873,7 +876,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1010,7 +1013,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1259,7 +1262,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1589,7 +1592,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1726,7 +1729,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1785,15 +1788,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ComponentVersion: 2
+  m_ComponentVersion: 4
   m_LightType: 4
   m_BlendStyleIndex: 0
+  m_Light2DProvider:
+    rid: -2
+  m_SelectionSources:
+    rid: 6397966015564087376
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 00000000i
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1808,6 +1815,9 @@ MonoBehaviour:
   m_ShadowSoftnessFalloffIntensity: 0.5
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
@@ -1825,6 +1835,19 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6397966015564087376
+      type: {class: Light2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_SelectedHashCode: 4
+        m_SelectedSource:
+          rid: -2
+        m_Provider2DCache:
+          rid: -2
 --- !u!4 &619394802
 Transform:
   m_ObjectHideFlags: 0
@@ -2246,7 +2269,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2384,7 +2407,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -2702,7 +2725,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3172,7 +3195,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1710658263
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3229,6 +3252,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!1 &1840046293
 GameObject:
   m_ObjectHideFlags: 0
@@ -3336,7 +3360,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3473,7 +3497,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -3737,7 +3761,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1

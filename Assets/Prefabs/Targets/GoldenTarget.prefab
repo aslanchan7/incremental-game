@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2477641792034853449}
   - component: {fileID: 1688681088297436319}
   - component: {fileID: 459880241369295931}
+  - component: {fileID: -9001020489507900468}
   m_Layer: 3
   m_Name: GoldenTarget
   m_TagString: Untagged
@@ -35,7 +36,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1688681088297436319
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,6 +93,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!58 &459880241369295931
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -128,3 +130,24 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 1
+--- !u!114 &-9001020489507900468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6394022492654286143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8476aae5d39dfb24180c96b38f61a71b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoldenTarget
+  TargetSpawner: {fileID: 0}
+  targetHitParticles: {fileID: 6156794285846784741, guid: 71eff1e0c890fd14d8d71c1e3647e521, type: 3}
+  BaseValue: 0
+  MaxHealth: 2
+  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
+  bullseyeFlytextColor: {r: 0.8980393, g: 0.23137257, b: 0.26666668, a: 1}
+  selfDestroyTime: 2.5
+  cashMult: 10
+  goldenFlytextColor: {r: 1, g: 0.6745098, b: 0, a: 1}

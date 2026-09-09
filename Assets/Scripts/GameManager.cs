@@ -1,8 +1,9 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    [AutoStaticsCleanup] public static GameManager Instance = null;
 
     [Header("References")]
     [SerializeField] private PlayerData playerData;
@@ -16,13 +17,13 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
 
         InitializePlayerRuntimeStats();

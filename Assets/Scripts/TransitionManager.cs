@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class TransitionManager : MonoBehaviour
+public partial class TransitionManager : MonoBehaviour
 {
-    public static TransitionManager Instance;
+    [AutoStaticsCleanup] public static TransitionManager Instance = null;
 
     [Header("References")]
     private CanvasGroup canvasGroup;

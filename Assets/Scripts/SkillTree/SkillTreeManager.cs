@@ -1,9 +1,10 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
-public class SkillTreeManager : MonoBehaviour
+public partial class SkillTreeManager : MonoBehaviour
 {
-    public static SkillTreeManager Instance;
+    [AutoStaticsCleanup] public static SkillTreeManager Instance = null;
 
     void Awake()
     {

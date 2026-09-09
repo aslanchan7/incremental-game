@@ -17,13 +17,10 @@ public class AmmoUI : MonoBehaviour
 
     private List<Image> ammoImages = new();
 
-    void Awake()
-    {
-        playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
-    }
-
     void Start()
     {
+        playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
+        
         for (int i = 0; i < playerRuntimeStats.MaxAmmo; i++)
         {
             GameObject instantiated = Instantiate(ammoPrefab, transform);

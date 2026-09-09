@@ -17,36 +17,35 @@ public class TargetSpawner : MonoBehaviour
     [SerializeField] private float spawnPaddingRight;
     [Space(10)]
     [SerializeField] private float minDistBetweenTargets = 1f;
-    [SerializeField] private float timePerTarget = 0.5f;
+    [SerializeField] float timePerTarget = 1f;
     [SerializeField] private LayerMask targetLayer;
 
     [Header("References")]
-    [SerializeField] private GameObject targetPrefab;
-    [SerializeField] private GameObject goldenTargetPrefab;
+    [SerializeField] private DefaultTarget defaultTargetPrefab;
+    [SerializeField] private GoldenTarget goldenTargetPrefab;
     [SerializeField] private ShootingModule shootingModule;
-    [HideInInspector] public List<GameObject> SpawnedTargets = new();
+    [HideInInspector] public List<Target> SpawnedTargets = new();
     private RoundRuntimeData roundRuntimeData;
 
     [Header("Golden Target Settings")]
-    [SerializeField] private float goldenTargetDestroyTime = 4f;
-    [SerializeField] private float goldenTargetCashMult = 10f;
-    [SerializeField] private Color goldenFlytextColor;
-    [SerializeField] private Flytext flytextPrefab;
-    private List<GameObject> goldenTargetList = new();
+
+    private List<GoldenTarget> goldenTargetList = new();
 
     [Header("Actions")]
     public Action OnTargetsCleared;
     public Action OnRoundStart;
 
     [Header("Chance Bags")]
-    [SerializeField] private ChanceBag targetRespawnChanceBag;
-    [SerializeField] private ChanceBag goldenTargetChanceBag;
+    public ChanceBag TargetRespawnChanceBag;
+    public ChanceBag GoldenTargetChanceBag;
 
     [Header("Screen Variables")]
-    private int screenSegments;
-    private float minX, maxX;
-    private float minY, maxY;
-    private float segmentWidth;
+    [HideInInspector] public int ScreenSegments;
+    [HideInInspector] public float MinX;
+    [HideInInspector] public float MaxX;
+    [HideInInspector] public float MinY;
+    [HideInInspector] public float MaxY;
+    [HideInInspector] public float SegmentWidth;
 
     [Header("Stats for Summary UI")]
     [HideInInspector] public float Accuracy;
@@ -54,18 +53,18 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public int TotalTargetsHit;
     [HideInInspector] public int TotalBullseyesHit;
     [HideInInspector] public int TotalShotsFired;
+    [HideInInspector] public int TotalShotsMissed;
     [HideInInspector] public float RoundStartTime;
     [HideInInspector] public BigDouble TotalMoneyEarned;
     [HideInInspector] public double SpeedBonusCashEarned;
     [HideInInspector] public double AccuracyBonusCashEarned;
     
     [Header("Combo Settings")]
-    private float comboMultPerHit = 0.1f;
-    private int currCombo;
+    public float comboMultPerHit = 0.1f;
+    public int CurrCombo;
 
     [Header("Target Variables")]
-    private int remainingTargets;
-    private bool isSpawningTargetsOverTime;
+    [HideInInspector] public int RemainingTargets;
 
     [Header("Debug")]
     [SerializeField] private bool refresh;
@@ -115,57 +114,36 @@ public class TargetSpawner : MonoBehaviour
 
     void SpawnInitialTargets()
     {
-        screenSegments = Mathf.Min(roundRuntimeData.InitialTargetCount, maxScreenSegments);
+        ScreenSegments = Mathf.Min(roundRuntimeData.InitialTargetCount, maxScreenSegments);
 
-        if (screenSegments <= 0)
+        if (ScreenSegments <= 0)
         {
             Debug.LogError("Screen Segments is less than or equal to 0");
         }
 
-        minX = spawnPaddingLeft;
-        maxX = Screen.width - spawnPaddingRight;
-        minY = spawnPaddingBottom;
-        maxY = Screen.height - spawnPaddingTop;
-        segmentWidth = Screen.width / screenSegments;
+        MinX = spawnPaddingLeft;
+        MaxX = Screen.width - spawnPaddingRight;
+        MinY = spawnPaddingBottom;
+        MaxY = Screen.height - spawnPaddingTop;
+        SegmentWidth = Screen.width / ScreenSegments;
 
         for (int i = 0; i < roundRuntimeData.InitialTargetCount; i++)
         {
-            SpawnTarget(i % screenSegments);
+            SpawnTarget(i % ScreenSegments);
         }
-
-        // StartCoroutine(SpawnTargetsOverTime());
-    }
-
-    // IEnumerator SpawnTargetsOverTime()
-    // {
-    //     isSpawningTargetsOverTime = true;
-    //     while (TotalTargetsSpawned < roundRuntimeData.TotalTargetCount)
-    //     {
-    //         yield return new WaitForSeconds(roundRuntimeData.TimeBetweenSpawns);
-    //         int segmentIdx = Random.Range(0, screenSegments);
-    //         SpawnTarget(segmentIdx);
-    //     }
-    //     isSpawningTargetsOverTime = false;
-    // }
-
-    public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits)
-    {
-        hits = Physics2D.OverlapCircleAll(worldPos, radius, targetLayer);
-        return hits.Length == 0;
     }
 
     void DestroyTargets()
     {
-        // StopCoroutine(SpawnTargetsOverTime());
         foreach (var target in SpawnedTargets)
         {
             Destroy(target);
         }
         TotalTargetsSpawned = 0;
-        remainingTargets = 0;
+        RemainingTargets = 0;
     }
 
-    private void SpawnTarget(int segmentIdx, bool isGolden = false)
+    public void SpawnTarget(int segmentIdx, bool isGolden = false)
     {
         Vector2 worldPos;
         int attempts = 0;
@@ -182,47 +160,34 @@ public class TargetSpawner : MonoBehaviour
             return;
         }
 
-        GameObject prefabToInstantiate = isGolden ? goldenTargetPrefab : targetPrefab;
-        GameObject instantiated = Instantiate(prefabToInstantiate, worldPos, Quaternion.identity, transform);
+        Target prefabToInstantiate = isGolden ? goldenTargetPrefab : defaultTargetPrefab;
+        Target instantiated = Instantiate(prefabToInstantiate, worldPos, Quaternion.identity, transform);
+        instantiated.TargetSpawner = this;
 
         if (isGolden)
-        {
-            StartCoroutine(GoldenTargetSelfDestroy(instantiated));
-            goldenTargetList.Add(instantiated);
-        }
+            goldenTargetList.Add(instantiated.GetComponent<GoldenTarget>());
 
         SpawnedTargets.Add(instantiated);
         TotalTargetsSpawned++;
-        remainingTargets++;
-    }
-
-    IEnumerator GoldenTargetSelfDestroy(GameObject target)
-    {
-        yield return new WaitForSeconds(goldenTargetDestroyTime);
-        if (target != null)
-        {
-            Destroy(target);
-            remainingTargets--;
-            Debug.Log("Golden Target destroyed itself");
-        }
+        RemainingTargets++;
     }
 
     Vector2 GetRandomSpawnWorldPos(int segmentIndex)
     {
         float randX = Random.Range(0f, 1f);
-        float xPos = (segmentWidth * segmentIndex) + (segmentWidth * randX);
-        xPos = xPos < minX
-            ? minX
-            : xPos > maxX
-                ? maxX
+        float xPos = (SegmentWidth * segmentIndex) + (SegmentWidth * randX);
+        xPos = xPos < MinX
+            ? MinX
+            : xPos > MaxX
+                ? MaxX
                 : xPos;
 
         float randY = Random.Range(0f, 1f);
         float yPos = randY * Screen.height;
-        yPos = yPos < minY
-            ? minY
-            : yPos > maxY
-                ? maxY
+        yPos = yPos < MinY
+            ? MinY
+            : yPos > MaxY
+                ? MaxY
                 : yPos;
 
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(new(xPos, yPos));
@@ -230,48 +195,21 @@ public class TargetSpawner : MonoBehaviour
         return worldPos;
     }
 
-    void HandleShotFired(GameObject target, bool isBullseye)
+    public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits)
+    {
+        hits = Physics2D.OverlapCircleAll(worldPos, radius, targetLayer);
+        return hits.Length == 0;
+    }
+
+    void HandleShotFired(Target target, bool isBullseye, Vector3 shotPos)
     {
         TotalShotsFired++;
-        currCombo = target != null ? currCombo + 1 : 0;
+        TotalShotsMissed += target == null ? 1 : 0;
+        CurrCombo += target != null ? 1 : 0;
 
         if (target != null)
         {
-            SpawnedTargets.Remove(target);
-            remainingTargets--;
-            TotalTargetsHit++;
-
-            BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
-            if (goldenTargetList.Contains(target))
-            {
-                moneyEarned *= goldenTargetCashMult;
-                Flytext flytext = Instantiate(flytextPrefab, target.transform.position, Quaternion.identity);
-                flytext.Show($"x{goldenTargetCashMult:F0}", 1f, Vector3.up, goldenFlytextColor);
-            }
-            // Account for Combo Bonus
-            float comboBonusMult = 1 + (currCombo * comboMultPerHit);
-            moneyEarned = roundRuntimeData.IsComboBonusActive ? moneyEarned * comboBonusMult : moneyEarned;
-            TotalMoneyEarned += moneyEarned;
-            TotalBullseyesHit += isBullseye ? 1 : 0;
-
-            CurrencyManager.Instance.Add("cash", moneyEarned);
-
-            // Potentially respawn target here based on TargetRespawnChance
-            if (roundRuntimeData.TargetRespawnChance != 0f)
-            {
-                bool respawnTarget = targetRespawnChanceBag.Pull(roundRuntimeData.TargetRespawnChance);
-                if (respawnTarget)
-                {
-                    bool isGoldenTarget = false;
-                    if (roundRuntimeData.GoldenTargetChance != 0f)
-                    {
-                        isGoldenTarget = goldenTargetChanceBag.Pull(roundRuntimeData.GoldenTargetChance);
-                    }
-
-                    int segmentIdx = Random.Range(0, screenSegments);
-                    SpawnTarget(segmentIdx, isGoldenTarget);
-                }
-            }
+            target.HandleShot(isBullseye, 1f, shotPos);
         }
 
         CheckRoundEndCondition();
@@ -279,7 +217,7 @@ public class TargetSpawner : MonoBehaviour
 
     void CheckRoundEndCondition()
     {
-        if (remainingTargets == 0 && !isSpawningTargetsOverTime)
+        if (RemainingTargets == 0)
         {
             // Apply Speed Bonus
             float extraTime = (TotalTargetsHit * timePerTarget) - (Time.time - RoundStartTime);
@@ -290,7 +228,7 @@ public class TargetSpawner : MonoBehaviour
             }
 
             // Apply Accuracy Bonus
-            Accuracy = (float)TotalTargetsHit / TotalShotsFired;
+            Accuracy = (TotalShotsFired - TotalShotsMissed) / (float)TotalShotsFired;
             if (Accuracy >= 0.9f)
             {
                 AccuracyBonusCashEarned = TotalMoneyEarned.ToDouble() * roundRuntimeData.AccuracyBonusCashPercentage;

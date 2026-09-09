@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -13,8 +14,6 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private Image crosshair;
     [SerializeField] private Image reloadImage;
     [SerializeField] private Transform gunVisualsTransform;
-    [SerializeField] private GameObject targetHitParticles;
-    [SerializeField] private Flytext flytextPrefab;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
@@ -25,14 +24,12 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private float bulletTrailSpeed;
     [SerializeField] private float aerialStrikeTrailSpeed = 50f;
 
-
     [Header("Config")]
     [SerializeField] private float bullseyeDistanceThreshold;
     [SerializeField] private float ricochetDistance;
     [SerializeField] private Vector3 aerialStrikeOriginOffset = new(-2f, 20f, 0f);
     [SerializeField] private bool enableAerialStrikeShake = true;
     [SerializeField] private bool enableBulletShake = true;
-    [SerializeField] private Color bullseyeFlytextColor;
 
     [Space(20)]
     private int currAmmo;
@@ -58,7 +55,7 @@ public class ShootingModule : MonoBehaviour
     [Space(20)]
 
     [Header("Actions")]
-    public Action<GameObject, bool> ShotFired; // GameObject: target, 1st bool: isBullseye
+    public Action<Target, bool, Vector3> ShotFired;
     public Action<int> OnAmmoValueChanged;
 
     [Header("Auto Fire Settings")]
@@ -206,10 +203,10 @@ public class ShootingModule : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         var hit = Physics2D.GetRayIntersection(ray);
 
-        GameObject target = null;
+        Target target = null;
         bool isBullseye = false;
 
-        List<GameObject> hits = new();
+        List<Target> hits = new();
         List<bool> isBullseyes = new();
 
         if (hit.collider != null)
@@ -227,7 +224,7 @@ public class ShootingModule : MonoBehaviour
                 isBullseye = distToBullseye < bullseyeDistanceThreshold;
             }
 
-            target = hit.collider.gameObject;
+            target = hit.collider.GetComponent<Target>();
 
             hits.Add(target);
             isBullseyes.Add(isBullseye);
@@ -251,7 +248,7 @@ public class ShootingModule : MonoBehaviour
         }
     }
 
-    private IEnumerator HandleShotFired(Vector2 shotPos, List<GameObject> hits, List<bool> isBullseyes)
+    private IEnumerator HandleShotFired(Vector2 shotPos, List<Target> hits, List<bool> isBullseyes)
     {
         // Vector3 muzzlePointInWorldSpace = Camera.main.ScreenToWorldPoint(muzzlePoint.position);
         Vector3 muzzlePointInWorldSpace = muzzlePoint.position;
@@ -260,15 +257,8 @@ public class ShootingModule : MonoBehaviour
         SFXManager.PlaySound(SoundType.Gunshot);
         if (enableBulletShake)
             Camera.main.GetComponent<CameraShake>().Recoil(new(0f, -1f), 0.15f, gunVisualsTransform);
-        // yield return SpawnTracer(startPos, shotPosVec3);
-        // if (hits[0] != null)
-        // {
-        //     Instantiate(targetHitParticles, shotPosVec3, Quaternion.identity);
-        //     SFXManager.PlaySound(SoundType.TargetHit);
-        //     Destroy(hits[0]);
-        // }
-        // ShotFired?.Invoke(hits[0], isBullseyes[0]);
-        yield return DestroyTarget(startPos, shotPosVec3, hits[0], isBullseyes[0]);
+        
+        yield return DestroyTarget(startPos, shotPosVec3, false, hits[0], isBullseyes[0]);
 
         for (int i = 1; i < hits.Count; i++)
         {
@@ -276,38 +266,17 @@ public class ShootingModule : MonoBehaviour
             Vector3 tracerStartPos = hits[i - 1].transform.position;
             tracerStartPos.z = 0;
             if (i == 1) tracerStartPos = shotPosVec3;
-            yield return DestroyTarget(tracerStartPos, hits[i].transform.position, hits[i], isBullseyes[i]);
-            // yield return SpawnTracer(tracerStartPos, hits[i].transform.position);
-            // if (hits[i] != null)
-            // {
-            //     Instantiate(targetHitParticles, hits[i].transform.position, Quaternion.identity);
-            //     SFXManager.PlaySound(SoundType.TargetHit);
-
-            //     Destroy(hits[i]);
-            // }
-            // ShotFired?.Invoke(hits[i], isBullseyes[i]);
+            yield return DestroyTarget(tracerStartPos, hits[i].transform.position, false, hits[i], isBullseyes[i]);
         }
     }
 
-    private IEnumerator DestroyTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, GameObject hit, bool isBullseye)
+    private IEnumerator DestroyTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
     {
-        yield return SpawnTracer(tracerStartPos, tracerEndPos);
-        if (hit != null)
-        {
-            Instantiate(targetHitParticles, tracerEndPos, Quaternion.identity);
-            SFXManager.PlaySound(SoundType.TargetHit);
-            Destroy(hit);
-
-            if (isBullseye)
-            {
-                Flytext flytext = Instantiate(flytextPrefab, hit.transform.position, Quaternion.identity);
-                flytext.Show("bullseye!", 1f, Vector2.up, bullseyeFlytextColor);
-            }
-        }
-        ShotFired?.Invoke(hit, isBullseye);
+        yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
+        ShotFired?.Invoke(hit, isBullseye, tracerEndPos);
     }
 
-    private void HandleRicochetShot(GameObject target, ref List<GameObject> hits, ref List<bool> isBullseyes)
+    private void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes)
     {
         if (playerRuntimeStats.RicochetShotChance == 0f)
         {
@@ -317,13 +286,13 @@ public class ShootingModule : MonoBehaviour
 
         targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] colliders);
 
-        GameObject firstHit = null;
+        Target firstHit = null;
         if (colliders.Length >= 2)
         {
             foreach (var collider in colliders)
             {
-                if (hits.Contains(collider.gameObject)) continue;
-                firstHit = collider.gameObject;
+                if (hits.Contains(collider.GetComponent<Target>())) continue;
+                firstHit = collider.GetComponent<Target>();
                 break;
             }
         }
@@ -348,7 +317,7 @@ public class ShootingModule : MonoBehaviour
         }
     }
 
-    private IEnumerator HandleAerialStrike(List<GameObject> shotTargets)
+    private IEnumerator HandleAerialStrike(List<Target> shotTargets)
     {
         if (playerRuntimeStats.AerialStrikeChance == 0f)
         {
@@ -363,7 +332,7 @@ public class ShootingModule : MonoBehaviour
         
         if (aerialStrike || isAerialStrikeDue)
         {
-            List<GameObject> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
+            List<Target> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);
             isAerialStrikeDue = currTargetsOnScreen.Count <= aerialStrikeTargetThreshold;
             if (isAerialStrikeDue)  // If there are too few targets then don't perform aerial strike but queue it up 
             {
@@ -379,10 +348,7 @@ public class ShootingModule : MonoBehaviour
                 Vector3 targetPos = target.transform.position;
                 targetPos.z = 0; // make sure targetPos.z is 0
                 Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
-                yield return SpawnTracer(tracerStartPos, targetPos, true);
-                SFXManager.PlaySound(SoundType.TargetHit);
-                Destroy(target);
-                ShotFired?.Invoke(target, false);
+                yield return DestroyTarget(tracerStartPos, targetPos, true, target, false);
                 if (enableAerialStrikeShake)
                     Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);
             }

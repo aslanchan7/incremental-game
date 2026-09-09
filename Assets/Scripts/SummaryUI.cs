@@ -47,13 +47,6 @@ public class SummaryUI : MonoBehaviour
 
     private IEnumerator UpdateStats()
     {
-        // accuracy.text = $"{targetSpawner.Accuracy * 100:F0}%";
-        // targetsShot.text = $"{targetSpawner.TotalTargetsHit}";
-        // bullseye.text = $"{(float)targetSpawner.TotalBullseyesHit / targetSpawner.TotalTargetsHit * 100:F0}%";
-        // timeTaken.text = $"{Time.time - targetSpawner.RoundStartTime:F1}s";
-        // moneyEarned.text = $"Money Earned: ${targetSpawner.TotalMoneyEarned.ToDouble():F0}";
-        // accuracyMoneyEarned.text = targetSpawner.AccuracyBonusCashEarned > 0d ? $"(+${targetSpawner.AccuracyBonusCashEarned:F0})" : "";
-
         // Initialize string values
         accuracy.text = "0%";
         targetsShot.text = "0";
@@ -65,7 +58,7 @@ public class SummaryUI : MonoBehaviour
 
         StartCoroutine(IncrementText(accuracy, 0f, targetSpawner.Accuracy * 100f, animTime, "{0:F0}%"));
         StartCoroutine(IncrementText(targetsShot, 0f, targetSpawner.TotalTargetsHit, animTime, "{0:F0}"));
-        StartCoroutine(IncrementText(bullseye, 0f, (float)targetSpawner.TotalBullseyesHit / targetSpawner.TotalTargetsHit * 100, animTime, "{0:F0}%"));
+        StartCoroutine(IncrementText(bullseye, 0f, (float)targetSpawner.TotalBullseyesHit / targetSpawner.TotalShotsFired * 100, animTime, "{0:F0}%"));
         StartCoroutine(IncrementText(timeTaken, 0f, Time.time - targetSpawner.RoundStartTime, animTime, "{0:F1}s"));
 
         if (targetSpawner.AccuracyBonusCashEarned > 0d)

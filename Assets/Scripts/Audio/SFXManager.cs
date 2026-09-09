@@ -1,12 +1,13 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Audio;
 
 [RequireComponent(typeof(AudioSource))]
-public class SFXManager : MonoBehaviour
+public partial class SFXManager : MonoBehaviour
 {
     [SerializeField] private SoundsSO SO;
-    private static SFXManager instance = null;
+    [AutoStaticsCleanup] private static SFXManager instance = null;
     private AudioSource audioSource;
 
     private void Awake()

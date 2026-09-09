@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BreakInfinity;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
-public class CurrencyManager : MonoBehaviour {
-    public static CurrencyManager Instance;
+public partial class CurrencyManager : MonoBehaviour {
+    [AutoStaticsCleanup] public static CurrencyManager Instance = null;
     [SerializeField] private List<CurrencySO> allCurrencies;
     private Dictionary<string, CurrencySO> currencyDict;
     public Action<string> OnCurrencyChanged;
@@ -19,9 +20,12 @@ public class CurrencyManager : MonoBehaviour {
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            currencyDict = allCurrencies.ToDictionary(c => c.id, c => c);
+            foreach (var currency in currencyDict)
+            {
+                currency.Value.amount = 0;
+            }
         }
-
-        currencyDict = allCurrencies.ToDictionary(c => c.id, c => c);
     }
 
     public void Add(string currencyId, BigDouble amount)
