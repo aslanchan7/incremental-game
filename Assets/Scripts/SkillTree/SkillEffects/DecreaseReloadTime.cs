@@ -8,7 +8,8 @@ public class DecreaseReloadTime : SkillEffect
     [SerializeField] private float decreasePercentage = 0.25f;
     public override void Apply(SkillEffectContext context)
     {
-        float decreaseTime = decreasePercentage * context.PlayerRuntimeStats.ReloadTime;
-        context.PlayerRuntimeStats.ReloadTime -= decreaseTime;
+        // TODO
+        // float decreaseTime = decreasePercentage * context.GunData.ReloadTime;
+        // context.GunData.ReloadTime -= decreaseTime;
     }
 }

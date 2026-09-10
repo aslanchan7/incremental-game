@@ -15,7 +15,8 @@ public class IncreaseAerialStrikeChance : SkillEffect
             chanceToAdd = aerialStrikeChance;
         } else if (variable == PlayerStatsCondition.MaxAmmo)
         {
-            chanceToAdd = aerialStrikeChance * context.PlayerRuntimeStats.MaxAmmo;
+            // TODO
+            // chanceToAdd = aerialStrikeChance * context.GunData.MaxAmmo;
         }
 
         context.PlayerRuntimeStats.AerialStrikeChance += chanceToAdd;

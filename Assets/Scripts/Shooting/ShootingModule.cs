@@ -1,28 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class ShootingModule : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TargetSpawner targetSpawner;
     [SerializeField] private Image crosshair;
-    [SerializeField] private Image reloadImage;
-    [SerializeField] private Transform gunVisualsTransform;
+    // [SerializeField] private Transform gunVisualsTransform;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
-    [Header("Bullet Trail")]
-    [SerializeField] private TrailRenderer bulletTrailPrefab;
-    [SerializeField] private TrailRenderer aerialStrikeTrailPrefab;
-    [SerializeField] private Transform muzzlePoint;
-    [SerializeField] private float bulletTrailSpeed;
-    [SerializeField] private float aerialStrikeTrailSpeed = 50f;
+    [Header("Guns")]
+    private Gun currGun;
 
     [Header("Config")]
     [SerializeField] private float bullseyeDistanceThreshold;
@@ -31,32 +24,9 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private bool enableAerialStrikeShake = true;
     [SerializeField] private bool enableBulletShake = true;
 
-    [Space(20)]
-    private int currAmmo;
-    [HideInInspector]
-    public int CurrAmmo
-    {
-        get => currAmmo;
-        set
-        {
-            if (currAmmo == value) return; // if value didn't change don't do anything
-            currAmmo = value;
-            OnAmmoValueChanged.Invoke(currAmmo);
-        }
-    }
-    private bool isReloading;
-
     [Header("Chance Bags")]
-    [SerializeField] private ChanceBag ricochetChanceBag;
-    [SerializeField] private ChanceBag ricochetBullseyeChanceBag;
     [SerializeField] private ChanceBag aerialStrikeChanceBag;
     [SerializeField] private ChanceBag bullseyeChanceBag;
-
-    [Space(20)]
-
-    [Header("Actions")]
-    public Action<Target, bool, Vector3> ShotFired;
-    public Action<int> OnAmmoValueChanged;
 
     [Header("Auto Fire Settings")]
     [SerializeField] private Image autoFireCrosshairCountdown;
@@ -72,6 +42,9 @@ public class ShootingModule : MonoBehaviour
     [SerializeField] private bool autoFire;
     [SerializeField] private bool randomBullseye;
 
+    // [Header("Actions")]
+    // public Action OnGunInitialized;
+
     void Awake()
     {
         controls = new();
@@ -80,12 +53,10 @@ public class ShootingModule : MonoBehaviour
     void Start()
     {
         playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
-        EnableShooting();
-        CurrAmmo = playerRuntimeStats.MaxAmmo;
+        EquipGun(GameManager.Instance.CurrGunType);
         crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
 
-        reloadImage.color = Color.white;
-        reloadImage.gameObject.SetActive(false);
+        EnableShooting();
     }
 
     void OnEnable()
@@ -106,6 +77,35 @@ public class ShootingModule : MonoBehaviour
         targetSpawner.OnTargetsCleared -= DisableShooting;
     }
 
+    private void EquipGun(GunType gunType)
+    {
+        if (currGun != null)
+            Destroy(currGun.gameObject);
+
+        switch (gunType)
+        {
+            case GunType.Pistol:
+
+                break;
+            case GunType.Shotgun:
+                break;
+            case GunType.Sniper:
+                break;
+        }
+
+        GameObject gunGO = Instantiate(GameManager.Instance.GunDictionary[gunType], transform);
+        currGun = gunGO.GetComponent<Gun>();
+
+        if (currGun == null)
+        {
+            Debug.LogError($"ShootingModule: prefab '{gunGO.name}' has no Gun component attached.");
+            return;
+        }
+
+        currGun.InitializeGunData();
+        GameManager.Instance.CurrGunInstance = currGun;
+    }
+
     void LateUpdate()
     {
         UpdateCrosshair();
@@ -115,29 +115,28 @@ public class ShootingModule : MonoBehaviour
     {
         crosshair.gameObject.SetActive(true);
         Cursor.visible = false;
-        if (autoFire)
-        {
-            currFireRateCoroutine = StartCoroutine(HandleFireRate());
-        }
-        else
-        {
-            controls.Player.Shoot.performed += ManualShoot;
-        }
-    }
 
+        if (autoFire)
+            currFireRateCoroutine = StartCoroutine(HandleFireRate());
+        else
+            controls.Player.Shoot.performed += ManualShoot;
+    }
 
     public void DisableShooting()
     {
         crosshair.gameObject.SetActive(false);
         Cursor.visible = true;
+
         if (autoFire)
-        {
             StopCoroutine(currFireRateCoroutine);
-        }
         else
-        {
             controls.Player.Shoot.performed -= ManualShoot;
-        }
+    }
+
+    void UpdateCrosshair()
+    {
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        crosshair.rectTransform.position = screenPos;
     }
 
     private IEnumerator HandleFireRate()
@@ -174,7 +173,7 @@ public class ShootingModule : MonoBehaviour
             {
                 autoFireCrosshairCountdown.fillAmount = 0;
             },
-            1f / playerRuntimeStats.AutoFireRate
+            1f / currGun.AutoFireRate
         );
     }
 
@@ -190,11 +189,11 @@ public class ShootingModule : MonoBehaviour
 
     void TryShoot()
     {
-        if (isReloading) return; // Can't shoot while reloading
+        if (currGun.IsReloading) return; // Can't shoot while reloading
 
-        if (CurrAmmo == 0)
+        if (currGun.CurrAmmo == 0)
         {
-            reloadCoroutine = StartCoroutine(TryReload());
+            reloadCoroutine = StartCoroutine(Reload());
             return;
         }
 
@@ -202,20 +201,16 @@ public class ShootingModule : MonoBehaviour
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         var hit = Physics2D.GetRayIntersection(ray);
-
-        Target target = null;
-        bool isBullseye = false;
-
+        
         List<Target> hits = new();
         List<bool> isBullseyes = new();
 
         if (hit.collider != null)
         {
+            bool isBullseye;
             if (randomBullseye)
             {
-                isBullseye = playerRuntimeStats.BullseyeChance == 0f
-                    ? false
-                    : bullseyeChanceBag.Pull(playerRuntimeStats.BullseyeChance);
+                isBullseye = bullseyeChanceBag.Pull(currGun.BullseyeChance);
             }
             else
             {
@@ -224,12 +219,12 @@ public class ShootingModule : MonoBehaviour
                 isBullseye = distToBullseye < bullseyeDistanceThreshold;
             }
 
-            target = hit.collider.GetComponent<Target>();
+            Target target = hit.collider.GetComponent<Target>();
 
             hits.Add(target);
             isBullseyes.Add(isBullseye);
 
-            HandleRicochetShot(target, ref hits, ref isBullseyes);
+            currGun.HandleRicochetShot(target, ref hits, ref isBullseyes, ricochetDistance);
         }
         else
         {
@@ -237,85 +232,95 @@ public class ShootingModule : MonoBehaviour
             isBullseyes.Add(false);
         }
 
-        StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
+        StartCoroutine(currGun.HandleShot(worldPos, hits, isBullseyes));
+        // StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
         aerialStrikeCoroutine = StartCoroutine(HandleAerialStrike(hits));
 
-        CurrAmmo--;
-        if (CurrAmmo == 0)
+        // CurrAmmo--;
+        if (currGun.CurrAmmo == 0)
         {
-            reloadCoroutine = StartCoroutine(TryReload());
+            reloadCoroutine = StartCoroutine(Reload());
             return;
         }
     }
 
-    private IEnumerator HandleShotFired(Vector2 shotPos, List<Target> hits, List<bool> isBullseyes)
+    private IEnumerator Reload()
     {
-        // Vector3 muzzlePointInWorldSpace = Camera.main.ScreenToWorldPoint(muzzlePoint.position);
-        Vector3 muzzlePointInWorldSpace = muzzlePoint.position;
-        Vector3 startPos = new(muzzlePointInWorldSpace.x, muzzlePointInWorldSpace.y, 0);
-        Vector3 shotPosVec3 = new(shotPos.x, shotPos.y, 0);
-        SFXManager.PlaySound(SoundType.Gunshot);
-        if (enableBulletShake)
-            Camera.main.GetComponent<CameraShake>().Recoil(new(0f, -1f), 0.15f, gunVisualsTransform);
-        
-        yield return DestroyTarget(startPos, shotPosVec3, false, hits[0], isBullseyes[0]);
-
-        for (int i = 1; i < hits.Count; i++)
-        {
-            if (hits[i - 1] == null) continue;
-            Vector3 tracerStartPos = hits[i - 1].transform.position;
-            tracerStartPos.z = 0;
-            if (i == 1) tracerStartPos = shotPosVec3;
-            yield return DestroyTarget(tracerStartPos, hits[i].transform.position, false, hits[i], isBullseyes[i]);
-        }
-    }
-
-    private IEnumerator DestroyTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
-    {
-        yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
-        ShotFired?.Invoke(hit, isBullseye, tracerEndPos);
-    }
-
-    private void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes)
-    {
-        if (playerRuntimeStats.RicochetShotChance == 0f)
-        {
-            ricochetChanceBag.Clear();
-            return;
-        }
-
-        targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] colliders);
-
-        Target firstHit = null;
-        if (colliders.Length >= 2)
-        {
-            foreach (var collider in colliders)
+        StartCoroutine(currGun.Reload());
+        yield return BasicAnimations.Interpolate(
+            () =>
             {
-                if (hits.Contains(collider.GetComponent<Target>())) continue;
-                firstHit = collider.GetComponent<Target>();
-                break;
-            }
-        }
-
-        if (firstHit != null)
-        {
-            bool ricochet = ricochetChanceBag.Pull(playerRuntimeStats.RicochetShotChance);
-            if (ricochet)
+                crosshair.color = playerRuntimeStats.InactiveCrosshairColor;
+                autoFireCrosshairCountdown.fillAmount = 1f;
+            },
+            (t) =>
             {
-                hits.Add(firstHit);
-                bool isBullseye = false;
-                if (playerRuntimeStats.RicochetBullseyeChance != 0f)
-                {
-                    isBullseye = ricochetBullseyeChanceBag.Pull(playerRuntimeStats.RicochetBullseyeChance);
-                }
-                isBullseyes.Add(isBullseye);
-
-                // hits.Count-1 gives you the curr number of ricochet bounces. only if this is less than RicochetMaxBounce then handle another ricochet shot
-                if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce)
-                    HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
-            }
-        }
+                autoFireCrosshairCountdown.fillAmount = 1 - t;
+            },
+            () =>
+            {
+                crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
+                autoFireCrosshairCountdown.fillAmount = 0f;
+            },
+            currGun.ReloadTime
+        );
+        reloadCoroutine = null;
     }
+
+    // private IEnumerator ShootTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
+    // {
+    //     yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
+    //     float damage = currGunData.Damage;
+    //     bool isCrit = false;
+    //     if (currGunData.CritChance != 0f)
+    //     {
+    //         isCrit = critChanceBag.Pull(currGunData.CritChance);   
+    //         damage *= isCrit ? 2f : 1f;
+    //     }
+
+    //     ShotFired?.Invoke(hit, isBullseye, isCrit, isAerialStrike, tracerEndPos);
+    // }
+
+    // private void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes)
+    // {
+    //     if (playerRuntimeStats.RicochetShotChance == 0f)
+    //     {
+    //         ricochetChanceBag.Clear();
+    //         return;
+    //     }
+
+    //     targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] colliders);
+
+    //     Target firstHit = null;
+    //     if (colliders.Length >= 2)
+    //     {
+    //         foreach (var collider in colliders)
+    //         {
+    //             if (hits.Contains(collider.GetComponent<Target>())) continue;
+    //             firstHit = collider.GetComponent<Target>();
+    //             break;
+    //         }
+    //     }
+
+    //     if (firstHit != null)
+    //     {
+    //         bool ricochet = ricochetChanceBag.Pull(playerRuntimeStats.RicochetShotChance);
+    //         if (ricochet)
+    //         {
+    //             hits.Add(firstHit);
+    //             bool isBullseye = false;
+    //             if (playerRuntimeStats.RicochetBullseyeChance != 0f)
+    //             {
+    //                 isBullseye = ricochetBullseyeChanceBag.Pull(playerRuntimeStats.RicochetBullseyeChance);
+    //             }
+    //             isBullseyes.Add(isBullseye);
+
+    //             // hits.Count-1 gives you the curr number of ricochet bounces. only if this is less than RicochetMaxBounce then handle another ricochet shot
+    //             if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce)
+    //                 HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
+    //         }
+    //     }
+    // }
 
     private IEnumerator HandleAerialStrike(List<Target> shotTargets)
     {
@@ -349,81 +354,13 @@ public class ShootingModule : MonoBehaviour
                 targetPos.z = 0; // make sure targetPos.z is 0
                 Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
                 
-                yield return DestroyTarget(tracerStartPos, targetPos, true, target, false);
+                yield return currGun.Shoot(tracerStartPos, targetPos, true, target, false);
+                
                 if (enableAerialStrikeShake)
                     Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);
             }
         }
 
         aerialStrikeCoroutine = null;
-    }
-
-    IEnumerator TryReload()
-    {
-        bool sfxPlayed = false;
-        yield return BasicAnimations.Interpolate(
-            () =>
-            {
-                isReloading = true;
-                crosshair.color = playerRuntimeStats.InactiveCrosshairColor;
-
-                // reloadImage.gameObject.SetActive(true);
-                autoFireCrosshairCountdown.fillAmount = 1f;
-            },
-            (t) =>
-            {
-                // TODO: REPLACE THIS TEMPORARY SFX PLAY
-                if (t >= 0.2f && !sfxPlayed)
-                {
-                    sfxPlayed = true;
-                    SFXManager.PlaySound(SoundType.ReloadGun);
-                }
-
-                autoFireCrosshairCountdown.fillAmount = 1 - t;
-            },
-            () =>
-            {
-                CurrAmmo = playerRuntimeStats.MaxAmmo;
-                isReloading = false;
-                crosshair.color = playerRuntimeStats.ActiveCrosshairColor;
-
-                // reloadImage.gameObject.SetActive(false);
-                autoFireCrosshairCountdown.fillAmount = 0f;
-            },
-            playerRuntimeStats.ReloadTime
-        );
-        reloadCoroutine = null;
-    }
-
-    void UpdateCrosshair()
-    {
-        Vector2 screenPos = Mouse.current.position.ReadValue();
-        crosshair.rectTransform.position = screenPos;
-    }
-
-    private IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition, bool isAerialStrike = false)
-    {
-        TrailRenderer prefab = isAerialStrike ? aerialStrikeTrailPrefab : bulletTrailPrefab;
-        TrailRenderer tracer = Instantiate(prefab, startPos, Quaternion.identity);
-
-        Vector3 startPosition = tracer.transform.position;
-        float distance = Vector3.Distance(startPosition, targetPosition);
-        float remainingDistance = distance;
-        float speed = isAerialStrike ? aerialStrikeTrailSpeed : bulletTrailSpeed;
-
-        // Move the tracer towards the destination smoothly based on distance/speed
-        while (remainingDistance > 0)
-        {
-            tracer.transform.position = Vector3.MoveTowards(
-                tracer.transform.position,
-                targetPosition,
-                speed * Time.deltaTime
-            );
-
-            remainingDistance = Vector3.Distance(tracer.transform.position, targetPosition);
-            yield return null;
-        }
-
-        tracer.transform.position = targetPosition;
     }
 }

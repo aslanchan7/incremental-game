@@ -35,13 +35,18 @@ public abstract class Target : MonoBehaviour
 
     // HANDLE THEIR OWN HEALTH
     // HANDLE DESTROYING THEMSELVES -- INCLUDING GIVING MONEY, INCREMENTING COMBO, PLAY SFX, PARTICLES, ETC
-    public virtual void HandleShot(bool isBullseye, float damage, Vector3 shotPos)
+    public virtual void HandleShot(bool isBullseye, bool isCrit, bool isAerialStrike, Vector3 shotPos)
     {
+        float damage = GameManager.Instance.CurrGunInstance.Damage;
+        damage *= isCrit ? 2f : 1f;
+        if (isAerialStrike)
+            damage = 100;
         currHealth -= damage;
+        if (currHealth < 0f) currHealth = 0f;
 
         SFXManager.PlaySound(SoundType.TargetHit);
         Instantiate(targetHitParticles, shotPos, Quaternion.identity);
-        HandleFlytext(isBullseye);
+        HandleFlytext(isBullseye, isCrit);
 
         StartCoroutine(healthBar.UpdateHealthBar(currHealth, MaxHealth, healthBarAnimTime));
 
@@ -68,12 +73,18 @@ public abstract class Target : MonoBehaviour
         Destroy(gameObject);
     }
 
-    protected virtual void HandleFlytext(bool isBullseye)
+    protected virtual void HandleFlytext(bool isBullseye, bool isCrit)
     {
         if (isBullseye)
         {
             Flytext flytext = Instantiate(flytextPrefab, transform.position, Quaternion.identity);
             flytext.Show("bullseye!", 1f, Vector2.up, bullseyeFlytextColor);
+        }
+
+        if (isCrit)
+        {
+            Flytext flytext = Instantiate(flytextPrefab, transform.position, Quaternion.identity);
+            flytext.Show("critical!", 1f, Vector2.up, bullseyeFlytextColor);        
         }
     }
 
@@ -108,5 +119,11 @@ public abstract class Target : MonoBehaviour
                 TargetSpawner.SpawnTarget(segmentIdx, isGoldenTarget);
             }
         }   
+    }
+
+    public virtual Collider2D[] FindNearbyTargets(float distance)
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, distance, gameObject.layer);
+        return hits;
     }
 }

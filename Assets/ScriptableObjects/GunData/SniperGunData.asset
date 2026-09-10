@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78211cbc6e3ebfd4ab614ee2be65ba6e, type: 3}
   m_Name: SniperGunData
   m_EditorClassIdentifier: Assembly-CSharp::GunDataSO
+  Damage: 10
   MaxAmmo: 4
   ReloadTime: 4
   AutoFireRate: 0.5
+  CritChance: 0
   BullseyeChance: 0.9

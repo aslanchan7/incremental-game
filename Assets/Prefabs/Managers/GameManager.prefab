@@ -46,4 +46,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerData: {fileID: 11400000, guid: 210187d3094c71b44b22d850dd7cb7ae, type: 2}
   roundData: {fileID: 11400000, guid: 53031483ec99f7b468e612903025286d, type: 2}
-  currGunData: {fileID: 11400000, guid: 3c3b4dac54944c241a712843ddbf41aa, type: 2}
+  GunDictionary:
+  - key: 0
+    value: {fileID: 6499587658663644361, guid: fce13824e296ab1488e8ad5f41e4f10d, type: 3}
+  - key: 2
+    value: {fileID: 4337723038696998519, guid: 18c5cebf401e2e94cbbdb678c009359b, type: 3}
+  CurrGunType: 0
+  CurrGunInstance: {fileID: 0}
+  PlayerRuntimeStats:
+    ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0}
+    InactiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0}
+    RicochetShotChance: 0
+    RicochetBullseyeChance: 0
+    AerialStrikeChance: 0
+  RoundRuntimeData:
+    InitialTargetCount: 0
+    TimeBetweenSpawns: 0
+    TargetRespawnChance: 0
+    BaseTargetValue: 0
+    BullseyeMultiplier: 0
+    SpeedBonusCash: 0
+    AccuracyBonusCashPercentage: 0
+    IsComboBonusActive: 0
+    GoldenTargetChance: 0
+  SkillTree:
+    PurchasedNodeIds: []

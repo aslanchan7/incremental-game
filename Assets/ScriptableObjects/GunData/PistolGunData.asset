@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78211cbc6e3ebfd4ab614ee2be65ba6e, type: 3}
   m_Name: PistolGunData
   m_EditorClassIdentifier: Assembly-CSharp::GunDataSO
+  Damage: 1
   MaxAmmo: 6
   ReloadTime: 2
   AutoFireRate: 1
-  BullseyeChance: 0.25
+  RicochetMaxBounce: 1
+  CritChance: 0.2
+  BullseyeChance: 0

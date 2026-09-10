@@ -5,9 +5,9 @@ using UnityEngine.UI;
 public class AmmoUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private ShootingModule shootingModule;
     [SerializeField] private GameObject ammoPrefab;
-    private PlayerRuntimeStats playerRuntimeStats;
+    [SerializeField] private ShootingModule shootingModule;
+    private Gun currGun;
 
     [Header("Settings")]
     // [SerializeField] private Color activeAmmoColor;
@@ -19,9 +19,14 @@ public class AmmoUI : MonoBehaviour
 
     void Start()
     {
-        playerRuntimeStats = GameManager.Instance.PlayerRuntimeStats;
-        
-        for (int i = 0; i < playerRuntimeStats.MaxAmmo; i++)
+        InitializeAmmoUI();
+    }
+
+    void InitializeAmmoUI()
+    {
+        currGun = GameManager.Instance.CurrGunInstance;
+
+        for (int i = 0; i < currGun.MaxAmmo; i++)
         {
             GameObject instantiated = Instantiate(ammoPrefab, transform);
             Image imageComponent = instantiated.GetComponent<Image>();
@@ -32,12 +37,20 @@ public class AmmoUI : MonoBehaviour
 
     void OnEnable()
     {
-        shootingModule.OnAmmoValueChanged += UpdateAmmoUI;
+        // shootingModule.OnGunInitialized += HandleGunInitialized;
+        Gun.OnAmmoValueChanged += UpdateAmmoUI;
     }
 
     void OnDisable()
     {
-        shootingModule.OnAmmoValueChanged -= UpdateAmmoUI;
+        Gun.OnAmmoValueChanged -= UpdateAmmoUI;
+        // shootingModule.OnGunInitialized -= HandleGunInitialized;
+    }
+
+    private void HandleGunInitialized()
+    {
+        Gun.OnAmmoValueChanged += UpdateAmmoUI;
+        InitializeAmmoUI();  
     }
 
     void UpdateAmmoUI(int ammo)

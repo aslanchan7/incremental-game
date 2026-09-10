@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoundData
   InitialTargetCount: 10
   TimeBetweenSpawns: 1
-  TargetRespawnChance: 0.451
+  TargetRespawnChance: 0
   BaseTargetValue: 1
   BullseyeMultiplier: 2
   SpeedBonusCash: 0
   AccuracyBonusCashPercentage: 0
   IsComboBonusActive: 0
-  GoldenTargetChance: 1
+  GoldenTargetChance: 0

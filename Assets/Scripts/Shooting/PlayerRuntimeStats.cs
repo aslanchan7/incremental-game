@@ -4,30 +4,30 @@ using UnityEngine;
 [Serializable]
 public class PlayerRuntimeStats
 {
-    public int MaxAmmo;
-    public float ReloadTime;
-    public float AutoFireRate;
+    // public int MaxAmmo;
+    // public float ReloadTime;
+    // public float AutoFireRate;
+    // public float BullseyeChance;
+    // public float CritChance;
     public Color ActiveCrosshairColor;
     public Color InactiveCrosshairColor;
-    public float BullseyeChance;
     public float RicochetShotChance;
-    public int RicochetMaxBounce;
     public float RicochetBullseyeChance;
     public float AerialStrikeChance;
 
-    public PlayerRuntimeStats(PlayerData playerData, GunDataSO gunData)
+    public PlayerRuntimeStats(PlayerData playerData)
     {
         ActiveCrosshairColor = playerData.ActiveCrosshairColor;
         InactiveCrosshairColor = playerData.InactiveCrosshairColor;
-        RicochetMaxBounce = playerData.RicochetMaxBounce;
         RicochetShotChance = playerData.RicochetShotChance;
         RicochetBullseyeChance = playerData.RicochetBullseyeChance;
         AerialStrikeChance = playerData.AerialStrikeChance;
 
-        MaxAmmo = gunData.MaxAmmo;
-        ReloadTime = gunData.ReloadTime;
-        AutoFireRate = gunData.AutoFireRate;
-        BullseyeChance = gunData.BullseyeChance;
+        // MaxAmmo = gunData.MaxAmmo;
+        // ReloadTime = gunData.ReloadTime;
+        // AutoFireRate = gunData.AutoFireRate;
+        // BullseyeChance = gunData.BullseyeChance;
+        // CritChance = gunData.CritChance;
     }
 }
 

@@ -7,6 +7,7 @@ public class IncreaseRicochetMaxBounce : SkillEffect
     [SerializeField] private int count;
     public override void Apply(SkillEffectContext context)
     {
-        context.PlayerRuntimeStats.RicochetMaxBounce += count;
+        // TODO
+        // context.PlayerRuntimeStats.RicochetMaxBounce += count;
     }
 }

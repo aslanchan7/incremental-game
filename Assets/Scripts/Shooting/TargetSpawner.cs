@@ -89,14 +89,23 @@ public class TargetSpawner : MonoBehaviour
     void OnEnable()
     {
         // TODO: MAYBE REFACTOR? IDK IF TARGET SPAWNER NEEDS TO HAVE A REFERENCE TO SHOOTING MODULE
-        shootingModule.ShotFired += HandleShotFired;
-        TransitionManager.Instance.OnFadeIn += HandleFadeIn;
+        // shootingModule.OnGunInitialized += HandleGunInitialized;
+        Gun.ShotFired += HandleShotFired;
+        if (TransitionManager.Instance != null)
+            TransitionManager.Instance.OnFadeIn += HandleFadeIn;
     }
 
     void OnDisable()
     {
-        shootingModule.ShotFired -= HandleShotFired;
+        // shootingModule.ShotFired -= HandleShotFired;
+        // shootingModule.OnGunInitialized -= HandleGunInitialized;
+        Gun.ShotFired -= HandleShotFired;
         TransitionManager.Instance.OnFadeIn -= HandleFadeIn;
+    }
+
+    private void HandleGunInitialized()
+    {
+        Gun.ShotFired += HandleShotFired;
     }
 
     void HandleFadeIn()
@@ -201,7 +210,7 @@ public class TargetSpawner : MonoBehaviour
         return hits.Length == 0;
     }
 
-    void HandleShotFired(Target target, bool isBullseye, Vector3 shotPos)
+    void HandleShotFired(Target target, bool isBullseye, bool isCrit, bool isAerialStrike, Vector3 shotPos)
     {
         TotalShotsFired++;
         TotalShotsMissed += target == null ? 1 : 0;
@@ -209,7 +218,7 @@ public class TargetSpawner : MonoBehaviour
 
         if (target != null)
         {
-            target.HandleShot(isBullseye, 1f, shotPos);
+            target.HandleShot(isBullseye, isCrit, isAerialStrike, shotPos);
         }
 
         CheckRoundEndCondition();

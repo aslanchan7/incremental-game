@@ -23,9 +23,9 @@ public class GoldenTarget : Target
         Debug.Log("Golden Target destroyed itself");
     }
 
-    protected override void HandleFlytext(bool isBullseye)
+    protected override void HandleFlytext(bool isBullseye, bool isCrit)
     {
-        base.HandleFlytext(isBullseye);
+        base.HandleFlytext(isBullseye, isCrit);
 
         if (currHealth <= 0f)
         {

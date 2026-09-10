@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -8,7 +9,9 @@ public partial class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private RoundData roundData;
-    [SerializeField] private GunDataSO currGunData;
+    [SerializeField] public Dictionary<GunType, GameObject> GunDictionary;
+    public GunType CurrGunType;
+    [HideInInspector] public Gun CurrGunInstance;
     public PlayerRuntimeStats PlayerRuntimeStats;
     public RoundRuntimeData RoundRuntimeData;
     public SkillTree SkillTree;
@@ -28,12 +31,13 @@ public partial class GameManager : MonoBehaviour
 
         InitializePlayerRuntimeStats();
         InitializeRoundRuntimeData();
+        InitializeGunData();
         SkillTree = new SkillTree();
     }
 
     void InitializePlayerRuntimeStats()
     {
-        PlayerRuntimeStats = new(playerData, currGunData);
+        PlayerRuntimeStats = new(playerData);
 
         // TODO: READ FROM SAVE FILE IF AVAILABLE
     }
@@ -43,5 +47,17 @@ public partial class GameManager : MonoBehaviour
         RoundRuntimeData = new(roundData);
 
         // TODO: READ FROM SAVE FILE IF AVAILABLE
+    }
+
+    void InitializeGunData()
+    {
+        // GunData = new(currGunDataSO);
+
+        // TODO: READ FROM SAVE FILE IF AVAILABLE
+    }
+
+    public void SwitchGun(GunType gunType)
+    {
+        CurrGunType = gunType;
     }
 }

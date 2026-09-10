@@ -70,6 +70,9 @@ public class ChanceBag : ScriptableObject
 
     public bool Pull(float chance)
     {
+        if (chance == 0f)
+            return false;
+
         if (IsEmpty || chance != CurrChance)
             NewBag(chance);
 

@@ -7,6 +7,7 @@ public class IncreaseBullseyeChance : SkillEffect
     [SerializeField, Range(0, 1)] private float bullseyeChance;
     public override void Apply(SkillEffectContext context)
     {
-        context.PlayerRuntimeStats.BullseyeChance += bullseyeChance;
+        // TODO
+        // context.GunData.BullseyeChance += bullseyeChance;
     }
 }
