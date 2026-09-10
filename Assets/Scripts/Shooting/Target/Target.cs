@@ -23,11 +23,12 @@ public abstract class Target : MonoBehaviour
     [SerializeField] protected Vector3 healthBarOffsetWorldSpace;
     [SerializeField] protected float healthBarAnimTime = 0.1f;
 
-    void Start()
+    protected virtual void Start()
     {
         healthBar = Instantiate(healthBarPrefab, transform);
         Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
         healthBar.SetPositionWorldSpace(worldPos);
+        BaseValue = GameManager.Instance.RoundRuntimeData.BaseTargetValue;
 
         currHealth = MaxHealth;
     }
@@ -36,11 +37,12 @@ public abstract class Target : MonoBehaviour
     // HANDLE DESTROYING THEMSELVES -- INCLUDING GIVING MONEY, INCREMENTING COMBO, PLAY SFX, PARTICLES, ETC
     public virtual void HandleShot(bool isBullseye, float damage, Vector3 shotPos)
     {
+        currHealth -= damage;
+
         SFXManager.PlaySound(SoundType.TargetHit);
         Instantiate(targetHitParticles, shotPos, Quaternion.identity);
         HandleFlytext(isBullseye);
 
-        currHealth -= damage;
         StartCoroutine(healthBar.UpdateHealthBar(currHealth, MaxHealth, healthBarAnimTime));
 
         if (currHealth <= 0f)
@@ -78,7 +80,7 @@ public abstract class Target : MonoBehaviour
     protected virtual void AddMoneyEarned(bool isBullseye)
     {
         RoundRuntimeData roundRuntimeData = GameManager.Instance.RoundRuntimeData;
-        BigDouble moneyEarned = isBullseye ? roundRuntimeData.BaseTargetValue * roundRuntimeData.BullseyeMultiplier : roundRuntimeData.BaseTargetValue;
+        BigDouble moneyEarned = isBullseye ? BaseValue * roundRuntimeData.BullseyeMultiplier : BaseValue;
         // Account for Combo Bonus
         float comboBonusMult = 1 + (TargetSpawner.CurrCombo * TargetSpawner.comboMultPerHit);
         moneyEarned = roundRuntimeData.IsComboBonusActive ? moneyEarned * comboBonusMult : moneyEarned;

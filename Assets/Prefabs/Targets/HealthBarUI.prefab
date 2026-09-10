@@ -195,6 +195,7 @@ MonoBehaviour:
   healthBarFill: {fileID: 24304373323227692}
   slider: {fileID: 4626557350642498528}
   IsAnimating: 0
+  flytextPrefab: {fileID: 1111954570241817612, guid: 84a0b018a30eb20489c6815a71ccd0f8, type: 3}
 --- !u!1 &7656536476398814108
 GameObject:
   m_ObjectHideFlags: 0

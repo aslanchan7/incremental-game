@@ -8,13 +8,10 @@ public class GoldenTarget : Target
     [SerializeField] private float cashMult = 10f;
     [SerializeField] private Color goldenFlytextColor;
 
-    void Awake()
+    protected override void Start()
     {
+        base.Start();
         BaseValue = GameManager.Instance.RoundRuntimeData.BaseTargetValue * cashMult;
-    }
-
-    void Start()
-    {
         StartCoroutine(GoldenTargetSelfDestroy());
     }
 
