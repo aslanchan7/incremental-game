@@ -36,7 +36,7 @@ public partial class SkillTreeManager : MonoBehaviour
 
     void Start()
     {
-        context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData);
+        context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData, GameManager.Instance.UpgradesData);
 
         InitializeNodesData();
 

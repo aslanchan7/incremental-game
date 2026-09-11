@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5376662886419031052}
   - component: {fileID: 2851780881459676833}
-  - component: {fileID: 1724333453497548502}
+  - component: {fileID: 2838648702079854578}
   m_Layer: 0
   m_Name: Sniper
   m_TagString: Untagged
@@ -94,7 +94,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!114 &1724333453497548502
+--- !u!114 &2838648702079854578
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,9 +103,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4337723038696998519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e83afc83c770ca4295815aeeb2bba5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a00b79faea9b1e499ba983f18458faf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::Sniper
   baseGunData: {fileID: 11400000, guid: bbaf506eb7b6418419bbf539dbb27937, type: 2}
   Damage: 0
   MaxAmmo: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
   bulletTrailPrefab: {fileID: 3702308357922012407, guid: 435b02af18d1bad4db2109a7fb7a68e7, type: 3}
   bulletTrailSpeed: 200
   aerialStrikeTrailPrefab: {fileID: 3702308357922012407, guid: 50e20d6e171fa2842b1d011527236548, type: 3}
-  aerialStrikeTrailSpeed: 50
+  aerialStrikeTrailSpeed: 300
 --- !u!1 &7052519724885841222
 GameObject:
   m_ObjectHideFlags: 0

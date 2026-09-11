@@ -18,7 +18,7 @@ public class TargetSpawner : MonoBehaviour
     [Space(10)]
     [SerializeField] private float minDistBetweenTargets = 1f;
     [SerializeField] float timePerTarget = 1f;
-    [SerializeField] private LayerMask targetLayer;
+    public LayerMask TargetLayer;
 
     [Header("References")]
     [SerializeField] private DefaultTarget defaultTargetPrefab;
@@ -206,7 +206,7 @@ public class TargetSpawner : MonoBehaviour
 
     public bool IsPositionClear(Vector2 worldPos, float radius, out Collider2D[] hits)
     {
-        hits = Physics2D.OverlapCircleAll(worldPos, radius, targetLayer);
+        hits = Physics2D.OverlapCircleAll(worldPos, radius, TargetLayer);
         return hits.Length == 0;
     }
 

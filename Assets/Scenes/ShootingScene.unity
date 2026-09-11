@@ -479,7 +479,7 @@ MonoBehaviour:
   spawnPaddingRight: 100
   minDistBetweenTargets: 1
   timePerTarget: 1
-  targetLayer:
+  TargetLayer:
     serializedVersion: 2
     m_Bits: 8
   defaultTargetPrefab: {fileID: 436141970365316559, guid: ca433ae7da56806468ca4ff8ffa41634, type: 3}

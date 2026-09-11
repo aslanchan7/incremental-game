@@ -123,7 +123,7 @@ public abstract class Target : MonoBehaviour
 
     public virtual Collider2D[] FindNearbyTargets(float distance)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, distance, gameObject.layer);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, distance, TargetSpawner.TargetLayer);
         return hits;
     }
 }

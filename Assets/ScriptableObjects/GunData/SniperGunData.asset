@@ -16,5 +16,6 @@ MonoBehaviour:
   MaxAmmo: 4
   ReloadTime: 4
   AutoFireRate: 0.5
-  CritChance: 0
+  RicochetMaxBounce: 3
+  CritChance: 0.5
   BullseyeChance: 0.9

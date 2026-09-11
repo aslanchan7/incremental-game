@@ -1,10 +1,92 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
-public class Pistol : Gun
+[Serializable]
+[AutoStaticsCleanup]
+public abstract partial class Gun : MonoBehaviour
 {
-    public override IEnumerator HandleShot(Vector2 shotPos, List<Target> hits, List<bool> isBullseyes)
+    [Header("Gun Data")]
+    [SerializeField] protected GunDataSO baseGunData;
+    [HideInInspector] public float Damage;
+    [HideInInspector] public int MaxAmmo;
+    [HideInInspector] public float ReloadTime;
+    [HideInInspector] public float AutoFireRate; // measured in bullets per second
+    [HideInInspector] public int RicochetMaxBounce;
+    [HideInInspector] [Range(0, 1)] public float CritChance;
+    [HideInInspector] [Range(0, 1)] public float BullseyeChance;
+    [Space(10)]
+    [HideInInspector] public bool IsReloading;
+    [HideInInspector] public int CurrAmmo;
+
+    [Header("References")]
+    [SerializeField] protected Transform muzzlePoint;
+    [SerializeField] protected SoundType gunshotSoundType;
+
+    [Header("Chance Bags")]
+    [SerializeField] protected ChanceBag ricochetChanceBag;
+    [SerializeField] protected ChanceBag ricochetBullseyeChanceBag;
+    [SerializeField] protected ChanceBag critChanceBag;
+
+    [Header("Actions")]
+    public static Action<Target, bool, bool, bool, Vector3> ShotFired;
+    public static Action<int> OnAmmoValueChanged;
+
+    [Header("Bullet Trail")]
+    [SerializeField] protected TrailRenderer bulletTrailPrefab;
+    [SerializeField] protected float bulletTrailSpeed = 200f;
+    [SerializeField] protected TrailRenderer aerialStrikeTrailPrefab;
+    [SerializeField] protected float aerialStrikeTrailSpeed = 300f;
+
+    protected virtual void Awake()
+    {
+        InitializeGunData();
+        CurrAmmo = MaxAmmo;
+    }
+
+    public virtual void InitializeGunData()
+    {
+        Damage = baseGunData.Damage;
+        MaxAmmo = baseGunData.MaxAmmo;
+        ReloadTime = baseGunData.ReloadTime;
+        AutoFireRate = baseGunData.AutoFireRate;
+        RicochetMaxBounce = baseGunData.RicochetMaxBounce;
+        CritChance = baseGunData.CritChance;
+        BullseyeChance = baseGunData.BullseyeChance;
+
+        // TODO: HANDLE UPGRADES
+        CheckForUpgrades();
+    }
+
+    protected virtual void CheckForUpgrades()
+    {
+        Damage += GameManager.Instance.UpgradesData.Damage;
+        MaxAmmo += GameManager.Instance.UpgradesData.MaxAmmo;
+        ReloadTime += GameManager.Instance.UpgradesData.ReloadTime;
+        AutoFireRate += GameManager.Instance.UpgradesData.AutoFireRate;
+        RicochetMaxBounce += GameManager.Instance.UpgradesData.RicochetMaxBounce;
+        CritChance += GameManager.Instance.UpgradesData.CritChance;
+        BullseyeChance += GameManager.Instance.UpgradesData.BullseyeChance;
+        
+        GameManager.Instance.PlayerRuntimeStats.AerialStrikeChance += MaxAmmo * GameManager.Instance.UpgradesData.AerialStrikeChanceMaxAmmo;
+    }
+
+    protected virtual void OnDisable()
+    {
+        Damage -= GameManager.Instance.UpgradesData.Damage;
+        MaxAmmo -= GameManager.Instance.UpgradesData.MaxAmmo;
+        ReloadTime -= GameManager.Instance.UpgradesData.ReloadTime;
+        AutoFireRate -= GameManager.Instance.UpgradesData.AutoFireRate;
+        RicochetMaxBounce -= GameManager.Instance.UpgradesData.RicochetMaxBounce;
+        CritChance -= GameManager.Instance.UpgradesData.CritChance;
+        BullseyeChance -= GameManager.Instance.UpgradesData.BullseyeChance;
+        
+        GameManager.Instance.PlayerRuntimeStats.AerialStrikeChance -= MaxAmmo * GameManager.Instance.UpgradesData.AerialStrikeChanceMaxAmmo;
+    }
+
+    public virtual IEnumerator HandleShot(Vector2 shotPos, List<Target> hits, List<bool> isBullseyes)
     {
         CurrAmmo--;
         OnAmmoValueChanged?.Invoke(CurrAmmo);
@@ -12,9 +94,6 @@ public class Pistol : Gun
         Vector3 muzzlePointInWorldSpace = muzzlePoint.position;
         Vector3 startPos = new(muzzlePointInWorldSpace.x, muzzlePointInWorldSpace.y, 0);
         Vector3 shotPosVec3 = new(shotPos.x, shotPos.y, 0);
-
-        // currGun.Shoot();
-        // diff sfx, diff recoil amounts
 
         SFXManager.PlaySound(gunshotSoundType);
 
@@ -31,10 +110,10 @@ public class Pistol : Gun
             tracerStartPos.z = 0;
             if (i == 1) tracerStartPos = shotPosVec3;
             yield return Shoot(tracerStartPos, hits[i].transform.position, false, hits[i], isBullseyes[i]);
-        }    
+        } 
     }
 
-    public override IEnumerator Shoot(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
+    public virtual IEnumerator Shoot(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
     {
         yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
         bool isCrit = critChanceBag.Pull(CritChance) && !isAerialStrike;
@@ -42,7 +121,7 @@ public class Pistol : Gun
         ShotFired?.Invoke(hit, isBullseye, isCrit, isAerialStrike, tracerEndPos);
     }
 
-    public override void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes, float ricochetDistance)
+    public virtual void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes, float ricochetDistance)
     {
         if (GameManager.Instance.PlayerRuntimeStats.RicochetShotChance == 0f)
         {
@@ -55,6 +134,8 @@ public class Pistol : Gun
         Target firstHit = null;
         if (colliders.Length >= 2)
         {
+            Debug.Log("1");
+
             foreach (var collider in colliders)
             {
                 if (hits.Contains(collider.GetComponent<Target>())) continue;
@@ -66,6 +147,7 @@ public class Pistol : Gun
         if (firstHit != null)
         {
             bool ricochet = ricochetChanceBag.Pull(GameManager.Instance.PlayerRuntimeStats.RicochetShotChance);
+            Debug.Log("2");
             if (ricochet)
             {
                 hits.Add(firstHit);
@@ -79,7 +161,7 @@ public class Pistol : Gun
         }
     }
 
-    public override IEnumerator Reload()
+    public virtual IEnumerator Reload()
     {
         bool sfxPlayed = false;
         yield return BasicAnimations.Interpolate(
@@ -102,10 +184,9 @@ public class Pistol : Gun
                 IsReloading = false;
             },
             ReloadTime
-        );
-    }
+        );    }
 
-    public override IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition, bool isAerialStrike = false)
+    public virtual IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition, bool isAerialStrike = false)
     {
         TrailRenderer prefab = isAerialStrike ? aerialStrikeTrailPrefab : bulletTrailPrefab;
         TrailRenderer tracer = Instantiate(prefab, startPos, Quaternion.identity);

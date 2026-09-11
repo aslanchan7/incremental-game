@@ -17,10 +17,10 @@ public class AmmoUI : MonoBehaviour
 
     private List<Image> ammoImages = new();
 
-    void Start()
-    {
-        InitializeAmmoUI();
-    }
+    // void Start()
+    // {
+    //     InitializeAmmoUI();
+    // }
 
     void InitializeAmmoUI()
     {
@@ -37,24 +37,23 @@ public class AmmoUI : MonoBehaviour
 
     void OnEnable()
     {
-        // shootingModule.OnGunInitialized += HandleGunInitialized;
+        shootingModule.OnGunInitialized += HandleGunInitialized;
         Gun.OnAmmoValueChanged += UpdateAmmoUI;
     }
 
     void OnDisable()
     {
+        shootingModule.OnGunInitialized -= HandleGunInitialized;
         Gun.OnAmmoValueChanged -= UpdateAmmoUI;
-        // shootingModule.OnGunInitialized -= HandleGunInitialized;
     }
 
     private void HandleGunInitialized()
     {
-        Gun.OnAmmoValueChanged += UpdateAmmoUI;
         InitializeAmmoUI();  
     }
 
     void UpdateAmmoUI(int ammo)
-    {        
+    {
         for (int i = 0; i < ammoImages.Count; i++) {
             ammoImages[i].sprite = (i >= ammo) ? inactiveAmmoImg : activeAmmoImg;
         }

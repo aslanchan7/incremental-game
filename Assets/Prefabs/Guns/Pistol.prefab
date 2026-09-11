@@ -124,7 +124,7 @@ MonoBehaviour:
   bulletTrailPrefab: {fileID: 3702308357922012407, guid: 435b02af18d1bad4db2109a7fb7a68e7, type: 3}
   bulletTrailSpeed: 200
   aerialStrikeTrailPrefab: {fileID: 3702308357922012407, guid: 50e20d6e171fa2842b1d011527236548, type: 3}
-  aerialStrikeTrailSpeed: 50
+  aerialStrikeTrailSpeed: 300
 --- !u!1 &6649199009720368512
 GameObject:
   m_ObjectHideFlags: 0

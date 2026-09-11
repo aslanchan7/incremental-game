@@ -9,16 +9,12 @@ public class IncreaseAerialStrikeChance : SkillEffect
 
     public override void Apply(SkillEffectContext context)
     {
-        float chanceToAdd = 0f;
         if (variable == PlayerStatsCondition.None)
         {
-            chanceToAdd = aerialStrikeChance;
+            context.PlayerRuntimeStats.AerialStrikeChance += aerialStrikeChance;
         } else if (variable == PlayerStatsCondition.MaxAmmo)
         {
-            // TODO
-            // chanceToAdd = aerialStrikeChance * context.GunData.MaxAmmo;
+            context.UpgradesData.AerialStrikeChanceMaxAmmo += aerialStrikeChance;
         }
-
-        context.PlayerRuntimeStats.AerialStrikeChance += chanceToAdd;
     }
 }

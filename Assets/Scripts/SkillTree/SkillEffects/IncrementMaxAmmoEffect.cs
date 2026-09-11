@@ -6,7 +6,6 @@ public class IncrementMaxAmmoEffect : SkillEffect {
     [SerializeField] private int amount;
 
     public override void Apply(SkillEffectContext context) {
-        // TODO
-        // context.GunData.MaxAmmo += amount;
+        context.UpgradesData.MaxAmmo += amount;
     }
 }

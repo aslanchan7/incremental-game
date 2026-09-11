@@ -13,6 +13,8 @@ public class ChanceBag : ScriptableObject
 
     public void NewBag(float chance)
     {
+        chance = Mathf.Clamp01(chance);
+
         int maxDecimalPlaces = 4;
         chance = (float)Math.Round(chance, maxDecimalPlaces);
         CurrChance = chance;

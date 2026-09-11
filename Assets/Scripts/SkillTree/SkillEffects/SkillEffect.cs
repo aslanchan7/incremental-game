@@ -8,10 +8,12 @@ public abstract class SkillEffect : ScriptableObject
 public class SkillEffectContext {
     public PlayerRuntimeStats PlayerRuntimeStats;
     public RoundRuntimeData RoundRuntimeData;
+    public UpgradesData UpgradesData;
 
-    public SkillEffectContext(PlayerRuntimeStats playerRuntimeStats, RoundRuntimeData roundRuntimeData)
+    public SkillEffectContext(PlayerRuntimeStats playerRuntimeStats, RoundRuntimeData roundRuntimeData, UpgradesData upgradesData)
     {
         PlayerRuntimeStats = playerRuntimeStats;
         RoundRuntimeData = roundRuntimeData;
+        UpgradesData = upgradesData;
     }
 }

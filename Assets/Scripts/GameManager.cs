@@ -14,7 +14,12 @@ public partial class GameManager : MonoBehaviour
     [HideInInspector] public Gun CurrGunInstance;
     public PlayerRuntimeStats PlayerRuntimeStats;
     public RoundRuntimeData RoundRuntimeData;
+    public UpgradesData UpgradesData;
     public SkillTree SkillTree;
+
+    [Header("Debug")]
+    public bool switchToSniper;
+    public bool switchToPistol;
 
     void Awake()
     {
@@ -31,8 +36,23 @@ public partial class GameManager : MonoBehaviour
 
         InitializePlayerRuntimeStats();
         InitializeRoundRuntimeData();
-        InitializeGunData();
+        InitializeUpgradesData();
         SkillTree = new SkillTree();
+    }
+
+    void Update()
+    {
+        if (switchToSniper)
+        {
+            switchToSniper = false;
+            SwitchGun(GunType.Sniper);
+        }
+
+        if (switchToPistol)
+        {
+            switchToPistol = false;
+            SwitchGun(GunType.Pistol);
+        }
     }
 
     void InitializePlayerRuntimeStats()
@@ -49,9 +69,9 @@ public partial class GameManager : MonoBehaviour
         // TODO: READ FROM SAVE FILE IF AVAILABLE
     }
 
-    void InitializeGunData()
+    void InitializeUpgradesData()
     {
-        // GunData = new(currGunDataSO);
+        UpgradesData.Reset();
 
         // TODO: READ FROM SAVE FILE IF AVAILABLE
     }

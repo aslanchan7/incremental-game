@@ -7,7 +7,6 @@ public class IncreaseFireRate : SkillEffect
     [SerializeField, Tooltip("Ex: 0.20f is a 20% INCREASE")] private float increaseRate;
     public override void Apply(SkillEffectContext context)
     {
-        // TODO
-        // context.GunData.AutoFireRate *= increaseRate + 1; // +1 is to make sure the rate is increasing and not being divided
+        context.UpgradesData.AutoFireRate *= increaseRate + 1; // +1 is to make sure the rate is increasing and not being divided
     }
 }
