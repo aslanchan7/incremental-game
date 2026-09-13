@@ -51,7 +51,9 @@ MonoBehaviour:
     value: {fileID: 6499587658663644361, guid: fce13824e296ab1488e8ad5f41e4f10d, type: 3}
   - key: 2
     value: {fileID: 4337723038696998519, guid: 18c5cebf401e2e94cbbdb678c009359b, type: 3}
-  CurrGunType: 0
+  - key: 1
+    value: {fileID: 6499587658663644361, guid: b130e4dc87c40434c8783e50114e3669, type: 3}
+  CurrGunType: 1
   CurrGunInstance: {fileID: 0}
   PlayerRuntimeStats:
     ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0}

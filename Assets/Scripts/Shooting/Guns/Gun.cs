@@ -56,7 +56,6 @@ public abstract partial class Gun : MonoBehaviour
         CritChance = baseGunData.CritChance;
         BullseyeChance = baseGunData.BullseyeChance;
 
-        // TODO: HANDLE UPGRADES
         CheckForUpgrades();
     }
 
@@ -101,7 +100,7 @@ public abstract partial class Gun : MonoBehaviour
         // if (enableBulletShake)
         Camera.main.GetComponent<CameraShake>().Recoil(new(0f, -1f), 0.15f, transform);
         
-        yield return Shoot(startPos, shotPosVec3, false, hits[0], isBullseyes[0]);
+        yield return Shoot(startPos, shotPosVec3, false, hits[0], isBullseyes[0], false);
 
         for (int i = 1; i < hits.Count; i++)
         {
@@ -109,11 +108,11 @@ public abstract partial class Gun : MonoBehaviour
             Vector3 tracerStartPos = hits[i - 1].transform.position;
             tracerStartPos.z = 0;
             if (i == 1) tracerStartPos = shotPosVec3;
-            yield return Shoot(tracerStartPos, hits[i].transform.position, false, hits[i], isBullseyes[i]);
+            yield return Shoot(tracerStartPos, hits[i].transform.position, false, hits[i], isBullseyes[i], true);
         } 
     }
 
-    public virtual IEnumerator Shoot(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
+    public virtual IEnumerator Shoot(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye, bool isRicochet)
     {
         yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
         bool isCrit = critChanceBag.Pull(CritChance) && !isAerialStrike;
@@ -134,8 +133,6 @@ public abstract partial class Gun : MonoBehaviour
         Target firstHit = null;
         if (colliders.Length >= 2)
         {
-            Debug.Log("1");
-
             foreach (var collider in colliders)
             {
                 if (hits.Contains(collider.GetComponent<Target>())) continue;
@@ -147,7 +144,6 @@ public abstract partial class Gun : MonoBehaviour
         if (firstHit != null)
         {
             bool ricochet = ricochetChanceBag.Pull(GameManager.Instance.PlayerRuntimeStats.RicochetShotChance);
-            Debug.Log("2");
             if (ricochet)
             {
                 hits.Add(firstHit);
@@ -184,7 +180,8 @@ public abstract partial class Gun : MonoBehaviour
                 IsReloading = false;
             },
             ReloadTime
-        );    }
+        );    
+    }
 
     public virtual IEnumerator SpawnTracer(Vector3 startPos, Vector3 targetPosition, bool isAerialStrike = false)
     {

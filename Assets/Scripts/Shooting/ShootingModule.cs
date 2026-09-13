@@ -85,7 +85,6 @@ public class ShootingModule : MonoBehaviour
         switch (gunType)
         {
             case GunType.Pistol:
-
                 break;
             case GunType.Shotgun:
                 break;
@@ -234,7 +233,6 @@ public class ShootingModule : MonoBehaviour
         }
 
         StartCoroutine(currGun.HandleShot(worldPos, hits, isBullseyes));
-        // StartCoroutine(HandleShotFired(worldPos, hits, isBullseyes));
         aerialStrikeCoroutine = StartCoroutine(HandleAerialStrike(hits));
 
         // CurrAmmo--;
@@ -268,61 +266,6 @@ public class ShootingModule : MonoBehaviour
         reloadCoroutine = null;
     }
 
-    // private IEnumerator ShootTarget(Vector3 tracerStartPos, Vector3 tracerEndPos, bool isAerialStrike, Target hit, bool isBullseye)
-    // {
-    //     yield return SpawnTracer(tracerStartPos, tracerEndPos, isAerialStrike);
-    //     float damage = currGunData.Damage;
-    //     bool isCrit = false;
-    //     if (currGunData.CritChance != 0f)
-    //     {
-    //         isCrit = critChanceBag.Pull(currGunData.CritChance);   
-    //         damage *= isCrit ? 2f : 1f;
-    //     }
-
-    //     ShotFired?.Invoke(hit, isBullseye, isCrit, isAerialStrike, tracerEndPos);
-    // }
-
-    // private void HandleRicochetShot(Target target, ref List<Target> hits, ref List<bool> isBullseyes)
-    // {
-    //     if (playerRuntimeStats.RicochetShotChance == 0f)
-    //     {
-    //         ricochetChanceBag.Clear();
-    //         return;
-    //     }
-
-    //     targetSpawner.IsPositionClear(target.transform.position, ricochetDistance, out Collider2D[] colliders);
-
-    //     Target firstHit = null;
-    //     if (colliders.Length >= 2)
-    //     {
-    //         foreach (var collider in colliders)
-    //         {
-    //             if (hits.Contains(collider.GetComponent<Target>())) continue;
-    //             firstHit = collider.GetComponent<Target>();
-    //             break;
-    //         }
-    //     }
-
-    //     if (firstHit != null)
-    //     {
-    //         bool ricochet = ricochetChanceBag.Pull(playerRuntimeStats.RicochetShotChance);
-    //         if (ricochet)
-    //         {
-    //             hits.Add(firstHit);
-    //             bool isBullseye = false;
-    //             if (playerRuntimeStats.RicochetBullseyeChance != 0f)
-    //             {
-    //                 isBullseye = ricochetBullseyeChanceBag.Pull(playerRuntimeStats.RicochetBullseyeChance);
-    //             }
-    //             isBullseyes.Add(isBullseye);
-
-    //             // hits.Count-1 gives you the curr number of ricochet bounces. only if this is less than RicochetMaxBounce then handle another ricochet shot
-    //             if ((hits.Count - 1) < playerRuntimeStats.RicochetMaxBounce)
-    //                 HandleRicochetShot(firstHit, ref hits, ref isBullseyes);
-    //         }
-    //     }
-    // }
-
     private IEnumerator HandleAerialStrike(List<Target> shotTargets)
     {
         if (playerRuntimeStats.AerialStrikeChance == 0f)
@@ -355,7 +298,7 @@ public class ShootingModule : MonoBehaviour
                 targetPos.z = 0; // make sure targetPos.z is 0
                 Vector3 tracerStartPos = targetPos + aerialStrikeOriginOffset;
 
-                yield return currGun.Shoot(tracerStartPos, targetPos, true, target, false);
+                yield return currGun.Shoot(tracerStartPos, targetPos, true, target, false, false);
 
                 if (enableAerialStrikeShake)
                     Camera.main.GetComponent<CameraShake>().Explosion(0.5f, 0.1f);

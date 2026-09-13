@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 1}
   InactiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0.50980395}
-  RicochetShotChance: 0
+  RicochetShotChance: 1
   RicochetBullseyeChance: 0
-  AerialStrikeChance: 0.5
+  AerialStrikeChance: 0
