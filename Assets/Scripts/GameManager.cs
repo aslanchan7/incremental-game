@@ -9,9 +9,14 @@ public partial class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private RoundData roundData;
+
+    [Header("Gun Data")]
     [SerializeField] public Dictionary<GunType, GameObject> GunDictionary;
     public GunType CurrGunType;
     [HideInInspector] public Gun CurrGunInstance;
+    public List<GunType> UnlockedGunTypes = new();
+    
+    [Header("Skill Tree Data")]
     public PlayerRuntimeStats PlayerRuntimeStats;
     public RoundRuntimeData RoundRuntimeData;
     public UpgradesData UpgradesData;
@@ -37,6 +42,7 @@ public partial class GameManager : MonoBehaviour
         InitializePlayerRuntimeStats();
         InitializeRoundRuntimeData();
         InitializeUpgradesData();
+        InitializeUnlockedGuns();
         SkillTree = new SkillTree();
     }
 
@@ -76,8 +82,19 @@ public partial class GameManager : MonoBehaviour
         // TODO: READ FROM SAVE FILE IF AVAILABLE
     }
 
+    void InitializeUnlockedGuns()
+    {
+        UnlockedGunTypes.Add(GunType.Pistol);
+    }
+
     public void SwitchGun(GunType gunType)
     {
+        if (!UnlockedGunTypes.Contains(gunType))
+        {
+            Debug.LogWarning($"Attempted to switch to {gunType} which has not been unlocked yet");
+            return;
+        }
+
         CurrGunType = gunType;
     }
 }

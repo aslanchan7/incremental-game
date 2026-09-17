@@ -26,6 +26,9 @@ public partial class CurrencyManager : MonoBehaviour {
                 currency.Value.amount = 0;
             }
         }
+    
+        // TODO: REMOVE THIS (TESTING PURPOSES)
+        Add("cash", 10000f);
     }
 
     public void Add(string currencyId, BigDouble amount)

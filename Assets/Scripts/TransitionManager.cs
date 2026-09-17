@@ -11,6 +11,7 @@ public partial class TransitionManager : MonoBehaviour
 
     [Header("References")]
     private CanvasGroup canvasGroup;
+    [SerializeField] private SceneData sceneData;
 
     [Header("Animation Settings")]
     private float fadeInAnimTime = 0.5f;
@@ -33,9 +34,16 @@ public partial class TransitionManager : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    public void StartFadeOutIn(int sceneIndex)
+    public void StartFadeOutIn(SceneType sceneType)
     {
-        StartCoroutine(FadeOutIn(sceneIndex));
+        bool hasValue = sceneData.sceneIndexDict.TryGetValue(sceneType, out int buildIndex);
+        if (!hasValue)
+        {
+            Debug.LogError($"{sceneType} does not have an associated build index in SceneData");
+            return;
+        }
+        
+        StartCoroutine(FadeOutIn(buildIndex));
     }
 
     private IEnumerator FadeOutIn(int sceneIndex)

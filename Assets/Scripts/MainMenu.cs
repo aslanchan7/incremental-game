@@ -69,7 +69,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        TransitionManager.Instance.StartFadeOutIn(SceneManager.GetActiveScene().buildIndex + 1);
+        TransitionManager.Instance.StartFadeOutIn(SceneType.Shooting);
     }
 
     public void QuitGame()

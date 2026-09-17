@@ -99,11 +99,11 @@ public class SummaryUI : MonoBehaviour
 
     public void HandleUpgradesButton()
     {
-        TransitionManager.Instance.StartFadeOutIn(SceneManager.GetActiveScene().buildIndex + 1);
+        TransitionManager.Instance.StartFadeOutIn(SceneType.Shop);
     }
 
     public void HandleContinueButton()
     {
-        TransitionManager.Instance.StartFadeOutIn(SceneManager.GetActiveScene().buildIndex);
+        TransitionManager.Instance.StartFadeOutIn(SceneType.Shooting);
     }
 }

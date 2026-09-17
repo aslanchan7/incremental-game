@@ -130,32 +130,6 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             node.gameObject.SetActive(node.IsVisible);
             if (node.IsVisible)
                 visibleNodes.Add(node);
-
-            // if (node.IsDemoLocked)
-            // {
-            //     node.GetComponent<Image>().color = lockedBorderColor; 
-            //     node.SpriteImage.sprite = lockedNodeSprite;
-            //     node.SpriteImage.color = lockedNodeColor;
-            //     continue;
-            // }
-            
-            // node.SpriteImage.sprite = node.Data.sprite;
-
-            // bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount > node.Data.cost;
-            // Color nodeBorderColor = lockedBorderColor;
-            // Color spriteColor = lockedNodeColor;
-            // if (node.IsPurchased)
-            // {
-            //     nodeBorderColor = purchasedBorderColor;
-            //     spriteColor = purchasedNodeColor;
-            // } else if (node.IsUnlocked)
-            // {
-            //     nodeBorderColor = canAfford ? unpurchasedBorderColor : lockedBorderColor;
-            //     spriteColor = canAfford ? unpurchasedNodeColor : lockedNodeColor;
-            // }
-
-            // node.GetComponent<Image>().color = nodeBorderColor;
-            // node.SpriteImage.color = spriteColor;
         }
 
         UpdateVisibleNodeVisuals();
@@ -173,44 +147,6 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
         }
 
         UpdateVisibleNodeVisuals();
-
-        // foreach (var connectedNode in node.NextNodes)
-        // {
-        //     connectedNode.gameObject.SetActive(true);
-        //     // connectedNode.GetComponent<Image>().color = connectedNode.IsPurchased 
-        //     //     ? purchasedBorderColor 
-        //     //     : connectedNode.IsUnlocked 
-        //     //         ? unpurchasedBorderColor 
-        //     //         : lockedBorderColor;
-        //     // connectedNode.SpriteImage.color = connectedNode.IsPurchased 
-        //     //     ? purchasedNodeColor 
-        //     //     : connectedNode.IsUnlocked 
-        //     //         ? unpurchasedNodeColor 
-        //     //         : lockedNodeColor;
-
-        //     if (connectedNode.IsDemoLocked)
-        //     {
-        //         connectedNode.GetComponent<Image>().color = lockedBorderColor;          
-        //         connectedNode.SpriteImage.color = lockedNodeColor;
-        //     }
-
-        //     bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount > connectedNode.Data.cost;
-        //     Color nodeBorderColor = lockedBorderColor;
-        //     Color spriteColor = lockedNodeColor;
-        //     if (connectedNode.IsPurchased)
-        //     {
-        //         nodeBorderColor = purchasedBorderColor;
-        //         spriteColor = purchasedNodeColor;
-        //     } else if (connectedNode.IsUnlocked)
-        //     {
-        //         nodeBorderColor = canAfford ? unpurchasedBorderColor : lockedBorderColor;
-        //         spriteColor = canAfford ? unpurchasedNodeColor : lockedNodeColor;
-        //     }
-
-        //     connectedNode.GetComponent<Image>().color = nodeBorderColor;
-        //     connectedNode.SpriteImage.color = spriteColor;
-        // }
-
 
         for (int i = 0; i < LineRendererParent.childCount; i++)
         {
@@ -272,11 +208,6 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             node.GetComponent<Image>().color = nodeBorderColor;
             node.SpriteImage.color = spriteColor;
         }
-    }
-
-    public void HandleContinueButton()
-    {
-        TransitionManager.Instance.StartFadeOutIn(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void OnDrag(PointerEventData eventData)

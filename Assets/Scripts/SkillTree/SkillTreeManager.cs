@@ -39,9 +39,6 @@ public partial class SkillTreeManager : MonoBehaviour
         context = new(GameManager.Instance.PlayerRuntimeStats, GameManager.Instance.RoundRuntimeData, GameManager.Instance.UpgradesData);
 
         InitializeNodesData();
-
-        // TODO: REMOVE THIS
-        // CurrencyManager.Instance.Add("cash", 10000);
     }
 
     void InitializeNodesData()
