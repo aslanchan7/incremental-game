@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BreakInfinity;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -28,7 +29,6 @@ public class TargetSpawner : MonoBehaviour
     private RoundRuntimeData roundRuntimeData;
 
     [Header("Golden Target Settings")]
-
     private List<GoldenTarget> goldenTargetList = new();
 
     [Header("Actions")]
@@ -69,10 +69,12 @@ public class TargetSpawner : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool refresh;
 
-    void Start()
+    public void StartRound()
     {
         roundRuntimeData = GameManager.Instance.RoundRuntimeData;
+
         SpawnInitialTargets();
+
         OnRoundStart?.Invoke();
         RoundStartTime = Time.time; // This is here in case TransitionManager does not trigger OnFadeIn. If OnFadeIn is triggered then this value will be overwritten.
     }
@@ -83,6 +85,19 @@ public class TargetSpawner : MonoBehaviour
         {
             refresh = false;
             Refresh();
+        }
+
+        if (DebugManager.Instance.AllowSkipRounds)
+        {
+            if (Keyboard.current.sKey.wasPressedThisFrame)
+            {
+                Target[] targets = new Target[SpawnedTargets.Count]; 
+                SpawnedTargets.CopyTo(targets);
+                foreach (var target in targets)
+                {
+                    HandleShotFired(target, true, true, false, Vector3.zero);
+                }
+            }
         }
     }
 

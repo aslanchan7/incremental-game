@@ -22,6 +22,9 @@ public partial class GameManager : MonoBehaviour
     public UpgradesData UpgradesData;
     public SkillTree SkillTree;
 
+    [Header("Current Round")]
+    public int CurrentRound;
+
     [Header("Debug")]
     public bool switchToSniper;
     public bool switchToPistol;
@@ -44,6 +47,7 @@ public partial class GameManager : MonoBehaviour
         InitializeUpgradesData();
         InitializeUnlockedGuns();
         SkillTree = new SkillTree();
+        CurrentRound = 0;
     }
 
     void Update()

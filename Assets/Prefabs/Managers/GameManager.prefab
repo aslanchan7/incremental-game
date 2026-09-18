@@ -53,8 +53,9 @@ MonoBehaviour:
     value: {fileID: 4337723038696998519, guid: 18c5cebf401e2e94cbbdb678c009359b, type: 3}
   - key: 1
     value: {fileID: 6499587658663644361, guid: b130e4dc87c40434c8783e50114e3669, type: 3}
-  CurrGunType: 1
+  CurrGunType: 0
   CurrGunInstance: {fileID: 0}
+  UnlockedGunTypes: 
   PlayerRuntimeStats:
     ActiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0}
     InactiveCrosshairColor: {r: 0, g: 0, b: 0, a: 0}
@@ -74,5 +75,6 @@ MonoBehaviour:
   UpgradesData: {fileID: 11400000, guid: 29cee54662bfb3345b9bb0babcfc6819, type: 2}
   SkillTree:
     PurchasedNodeIds: []
+  CurrentRound: 0
   switchToSniper: 0
   switchToPistol: 0
