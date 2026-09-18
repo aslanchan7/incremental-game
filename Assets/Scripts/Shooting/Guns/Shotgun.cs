@@ -25,8 +25,8 @@ public class Shotgun : Gun
 
     private Vector3 GetRandomVector3()
     {
-        float x = Random.Range(-0.5f, 0.5f);
-        float y = Random.Range(-0.5f, 0.5f);
+        float x = Random.Range(-0.9f, 0.9f);
+        float y = Random.Range(-0.9f, 0.9f);
         return new Vector3(x, y, 0f);
     }
 }
