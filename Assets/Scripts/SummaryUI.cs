@@ -24,14 +24,14 @@ public class SummaryUI : MonoBehaviour
         HideSummaryScreen();
     }
 
-    void OnEnable()
+    void Start()
     {
-        targetSpawner.OnTargetsCleared += ShowSummaryScreen;
+        RoundManager.OnRoundEnd += ShowSummaryScreen;
     }
 
     void OnDisable()
     {
-        targetSpawner.OnTargetsCleared -= ShowSummaryScreen;
+        RoundManager.OnRoundEnd -= ShowSummaryScreen;
     }
 
     void ShowSummaryScreen()
@@ -56,24 +56,24 @@ public class SummaryUI : MonoBehaviour
         speedMoneyEarned.text = "";
         accuracyMoneyEarned.text = "";
 
-        StartCoroutine(IncrementText(accuracy, 0f, targetSpawner.Accuracy * 100f, animTime, "{0:F0}%"));
-        StartCoroutine(IncrementText(targetsShot, 0f, targetSpawner.TotalTargetsHit, animTime, "{0:F0}"));
-        StartCoroutine(IncrementText(bullseye, 0f, (float)targetSpawner.TotalBullseyesHit / targetSpawner.TotalShotsFired * 100, animTime, "{0:F0}%"));
-        StartCoroutine(IncrementText(timeTaken, 0f, Time.time - targetSpawner.RoundStartTime, animTime, "{0:F1}s"));
+        StartCoroutine(IncrementText(accuracy, 0f, RoundManager.Instance.Accuracy * 100f, animTime, "{0:F0}%"));
+        StartCoroutine(IncrementText(targetsShot, 0f, RoundManager.Instance.TotalTargetsHit, animTime, "{0:F0}"));
+        StartCoroutine(IncrementText(bullseye, 0f, (float)RoundManager.Instance.TotalBullseyesHit / RoundManager.Instance.TotalShotsFired * 100, animTime, "{0:F0}%"));
+        StartCoroutine(IncrementText(timeTaken, 0f, Time.time - RoundManager.Instance.RoundStartTime, animTime, "{0:F1}s"));
 
-        if (targetSpawner.AccuracyBonusCashEarned > 0d)
-            StartCoroutine(IncrementText(accuracyMoneyEarned, 0f, (float)targetSpawner.AccuracyBonusCashEarned, animTime, "(+${0:F0})"));
+        if (RoundManager.Instance.AccuracyBonusCashEarned > 0d)
+            StartCoroutine(IncrementText(accuracyMoneyEarned, 0f, (float)RoundManager.Instance.AccuracyBonusCashEarned, animTime, "(+${0:F0})"));
         else
             accuracyMoneyEarned.text = "";
 
-        if (targetSpawner.SpeedBonusCashEarned > 0d)
-            StartCoroutine(IncrementText(speedMoneyEarned, 0f, (float)targetSpawner.SpeedBonusCashEarned, animTime, "(+${0:F0})"));
+        if (RoundManager.Instance.SpeedBonusCashEarned > 0d)
+            StartCoroutine(IncrementText(speedMoneyEarned, 0f, (float)RoundManager.Instance.SpeedBonusCashEarned, animTime, "(+${0:F0})"));
         else
             speedMoneyEarned.text = "";
 
 
         yield return new WaitForSeconds(animTime);
-        StartCoroutine(IncrementText(moneyEarned, 0f, (float)targetSpawner.TotalMoneyEarned.ToDouble(), animTime, "Money Earned: ${0:F0}"));
+        StartCoroutine(IncrementText(moneyEarned, 0f, (float)RoundManager.Instance.TotalMoneyEarned, animTime, "Money Earned: ${0:F0}"));
     }
 
     private IEnumerator IncrementText(TextMeshProUGUI tmp, float startNum, float endNum, float animTime, string format = "{0:F0}")
@@ -91,7 +91,7 @@ public class SummaryUI : MonoBehaviour
             },
             () =>
             {
-                tmp.text = string.Format(format, endNum);                
+                tmp.text = string.Format(format, endNum);
             },
             animTime
         );

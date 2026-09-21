@@ -7,7 +7,7 @@ public abstract class Target : MonoBehaviour
     [Header("References")]
     [HideInInspector] public TargetSpawner TargetSpawner;
     [SerializeField] protected GameObject targetHitParticles;
-    
+
     [Header("Target Variables")]
     public float BaseValue;
     public float MaxHealth;
@@ -60,8 +60,8 @@ public abstract class Target : MonoBehaviour
     {
         TargetSpawner.SpawnedTargets.Remove(this);
         TargetSpawner.RemainingTargets--;
-        TargetSpawner.TotalTargetsHit++;
-        TargetSpawner.TotalBullseyesHit += isBullseye ? 1 : 0;
+        RoundManager.Instance.TotalTargetsHit++;
+        RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
 
         AddMoneyEarned(isBullseye);
         HandleRespawnTarget();
@@ -84,18 +84,18 @@ public abstract class Target : MonoBehaviour
         if (isCrit)
         {
             Flytext flytext = Instantiate(flytextPrefab, transform.position, Quaternion.identity);
-            flytext.Show("critical!", 1f, Vector2.up, bullseyeFlytextColor);        
+            flytext.Show("critical!", 1f, Vector2.up, bullseyeFlytextColor);
         }
     }
 
     protected virtual void AddMoneyEarned(bool isBullseye)
     {
         RoundRuntimeData roundRuntimeData = GameManager.Instance.RoundRuntimeData;
-        BigDouble moneyEarned = isBullseye ? BaseValue * roundRuntimeData.BullseyeMultiplier : BaseValue;
+        double moneyEarned = isBullseye ? BaseValue * roundRuntimeData.BullseyeMultiplier : BaseValue;
         // Account for Combo Bonus
         float comboBonusMult = 1 + (TargetSpawner.CurrCombo * TargetSpawner.comboMultPerHit);
         moneyEarned = roundRuntimeData.IsComboBonusActive ? moneyEarned * comboBonusMult : moneyEarned;
-        TargetSpawner.TotalMoneyEarned += moneyEarned;
+        RoundManager.Instance.TotalMoneyEarned += moneyEarned;
 
         CurrencyManager.Instance.Add("cash", moneyEarned);
     }
@@ -118,7 +118,7 @@ public abstract class Target : MonoBehaviour
                 int segmentIdx = Random.Range(0, TargetSpawner.ScreenSegments);
                 TargetSpawner.SpawnTarget(segmentIdx, isGoldenTarget);
             }
-        }   
+        }
     }
 
     public virtual Collider2D[] FindNearbyTargets(float distance)

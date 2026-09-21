@@ -22,22 +22,16 @@ public class CurrencyUI : MonoBehaviour
 
     void OnEnable()
     {
+        RoundManager.OnRoundEnd += Show;
+        RoundManager.OnRoundStart += Hide;
         // CurrencyManager.Instance.OnCurrencyChanged += UpdateUI;
-        if (targetSpawner != null)
-        {
-            targetSpawner.OnTargetsCleared += Show;
-            targetSpawner.OnRoundStart += Hide;
-        }
     }
 
     void OnDisable()
     {
         CurrencyManager.Instance.OnCurrencyChanged -= UpdateUI;
-        if (targetSpawner != null)
-        {
-            targetSpawner.OnTargetsCleared -= Show;
-            targetSpawner.OnRoundStart -= Hide;  
-        } 
+        RoundManager.OnRoundStart -= Hide;
+        RoundManager.OnRoundEnd -= Show;
     }
 
     void UpdateUI(string currencyId)

@@ -64,8 +64,7 @@ public class ShootingModule : MonoBehaviour
         controls.Player.Enable();
         if (!autoFire)
             controls.Player.Shoot.performed += ManualShoot;
-
-        targetSpawner.OnTargetsCleared += DisableShooting;
+        RoundManager.OnRoundEnd += DisableShooting;
     }
 
     void OnDisable()
@@ -74,7 +73,7 @@ public class ShootingModule : MonoBehaviour
         if (!autoFire)
             controls.Player.Shoot.performed -= ManualShoot;
 
-        targetSpawner.OnTargetsCleared -= DisableShooting;
+        RoundManager.OnRoundEnd -= DisableShooting;
     }
 
     private void EquipGun(GunType gunType)
@@ -145,11 +144,13 @@ public class ShootingModule : MonoBehaviour
         if (reloadCoroutine != null)
         {
             yield return reloadCoroutine;
-        } else if (aerialStrikeCoroutine != null)
+        }
+        else if (aerialStrikeCoroutine != null)
         {
             yield return aerialStrikeCoroutine;
             yield return AutoFireCrosshairAnim();
-        } else
+        }
+        else
         {
             yield return AutoFireCrosshairAnim();
         }
@@ -201,7 +202,7 @@ public class ShootingModule : MonoBehaviour
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         var hit = Physics2D.GetRayIntersection(ray);
-        
+
         List<Target> hits = new();
         List<bool> isBullseyes = new();
 
@@ -278,7 +279,7 @@ public class ShootingModule : MonoBehaviour
         bool aerialStrike = false;
         if (!isAerialStrikeDue) // only pull if we don't already have an aerial strike in queue 
             aerialStrike = aerialStrikeChanceBag.Pull(playerRuntimeStats.AerialStrikeChance);
-        
+
         if (aerialStrike || isAerialStrikeDue)
         {
             List<Target> currTargetsOnScreen = new(targetSpawner.SpawnedTargets);

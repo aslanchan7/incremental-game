@@ -31,10 +31,6 @@ public class TargetSpawner : MonoBehaviour
     [Header("Golden Target Settings")]
     private List<GoldenTarget> goldenTargetList = new();
 
-    [Header("Actions")]
-    public Action OnTargetsCleared;
-    public Action OnRoundStart;
-
     [Header("Chance Bags")]
     public ChanceBag TargetRespawnChanceBag;
     public ChanceBag GoldenTargetChanceBag;
@@ -47,18 +43,6 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public float MaxY;
     [HideInInspector] public float SegmentWidth;
 
-    [Header("Stats for Summary UI")]
-    [HideInInspector] public float Accuracy;
-    [HideInInspector] public int TotalTargetsSpawned;
-    [HideInInspector] public int TotalTargetsHit;
-    [HideInInspector] public int TotalBullseyesHit;
-    [HideInInspector] public int TotalShotsFired;
-    [HideInInspector] public int TotalShotsMissed;
-    [HideInInspector] public float RoundStartTime;
-    [HideInInspector] public BigDouble TotalMoneyEarned;
-    [HideInInspector] public double SpeedBonusCashEarned;
-    [HideInInspector] public double AccuracyBonusCashEarned;
-    
     [Header("Combo Settings")]
     public float comboMultPerHit = 0.1f;
     public int CurrCombo;
@@ -72,11 +56,7 @@ public class TargetSpawner : MonoBehaviour
     public void StartRound()
     {
         roundRuntimeData = GameManager.Instance.RoundRuntimeData;
-
         SpawnInitialTargets();
-
-        OnRoundStart?.Invoke();
-        RoundStartTime = Time.time; // This is here in case TransitionManager does not trigger OnFadeIn. If OnFadeIn is triggered then this value will be overwritten.
     }
 
     void Update()
@@ -91,7 +71,7 @@ public class TargetSpawner : MonoBehaviour
         {
             if (Keyboard.current.sKey.wasPressedThisFrame)
             {
-                Target[] targets = new Target[SpawnedTargets.Count]; 
+                Target[] targets = new Target[SpawnedTargets.Count];
                 SpawnedTargets.CopyTo(targets);
                 foreach (var target in targets)
                 {
@@ -106,8 +86,6 @@ public class TargetSpawner : MonoBehaviour
         // TODO: MAYBE REFACTOR? IDK IF TARGET SPAWNER NEEDS TO HAVE A REFERENCE TO SHOOTING MODULE
         // shootingModule.OnGunInitialized += HandleGunInitialized;
         Gun.ShotFired += HandleShotFired;
-        if (TransitionManager.Instance != null)
-            TransitionManager.Instance.OnFadeIn += HandleFadeIn;
     }
 
     void OnDisable()
@@ -115,18 +93,12 @@ public class TargetSpawner : MonoBehaviour
         // shootingModule.ShotFired -= HandleShotFired;
         // shootingModule.OnGunInitialized -= HandleGunInitialized;
         Gun.ShotFired -= HandleShotFired;
-        TransitionManager.Instance.OnFadeIn -= HandleFadeIn;
     }
 
-    private void HandleGunInitialized()
-    {
-        Gun.ShotFired += HandleShotFired;
-    }
-
-    void HandleFadeIn()
-    {
-        RoundStartTime = Time.time;
-    }
+    // private void HandleGunInitialized()
+    // {
+    //     Gun.ShotFired += HandleShotFired;
+    // }
 
     // THIS IS JUST A HELPER FUNCTION, I NEED TO REMOVE THIS
     void Refresh()
@@ -163,7 +135,7 @@ public class TargetSpawner : MonoBehaviour
         {
             Destroy(target);
         }
-        TotalTargetsSpawned = 0;
+        RoundManager.Instance.TotalTargetsSpawned = 0;
         RemainingTargets = 0;
     }
 
@@ -192,7 +164,7 @@ public class TargetSpawner : MonoBehaviour
             goldenTargetList.Add(instantiated.GetComponent<GoldenTarget>());
 
         SpawnedTargets.Add(instantiated);
-        TotalTargetsSpawned++;
+        RoundManager.Instance.TotalTargetsSpawned++;
         RemainingTargets++;
     }
 
@@ -227,8 +199,8 @@ public class TargetSpawner : MonoBehaviour
 
     void HandleShotFired(Target target, bool isBullseye, bool isCrit, bool isAerialStrike, Vector3 shotPos)
     {
-        TotalShotsFired++;
-        TotalShotsMissed += target == null ? 1 : 0;
+        RoundManager.Instance.TotalShotsFired++;
+        RoundManager.Instance.TotalShotsMissed += target == null ? 1 : 0;
         CurrCombo += target != null ? 1 : 0;
 
         if (target != null)
@@ -243,25 +215,7 @@ public class TargetSpawner : MonoBehaviour
     {
         if (RemainingTargets == 0)
         {
-            // Apply Speed Bonus
-            float extraTime = (TotalTargetsHit * timePerTarget) - (Time.time - RoundStartTime);
-            if (extraTime > 0)
-            {
-                SpeedBonusCashEarned = (int)(extraTime + 1) * roundRuntimeData.SpeedBonusCash;
-                CurrencyManager.Instance.Add("cash", SpeedBonusCashEarned);
-            }
-
-            // Apply Accuracy Bonus
-            Accuracy = (TotalShotsFired - TotalShotsMissed) / (float)TotalShotsFired;
-            if (Accuracy >= 0.9f)
-            {
-                AccuracyBonusCashEarned = TotalMoneyEarned.ToDouble() * roundRuntimeData.AccuracyBonusCashPercentage;
-                CurrencyManager.Instance.Add("cash", AccuracyBonusCashEarned);
-            }
-
-            TotalMoneyEarned += SpeedBonusCashEarned + AccuracyBonusCashEarned;
-
-            OnTargetsCleared?.Invoke();
+            RoundManager.Instance.EndNormalRound(timePerTarget);
             SpawnedTargets.Clear();
         }
     }
