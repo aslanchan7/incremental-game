@@ -59,7 +59,7 @@ public partial class RoundManager : MonoBehaviour
     void Start()
     {
         GameManager.Instance.CurrentRound++;
-        isBossRound = GameManager.Instance.CurrentRound % 1 == 0;
+        isBossRound = GameManager.Instance.CurrentRound % 10 == 0;
 
         UpdateUI();
 
@@ -115,16 +115,16 @@ public partial class RoundManager : MonoBehaviour
     {
         for (int i = 0; i < roundIndicators.Count; i++)
         {
-            if ((i+1) % 1 == 0)
+            if ((i+1) % 10 == 0)
             {
                 roundIndicators[i].GetComponent<Image>().color *= Color.red;
             }
 
-            if (i == (GameManager.Instance.CurrentRound % 10) - 1)
+            if (i == (GameManager.Instance.CurrentRound - 1) % 10)
             {
                 roundIndicators[i].localScale *= 1.25f;
             }
-            else if (i < (GameManager.Instance.CurrentRound % 10) - 1)
+            else if (i < (GameManager.Instance.CurrentRound - 1) % 10)
             {
                 roundIndicators[i].GetComponent<Image>().color *= Color.gray;
             }
