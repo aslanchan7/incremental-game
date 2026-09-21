@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4333481195872843838}
   - component: {fileID: 7740264426508851947}
+  - component: {fileID: 5610068176367505500}
   - component: {fileID: 6473319670378585853}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,6 +94,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!58 &5610068176367505500
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656399003934601555}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 1
 --- !u!114 &6473319670378585853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,12 +143,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossTarget
   TargetSpawner: {fileID: 0}
-  targetHitParticles: {fileID: 0}
-  BaseValue: 10
-  MaxHealth: 1
+  targetHitParticles: {fileID: 6156794285846784741, guid: 71eff1e0c890fd14d8d71c1e3647e521, type: 3}
+  BaseValue: 100
+  MaxHealth: 100
   currHealth: 0
-  flytextPrefab: {fileID: 0}
-  bullseyeFlytextColor: {r: 0, g: 0, b: 0, a: 0}
-  healthBarPrefab: {fileID: 0}
-  healthBarOffsetWorldSpace: {x: 0, y: 0, z: 0}
+  flytextPrefab: {fileID: 1111954570241817612, guid: 7e5664c109ab0b84c9e68c3d8c92e112, type: 3}
+  bullseyeFlytextColor: {r: 1, g: 0.5254902, b: 0.5254902, a: 1}
+  healthBarPrefab: {fileID: 7506085658792486897, guid: 94885bc627756424a80f55c3a6e1a91c, type: 3}
+  healthBarOffsetWorldSpace: {x: 0, y: 1.25, z: 0}
   healthBarAnimTime: 0.1
+  initScale: {x: 8, y: 8, z: 8}
+  finalScale: {x: 0.5, y: 0.5, z: 0.5}

@@ -494,18 +494,6 @@ MonoBehaviour:
   MinY: 0
   MaxY: 0
   SegmentWidth: 0
-  Accuracy: 0
-  TotalTargetsSpawned: 0
-  TotalTargetsHit: 0
-  TotalBullseyesHit: 0
-  TotalShotsFired: 0
-  TotalShotsMissed: 0
-  RoundStartTime: 0
-  TotalMoneyEarned:
-    mantissa: 0
-    exponent: 0
-  SpeedBonusCashEarned: 0
-  AccuracyBonusCashEarned: 0
   comboMultPerHit: 0.1
   CurrCombo: 0
   RemainingTargets: 0
@@ -2164,6 +2152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoundManager
   targetSpawner: {fileID: 167575245}
+  bossSpawner: {fileID: 1537486205}
   roundIndicators:
   - {fileID: 1308660896}
   - {fileID: 1562057292}
@@ -2175,6 +2164,16 @@ MonoBehaviour:
   - {fileID: 958197627}
   - {fileID: 2146629477}
   - {fileID: 2046590049}
+  Accuracy: 0
+  TotalTargetsSpawned: 0
+  TotalTargetsHit: 0
+  TotalBullseyesHit: 0
+  TotalShotsFired: 0
+  TotalShotsMissed: 0
+  RoundStartTime: 0
+  TotalMoneyEarned: 0
+  SpeedBonusCashEarned: 0
+  AccuracyBonusCashEarned: 0
 --- !u!1 &795097204
 GameObject:
   m_ObjectHideFlags: 0
@@ -3671,6 +3670,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1535935371}
   m_CullTransparentMesh: 1
+--- !u!1 &1537486203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1537486204}
+  - component: {fileID: 1537486205}
+  m_Layer: 0
+  m_Name: BossSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1537486204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537486203}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1537486205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537486203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8607b08ae2dde546b9dcfe1b32a5743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossSpawner
+  bossTargetPrefab: {fileID: 6473319670378585853, guid: c81f98f455336cc459af2548a7e47788, type: 3}
 --- !u!1 &1557237443
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,3 +5239,4 @@ SceneRoots:
   - {fileID: 6144406074483340658}
   - {fileID: 1068503531}
   - {fileID: 762493312}
+  - {fileID: 1537486204}
