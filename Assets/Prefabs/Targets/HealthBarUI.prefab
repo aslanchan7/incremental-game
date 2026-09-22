@@ -104,8 +104,8 @@ RectTransform:
   m_GameObject: {fileID: 7157245657833692138}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5839479372571738061}
   m_Father: {fileID: 0}
@@ -124,7 +124,7 @@ Canvas:
   m_GameObject: {fileID: 7157245657833692138}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
+  m_ReferencePixelsPerUnit: 32
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1280, y: 640}
   m_ScreenMatchMode: 0
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &401987498386448914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +195,6 @@ MonoBehaviour:
   healthBarFill: {fileID: 24304373323227692}
   slider: {fileID: 4626557350642498528}
   IsAnimating: 0
-  flytextPrefab: {fileID: 1111954570241817612, guid: 84a0b018a30eb20489c6815a71ccd0f8, type: 3}
 --- !u!1 &7656536476398814108
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,11 +229,11 @@ RectTransform:
   - {fileID: 24304373323227692}
   m_Father: {fileID: 3055776009315929105}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 33.75}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 70, y: 10}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &766133512839243509
 CanvasRenderer:
   m_ObjectHideFlags: 0

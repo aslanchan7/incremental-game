@@ -18,16 +18,22 @@ public abstract class Target : MonoBehaviour
     [SerializeField] protected Color bullseyeFlytextColor;
 
     [Header("Health Bar Settings")]
-    [SerializeField] protected HealthBarUI healthBarPrefab;
+    // [SerializeField] protected HealthBarUI healthBarPrefab;
     protected HealthBarUI healthBar;
     [SerializeField] protected Vector3 healthBarOffsetWorldSpace;
     [SerializeField] protected float healthBarAnimTime = 0.1f;
 
+    protected virtual void Awake()
+    {
+        healthBar = GetComponentInChildren<HealthBarUI>();
+    }
+
     protected virtual void Start()
     {
-        healthBar = Instantiate(healthBarPrefab, transform);
-        Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
-        healthBar.SetPositionWorldSpace(worldPos);
+        // healthBar = Instantiate(healthBarPrefab, transform);
+        // Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
+        // healthBar.SetPositionWorldSpace(worldPos);
+
         BaseValue = GameManager.Instance.RoundRuntimeData.BaseTargetValue;
 
         currHealth = MaxHealth;
@@ -116,7 +122,7 @@ public abstract class Target : MonoBehaviour
                 }
 
                 int segmentIdx = Random.Range(0, TargetSpawner.ScreenSegments);
-                TargetSpawner.SpawnTarget(segmentIdx, isGoldenTarget);
+                TargetSpawner.SpawnTarget(segmentIdx, TargetSpawner.GoldenTargetPrefab);
             }
         }
     }

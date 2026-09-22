@@ -12,10 +12,11 @@ public class TargetSpawner : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int maxScreenSegments; // how many segments to split the screen into for spawning targets evenly
     [Space(10)]
-    [SerializeField] private float spawnPaddingTop;
-    [SerializeField] private float spawnPaddingBottom;
-    [SerializeField] private float spawnPaddingLeft;
-    [SerializeField] private float spawnPaddingRight;
+    // [SerializeField, Range(0, 1)] private float spawnPaddingTop;
+    // [SerializeField, Range(0, 1)] private float spawnPaddingBottom;
+    // [SerializeField, Range(0, 1)] private float spawnPaddingLeft;
+    // [SerializeField, Range(0, 1)] private float spawnPaddingRight;
+    [SerializeField] private BoxCollider2D spawnBounds;
     [Space(10)]
     [SerializeField] private float minDistBetweenTargets = 1f;
     [SerializeField] float timePerTarget = 1f;
@@ -23,8 +24,7 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private DefaultTarget defaultTargetPrefab;
-    [SerializeField] private GoldenTarget goldenTargetPrefab;
-    [SerializeField] private ShootingModule shootingModule;
+    public GoldenTarget GoldenTargetPrefab;
     [HideInInspector] public List<Target> SpawnedTargets = new();
     private RoundRuntimeData roundRuntimeData;
 
@@ -61,7 +61,7 @@ public class TargetSpawner : MonoBehaviour
 
     void Update()
     {
-        if (refresh)
+        if (refresh || Keyboard.current.rKey.wasPressedThisFrame)
         {
             refresh = false;
             Refresh();
@@ -117,15 +117,11 @@ public class TargetSpawner : MonoBehaviour
             Debug.LogError("Screen Segments is less than or equal to 0");
         }
 
-        MinX = spawnPaddingLeft;
-        MaxX = Screen.width - spawnPaddingRight;
-        MinY = spawnPaddingBottom;
-        MaxY = Screen.height - spawnPaddingTop;
-        SegmentWidth = Screen.width / ScreenSegments;
+        SegmentWidth = spawnBounds.bounds.size.x / ScreenSegments;
 
         for (int i = 0; i < roundRuntimeData.InitialTargetCount; i++)
         {
-            SpawnTarget(i % ScreenSegments);
+            SpawnTarget(i % ScreenSegments, defaultTargetPrefab);
         }
     }
 
@@ -133,14 +129,21 @@ public class TargetSpawner : MonoBehaviour
     {
         foreach (var target in SpawnedTargets)
         {
-            Destroy(target);
+            Destroy(target.gameObject);
         }
+        SpawnedTargets.Clear();
         RoundManager.Instance.TotalTargetsSpawned = 0;
         RemainingTargets = 0;
     }
 
-    public void SpawnTarget(int segmentIdx, bool isGolden = false)
+    public void SpawnTarget(int segmentIdx, Target targetPrefab)
     {
+        float radius = targetPrefab.GetComponent<CircleCollider2D>().radius;
+        MinX = spawnBounds.bounds.min.x + radius;
+        MaxX = spawnBounds.bounds.max.x - radius;
+        MinY = spawnBounds.bounds.min.y + radius;
+        MaxY = spawnBounds.bounds.max.y - radius;
+
         Vector2 worldPos;
         int attempts = 0;
         const int maxAttempts = 30;
@@ -156,12 +159,8 @@ public class TargetSpawner : MonoBehaviour
             return;
         }
 
-        Target prefabToInstantiate = isGolden ? goldenTargetPrefab : defaultTargetPrefab;
-        Target instantiated = Instantiate(prefabToInstantiate, worldPos, Quaternion.identity, transform);
+        Target instantiated = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
         instantiated.TargetSpawner = this;
-
-        if (isGolden)
-            goldenTargetList.Add(instantiated.GetComponent<GoldenTarget>());
 
         SpawnedTargets.Add(instantiated);
         RoundManager.Instance.TotalTargetsSpawned++;
@@ -171,23 +170,26 @@ public class TargetSpawner : MonoBehaviour
     Vector2 GetRandomSpawnWorldPos(int segmentIndex)
     {
         float randX = Random.Range(0f, 1f);
-        float xPos = (SegmentWidth * segmentIndex) + (SegmentWidth * randX);
+        float xPos = spawnBounds.bounds.min.x + (SegmentWidth * segmentIndex) + (SegmentWidth * randX);
         xPos = xPos < MinX
             ? MinX
             : xPos > MaxX
                 ? MaxX
                 : xPos;
 
-        float randY = Random.Range(0f, 1f);
-        float yPos = randY * Screen.height;
-        yPos = yPos < MinY
-            ? MinY
-            : yPos > MaxY
-                ? MaxY
-                : yPos;
+        // float randY = Random.Range(0f, 1f);
+        // float yPos = randY * spawnBounds.bounds.size.y;
+        // yPos = yPos < MinY
+        //     ? MinY
+        //     : yPos > MaxY
+        //         ? MaxY
+        //         : yPos;
+        float yPos = Random.Range(MinY, MaxY);
 
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(new(xPos, yPos));
+        // Vector2 worldPos = Camera.main.ScreenToWorldPoint(new(xPos, yPos));
 
+        // float xPos = Random.Range(MinX, MaxX);
+        Vector2 worldPos = new(xPos, yPos);
         return worldPos;
     }
 

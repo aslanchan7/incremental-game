@@ -8,11 +8,17 @@ public class BossTarget : Target
     [SerializeField] private Vector3 finalScale;
     [HideInInspector] public BossSpawner BossSpawner;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     protected override void Start()
     {
-        healthBar = Instantiate(healthBarPrefab, transform);
-        Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
-        healthBar.SetPositionWorldSpace(worldPos);
+        // healthBar = Instantiate(healthBarPrefab, transform);
+        // Vector3 worldPos = transform.position + healthBarOffsetWorldSpace;
+        // healthBar.SetPositionWorldSpace(worldPos);
+
         transform.localScale = initScale;
 
         currHealth = MaxHealth;

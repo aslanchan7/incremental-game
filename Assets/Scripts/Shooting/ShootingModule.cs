@@ -10,7 +10,7 @@ public class ShootingModule : MonoBehaviour
     [Header("References")]
     [SerializeField] private TargetSpawner targetSpawner;
     [SerializeField] private Image crosshair;
-    // [SerializeField] private Transform gunVisualsTransform;
+    [SerializeField] private LayerMask targetLayer;
     private PlayerControls controls;
     private PlayerRuntimeStats playerRuntimeStats;
 
@@ -201,7 +201,7 @@ public class ShootingModule : MonoBehaviour
         Vector2 screenPos = Mouse.current.position.ReadValue();
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        var hit = Physics2D.GetRayIntersection(ray);
+        var hit = Physics2D.GetRayIntersection(ray, float.PositiveInfinity, targetLayer);
 
         List<Target> hits = new();
         List<bool> isBullseyes = new();
