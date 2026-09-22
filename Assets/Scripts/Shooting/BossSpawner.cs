@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
     [SerializeField] private BossTarget bossTargetPrefab;
+    public List<BossTarget> SpawnedBossTargets = new();
     public void StartRound()
     {
         // TODO: BOSS INTRO ANIM
-        Instantiate(bossTargetPrefab);
+        BossTarget boss = Instantiate(bossTargetPrefab);
+        boss.BossSpawner = this;
+        SpawnedBossTargets.Add(boss);
     }
 
     void OnEnable()
@@ -34,6 +38,9 @@ public class BossSpawner : MonoBehaviour
 
     void CheckRoundEndCondition()
     {
-
+        if (SpawnedBossTargets.Count == 0)
+        {
+            RoundManager.Instance.EndBossRound();
+        }
     }
 }

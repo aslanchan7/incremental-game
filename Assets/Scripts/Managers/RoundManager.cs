@@ -110,6 +110,13 @@ public partial class RoundManager : MonoBehaviour
         OnRoundEnd?.Invoke();
     }
 
+    public void EndBossRound()
+    {
+        Accuracy = (TotalShotsFired - TotalShotsMissed) / (float)RoundManager.Instance.TotalShotsFired;
+
+        OnRoundEnd?.Invoke();
+    }
+
     //  -------------- UI STUFF ---------------
     void UpdateUI()
     {

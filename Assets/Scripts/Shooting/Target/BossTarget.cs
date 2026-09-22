@@ -6,6 +6,7 @@ public class BossTarget : Target
     [Header("Boss Config")]
     [SerializeField] private Vector3 initScale;
     [SerializeField] private Vector3 finalScale;
+    [HideInInspector] public BossSpawner BossSpawner;
 
     protected override void Start()
     {
@@ -26,6 +27,7 @@ public class BossTarget : Target
         currHealth -= damage;
         if (currHealth < 0f) currHealth = 0f;
 
+        RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
         SFXManager.PlaySound(SoundType.TargetHit);
         Instantiate(targetHitParticles, shotPos, Quaternion.identity);
         HandleFlytext(isBullseye, isCrit);
@@ -41,10 +43,9 @@ public class BossTarget : Target
 
     protected override IEnumerator TargetDestroyed(bool isBullseye)
     {
-        // TargetSpawner.SpawnedTargets.Remove(this);
         // TargetSpawner.RemainingTargets--;
+        BossSpawner.SpawnedBossTargets.Remove(this);
         RoundManager.Instance.TotalTargetsHit++;
-        RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
 
         AddMoneyEarned(isBullseye);
 

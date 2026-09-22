@@ -44,6 +44,7 @@ public abstract class Target : MonoBehaviour
         currHealth -= damage;
         if (currHealth < 0f) currHealth = 0f;
 
+        RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
         SFXManager.PlaySound(SoundType.TargetHit);
         Instantiate(targetHitParticles, shotPos, Quaternion.identity);
         HandleFlytext(isBullseye, isCrit);
@@ -61,7 +62,6 @@ public abstract class Target : MonoBehaviour
         TargetSpawner.SpawnedTargets.Remove(this);
         TargetSpawner.RemainingTargets--;
         RoundManager.Instance.TotalTargetsHit++;
-        RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
 
         AddMoneyEarned(isBullseye);
         HandleRespawnTarget();
