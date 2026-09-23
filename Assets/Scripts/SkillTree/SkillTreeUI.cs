@@ -109,6 +109,7 @@ public class SkillTreeUI : MonoBehaviour, IDragHandler, IScrollHandler
             }
 
             Color lineColor = lockedBorderColor;
+            if (CurrencyManager.Instance == null) continue;
             bool canAfford = CurrencyManager.Instance.GetCurrency("cash").amount >= toNode.Data.cost;
             if (toNode.IsPurchased)
             {

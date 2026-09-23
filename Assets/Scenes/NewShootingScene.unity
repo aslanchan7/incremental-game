@@ -127,17 +127,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1806886971187181291, guid: a1080d62ea055484db76e09f759214d5, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5004082791096767338, guid: a1080d62ea055484db76e09f759214d5, type: 3}
       propertyPath: m_Name
       value: SFXManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5004082791096767338, guid: a1080d62ea055484db76e09f759214d5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6542442083198889255, guid: a1080d62ea055484db76e09f759214d5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -625,14 +617,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 502964389942563005, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 18.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 2447781293928380985, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4899033167266063382, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
       propertyPath: targetSpawner
       value: 
@@ -716,10 +700,6 @@ PrefabInstance:
     - target: {fileID: 6141264347879855376, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6885204746531546826, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 18.61
       objectReference: {fileID: 0}
     - target: {fileID: 8431425546522258795, guid: a064f8629e4ccd347ad47d69b13af670, type: 3}
       propertyPath: m_Name
@@ -855,7 +835,7 @@ Camera:
     x: 0
     y: 0
     width: 1
-    height: 0.99956447
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

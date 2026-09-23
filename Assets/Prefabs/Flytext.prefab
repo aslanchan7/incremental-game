@@ -109,7 +109,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: bullseye!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3a18afa2307ee8941aedc0d8ec4301a7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 517719650525c92468af6d2baa748eb8, type: 2}
   m_sharedMaterial: {fileID: 7524866100110353314, guid: 3a18afa2307ee8941aedc0d8ec4301a7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -134,8 +134,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 2.5
+  m_fontSizeBase: 2.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -179,7 +179,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_renderer: {fileID: 7620798272406628204}
   m_maskType: 0
 --- !u!114 &1111954570241817612
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Flytext
   animInTime: 0.2
   animOutTime: 0.2
-  floatSpeed: 1
+  floatSpeed: 0.5
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   minXRot: 0
   maxXRot: 0

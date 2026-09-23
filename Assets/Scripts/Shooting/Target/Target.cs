@@ -7,6 +7,7 @@ public abstract class Target : MonoBehaviour
     [Header("References")]
     [HideInInspector] public TargetSpawner TargetSpawner;
     [SerializeField] protected GameObject targetHitParticles;
+    [SerializeField] protected GameObject bulletHolePrefab;
 
     [Header("Target Variables")]
     public float BaseValue;
@@ -53,6 +54,7 @@ public abstract class Target : MonoBehaviour
         RoundManager.Instance.TotalBullseyesHit += isBullseye ? 1 : 0;
         SFXManager.PlaySound(SoundType.TargetHit);
         Instantiate(targetHitParticles, shotPos, Quaternion.identity);
+        Instantiate(bulletHolePrefab, shotPos, Quaternion.identity, transform);
         HandleFlytext(isBullseye, isCrit);
 
         StartCoroutine(healthBar.UpdateHealthBar(currHealth, MaxHealth, healthBarAnimTime));
