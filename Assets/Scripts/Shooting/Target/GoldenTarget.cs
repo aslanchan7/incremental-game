@@ -18,8 +18,9 @@ public class GoldenTarget : Target
     private IEnumerator GoldenTargetSelfDestroy()
     {
         yield return new WaitForSeconds(selfDestroyTime);
-        Destroy(gameObject);
+        TargetSpawner.SpawnedTargets.Remove(this);
         TargetSpawner.RemainingTargets--;
+        Destroy(gameObject);
         Debug.Log("Golden Target destroyed itself");
     }
 

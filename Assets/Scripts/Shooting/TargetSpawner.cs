@@ -28,9 +28,6 @@ public class TargetSpawner : MonoBehaviour
     [HideInInspector] public List<Target> SpawnedTargets = new();
     private RoundRuntimeData roundRuntimeData;
 
-    [Header("Golden Target Settings")]
-    private List<GoldenTarget> goldenTargetList = new();
-
     [Header("Chance Bags")]
     public ChanceBag TargetRespawnChanceBag;
     public ChanceBag GoldenTargetChanceBag;
@@ -215,7 +212,7 @@ public class TargetSpawner : MonoBehaviour
 
     void CheckRoundEndCondition()
     {
-        if (RemainingTargets == 0)
+        if (SpawnedTargets.Count == 0)
         {
             RoundManager.Instance.EndNormalRound(timePerTarget);
             SpawnedTargets.Clear();

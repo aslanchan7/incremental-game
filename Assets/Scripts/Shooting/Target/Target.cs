@@ -44,6 +44,11 @@ public abstract class Target : MonoBehaviour
     // HANDLE DESTROYING THEMSELVES -- INCLUDING GIVING MONEY, INCREMENTING COMBO, PLAY SFX, PARTICLES, ETC
     public virtual void HandleShot(bool isBullseye, bool isCrit, bool isAerialStrike, Vector3 shotPos)
     {
+        if (currHealth <= 0f)
+        {
+            return;
+        }
+
         float damage = GameManager.Instance.CurrGunInstance.Damage;
         damage *= isCrit ? 2f : 1f;
         if (isAerialStrike)

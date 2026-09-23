@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
+    public BoxCollider2D SpawnBounds;
     [SerializeField] private BossTarget bossTargetPrefab;
     public List<BossTarget> SpawnedBossTargets = new();
     public void StartRound()

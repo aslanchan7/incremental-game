@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78211cbc6e3ebfd4ab614ee2be65ba6e, type: 3}
   m_Name: ShotgunGunData
   m_EditorClassIdentifier: Assembly-CSharp::GunDataSO
-  Damage: 5
+  Damage: 1
   MaxAmmo: 6
   ReloadTime: 2
   AutoFireRate: 0.5
   RicochetMaxBounce: 1
-  CritChance: 0.4
+  CritChance: 0.2
   BullseyeChance: 0
