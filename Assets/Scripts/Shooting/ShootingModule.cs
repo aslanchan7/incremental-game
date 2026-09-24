@@ -64,7 +64,9 @@ public class ShootingModule : MonoBehaviour
         controls.Player.Enable();
         if (!autoFire)
             controls.Player.Shoot.performed += ManualShoot;
+
         RoundManager.OnRoundEnd += DisableShooting;
+        RoundManager.OnBossFailed += DisableShooting;
     }
 
     void OnDisable()
@@ -74,6 +76,7 @@ public class ShootingModule : MonoBehaviour
             controls.Player.Shoot.performed -= ManualShoot;
 
         RoundManager.OnRoundEnd -= DisableShooting;
+        RoundManager.OnBossFailed -= DisableShooting;
     }
 
     private void EquipGun(GunType gunType)

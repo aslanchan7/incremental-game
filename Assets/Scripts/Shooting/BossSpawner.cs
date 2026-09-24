@@ -6,6 +6,7 @@ public class BossSpawner : MonoBehaviour
     public BoxCollider2D SpawnBounds;
     [SerializeField] private BossTarget bossTargetPrefab;
     public List<BossTarget> SpawnedBossTargets = new();
+    [HideInInspector] public bool outOfTime;
     public void StartRound()
     {
         // TODO: BOSS INTRO ANIM
@@ -41,7 +42,7 @@ public class BossSpawner : MonoBehaviour
     {
         if (SpawnedBossTargets.Count == 0)
         {
-            RoundManager.Instance.EndBossRound();
+            RoundManager.Instance.EndBossRound(outOfTime);
         }
     }
 }

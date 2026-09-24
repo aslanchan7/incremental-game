@@ -159,7 +159,7 @@ MonoBehaviour:
   finalScale: {x: 0.5, y: 0.5, z: 0.5}
   initSpeed: 1
   finalSpeed: 6
-  timerDuration: 45
+  timerDuration: 5
   BossSpawner: {fileID: 0}
 --- !u!1001 &1430417397756032527
 PrefabInstance:

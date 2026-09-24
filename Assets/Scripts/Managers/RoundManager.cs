@@ -44,6 +44,7 @@ public partial class RoundManager : MonoBehaviour
     [Header("Actions")]
     public static Action OnRoundStart;
     public static Action OnRoundEnd;
+    public static Action OnBossFailed;
 
     void OnEnable()
     {
@@ -110,11 +111,17 @@ public partial class RoundManager : MonoBehaviour
         OnRoundEnd?.Invoke();
     }
 
-    public void EndBossRound()
+    public void EndBossRound(bool outOfTime)
     {
         Accuracy = (TotalShotsFired - TotalShotsMissed) / (float)RoundManager.Instance.TotalShotsFired;
 
-        OnRoundEnd?.Invoke();
+        if (outOfTime)
+        {
+            OnBossFailed?.Invoke();
+        } else
+        {
+            OnRoundEnd?.Invoke();
+        }
     }
 
     //  -------------- UI STUFF ---------------

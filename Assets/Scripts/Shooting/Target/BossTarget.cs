@@ -148,6 +148,7 @@ public class BossTarget : Target
         if (bossTimerBar.RemainingDuration <= 0f)
         {
             BossSpawner.SpawnedBossTargets.Remove(this);
+            BossSpawner.outOfTime = true;
             Destroy(gameObject);
             Debug.Log("Failed to kill boss");
         }
